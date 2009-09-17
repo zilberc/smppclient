@@ -1,0 +1,15 @@
+Changelog 0.4beta2
+
+04.04.2009 0.4beta2
+
+[new features]
+* using SMPPClient proper message encoding choosed automatically
+
+[bug fixes]
+* SMPPByteBuffer accepted only Latin or UTF-8 strings 
+* a lot of other refactorings
+
+02.06.2009 0.4beta
+
+[new features]
+* library just imported to sourceforge

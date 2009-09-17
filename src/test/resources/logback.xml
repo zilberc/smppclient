@@ -1,0 +1,15 @@
+<configuration>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%date %level - %msg%n</Pattern>
+            <!--<Pattern>%date %level - %msg %ex%n</Pattern>-->
+        </layout>
+    </appender>
+
+    <root>
+        <level value="error"/>
+        <appender-ref ref="stdout"/>
+    </root>
+
+</configuration>
