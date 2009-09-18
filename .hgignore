@@ -3,4 +3,5 @@ syntax: glob
 
 *.iml
 *~
+target
 
