@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bulatnig</groupId>
     <artifactId>smpp</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <version>0.4</version>
     <name>SMPP client library</name>
     <inceptionYear>2008</inceptionYear>
@@ -15,7 +15,7 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:svn:https://smppclient.svn.sourceforge.net/svnroot/smppclient</connection>
+        <connection>scm:hg:https://smppclient.googlecode.com/hg/</connection>
     </scm>
     <dependencies>
         <dependency>
@@ -45,6 +45,11 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
