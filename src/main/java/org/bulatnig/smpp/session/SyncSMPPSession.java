@@ -1,8 +1,8 @@
 package org.bulatnig.smpp.session;
 
 import org.bulatnig.smpp.SMPPException;
-import org.bulatnig.smpp.net.SMPPConnection;
-import org.bulatnig.smpp.net.TCPConnection;
+import org.bulatnig.smpp.net.Connection;
+import org.bulatnig.smpp.net.impl.TCPConnection;
 import org.bulatnig.smpp.pdu.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +73,7 @@ public class SyncSMPPSession implements SMPPSession {
     /**
      * Соединение с SMSC.
      */
-    private SMPPConnection connection;
+    private Connection connection;
     /**
      * Тип соединения.
      */
@@ -159,7 +159,7 @@ public class SyncSMPPSession implements SMPPSession {
 
         private final String host;
         private final int port;
-        private final SMPPConnection connection;
+        private final Connection connection;
         private ConnectionType connType = DEFAULT_CONNECTION_TYPE;
         private String systemId;
         private String password;
@@ -176,7 +176,7 @@ public class SyncSMPPSession implements SMPPSession {
             this.connection = null;
         }
 
-        public Builder(SMPPConnection connection) {
+        public Builder(Connection connection) {
             this.connection = connection;
             this.host = connection.getHost();
             this.port = connection.getPort();
