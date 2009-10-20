@@ -1,16 +1,15 @@
 package org.bulatnig.smpp.client;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.session.*;
+import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.client.Message;
 import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.session.ConnectionType;
-import org.bulatnig.smpp.session.NoResponseException;
-import org.bulatnig.smpp.session.SMPPSession;
-import org.bulatnig.smpp.session.SyncSMPPSession;
+import org.bulatnig.smpp.session.Session;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,7 +73,7 @@ public class ClientSimplestSendTest extends MessageHandler {
 
     @Test
     public void clientSuccessfulSendTest() throws IOException, SMPPException {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT1).
+        Session session = new SyncSession.Builder("localhost", PORT1).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
                 password("pass").
@@ -89,7 +88,7 @@ public class ClientSimplestSendTest extends MessageHandler {
 
     @Test(expected = NoResponseException.class)
     public void clientWrongSequenceNumberTest() throws IOException, SMPPException {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT2).
+        Session session = new SyncSession.Builder("localhost", PORT2).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
                 password("pass").
@@ -104,7 +103,7 @@ public class ClientSimplestSendTest extends MessageHandler {
 
     @Test(expected = NoResponseException.class)
     public void clientWrongPDUTest() throws IOException,SMPPException {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT3).
+        Session session = new SyncSession.Builder("localhost", PORT3).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
                 password("pass").

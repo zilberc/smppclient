@@ -9,7 +9,7 @@ import org.bulatnig.smpp.pdu.PDU;
  * Date: Apr 5, 2009
  * Time: 2:41:42 PM
  */
-public class PDUHandlerStub implements PDUHandler {
+public final class PDUHandlerStub implements PDUHandler {
 
     public PDU received(PDU pdu) {
         return null;

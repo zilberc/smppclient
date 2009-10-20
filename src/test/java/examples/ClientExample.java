@@ -4,8 +4,8 @@ import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.client.*;
 import org.bulatnig.smpp.pdu.NPI;
 import org.bulatnig.smpp.pdu.TON;
-import org.bulatnig.smpp.session.SMPPSession;
-import org.bulatnig.smpp.session.SyncSMPPSession;
+import org.bulatnig.smpp.session.Session;
+import org.bulatnig.smpp.session.impl.SyncSession;
 
 /**
  * SMPPClient usage example.
@@ -19,7 +19,7 @@ public class ClientExample {
         SMPPClient client = null;
         try {
             // create Session with SMSC
-            SMPPSession session = new SyncSMPPSession.Builder("smschost", 9999).
+            Session session = new SyncSession.Builder("smschost", 9999).
                     systemId("login").password("pass").
                     addrTon(TON.INTERNATIONAL).addrNpi(NPI.ISDN).
                     build();

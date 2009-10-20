@@ -2,20 +2,13 @@ package org.bulatnig.smpp.client;
 
 import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.pdu.tlv.SarMsgRefNum;
-import org.bulatnig.smpp.pdu.tlv.SarSegmentSeqnum;
-import org.bulatnig.smpp.pdu.tlv.SarTotalSegments;
-import org.bulatnig.smpp.session.ConnectionType;
 import org.bulatnig.smpp.session.NoResponseException;
-import org.bulatnig.smpp.session.SMPPSession;
-import org.bulatnig.smpp.session.SyncSMPPSession;
+import org.bulatnig.smpp.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Простая реализация SMPP клиента.
@@ -36,7 +29,7 @@ public class SMPPClientImpl implements SMPPClient {
     /**
      * Сессия с SMSC.
      */
-    private SMPPSession session;
+    private Session session;
     /**
      * Обработчик входящих сообщений.
      */
@@ -94,7 +87,7 @@ public class SMPPClientImpl implements SMPPClient {
 
     private boolean work = true;
 
-    public SMPPClientImpl(SMPPSession session, MessageHandler handler, boolean registeredDelivery) throws SMPPException {
+    public SMPPClientImpl(Session session, MessageHandler handler, boolean registeredDelivery) throws SMPPException {
         this.session = session;
         this.handler = handler;
         sourceAddrTon = session.getAddrTon();

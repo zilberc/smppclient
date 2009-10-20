@@ -1,14 +1,14 @@
 package org.bulatnig.smpp.client;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.session.Session;
+import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.bulatnig.smpp.client.Message;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.ConnectionType;
-import org.bulatnig.smpp.session.SMPPSession;
-import org.bulatnig.smpp.session.SyncSMPPSession;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +58,7 @@ public class ClientEnquireLinkTest extends MessageHandler {
 
     @Test(timeout = 45000)
     public void clientEnquireLinkTimerTest() throws Exception {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT1).
+        Session session = new SyncSession.Builder("localhost", PORT1).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
                 password("pass").
@@ -75,7 +75,7 @@ public class ClientEnquireLinkTest extends MessageHandler {
     @Test(timeout = 45000)
     public void clientEnquireLinkVerifTest() throws Exception {
 
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT2).
+        Session session = new SyncSession.Builder("localhost", PORT2).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
                 password("pass").

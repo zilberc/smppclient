@@ -1,6 +1,7 @@
 package org.bulatnig.smpp.session;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
@@ -9,8 +10,7 @@ import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.ConnectionType;
 import org.bulatnig.smpp.session.PDUHandler;
-import org.bulatnig.smpp.session.SMPPSession;
-import org.bulatnig.smpp.session.SyncSMPPSession;
+import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.util.SMPPByteBuffer;
 
 import java.io.IOException;
@@ -86,34 +86,34 @@ public class SessionBindTest implements PDUHandler {
 
     @Test
     public void bindReceiverTest() throws SMPPException {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT1).connectionType(ConnectionType.RECEIVER).
+        Session session = new SyncSession.Builder("localhost", PORT1).connectionType(ConnectionType.RECEIVER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
         session.stop();
     }
 
     @Test
     public void bindTransceiverTest() throws SMPPException {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT2).
+        Session session = new SyncSession.Builder("localhost", PORT2).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
         session.stop();
     }
 
     @Test
     public void bindTransmitterTest() throws SMPPException {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT1).connectionType(ConnectionType.TRANSMITTER).
+        Session session = new SyncSession.Builder("localhost", PORT1).connectionType(ConnectionType.TRANSMITTER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
         session.stop();
     }
 
     @Test(expected = SMPPException.class)
     public void bindFailedTest() throws SMPPException {
-        new SyncSMPPSession.Builder("localhost", PORT4).connectionType(ConnectionType.TRANSMITTER).
+        new SyncSession.Builder("localhost", PORT4).connectionType(ConnectionType.TRANSMITTER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
     }
 
     @Test(expected = SMPPException.class)
     public void bindFailedTest2() throws SMPPException {
-        new SyncSMPPSession.Builder("localhost", PORT5).connectionType(ConnectionType.TRANSMITTER).
+        new SyncSession.Builder("localhost", PORT5).connectionType(ConnectionType.TRANSMITTER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
     }
 

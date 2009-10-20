@@ -3,11 +3,12 @@ package examples;
 import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.*;
+import org.bulatnig.smpp.session.impl.SyncSession;
 
 import java.io.IOException;
 
 /**
- * SyncSMPPSession usage example.
+ * SyncSession usage example.
  * <p/>
  * User: Bulat Nigmatullin
  * Date: Apr 7, 2009
@@ -17,7 +18,7 @@ public class SessionExample {
 
     public void run() {
         try {
-            SMPPSession session = new SyncSMPPSession.Builder("smschost", 9999).
+            Session session = new SyncSession.Builder("smschost", 9999).
                     systemId("login").password("pass").
                     addrTon(TON.INTERNATIONAL).addrNpi(NPI.ISDN).
                     pduHandler(new PDUHandlerExampleImpl()).

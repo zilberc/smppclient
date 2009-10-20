@@ -1,7 +1,7 @@
 package org.bulatnig.smpp.session;
 
 /**
- * SMPPSession state changes listener.
+ * Session state changes listener.
  * <p/>
  * User: Bulat Nigmatullin
  * Date: Apr 5, 2009
@@ -14,6 +14,6 @@ public interface SMPPSessionStateListener {
      *
      * @param state     new session state
      */
-    public void stateChanged(SMPPSessionState state);
+    void stateChanged(SMPPSessionState state);
 
 }

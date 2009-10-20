@@ -4,12 +4,10 @@ import org.bulatnig.smpp.SMPPException;
 
 /**
  * No response on sent message from SMSC received.
- * <p/>
- * User: Bulat Nigmatullin
- * Date: Nov 5, 2008
- * Time: 9:24:09 AM
+ *
+ * @author Bulat nigmatullin
  */
-public class NoResponseException extends SMPPException {
+public final class NoResponseException extends SMPPException {
 
     public NoResponseException() {
         super();

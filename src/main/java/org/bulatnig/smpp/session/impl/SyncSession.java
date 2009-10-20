@@ -1,9 +1,10 @@
-package org.bulatnig.smpp.session;
+package org.bulatnig.smpp.session.impl;
 
 import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.net.impl.TCPConnection;
 import org.bulatnig.smpp.pdu.*;
+import org.bulatnig.smpp.session.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +30,12 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Bulat Nigmatullin
  */
-public class SyncSMPPSession implements SMPPSession {
+public final class SyncSession implements Session {
 
     /**
      * Logger for this class and subclasses
      */
-    static final Logger logger = LoggerFactory.getLogger(SyncSMPPSession.class);
+    static final Logger logger = LoggerFactory.getLogger(SyncSession.class);
 
     /**
      * Default connection type.
@@ -107,7 +108,7 @@ public class SyncSMPPSession implements SMPPSession {
      */
     private PDUHandler pduHandler;
     /**
-     * SMPPSession state listener.
+     * Session state listener.
      */
     private SMPPSessionStateListener stateListener;
 
@@ -139,7 +140,7 @@ public class SyncSMPPSession implements SMPPSession {
      */
     protected boolean work = true;
 
-    private SyncSMPPSession(Builder builder) throws SMPPException {
+    private SyncSession(Builder builder) throws SMPPException {
         this.host = builder.host;
         this.port = builder.port;
         this.connection = builder.connection;
@@ -227,8 +228,8 @@ public class SyncSMPPSession implements SMPPSession {
             return this;
         }
 
-        public SyncSMPPSession build() throws SMPPException {
-            return new SyncSMPPSession(this);
+        public SyncSession build() throws SMPPException {
+            return new SyncSession(this);
         }
 
     }

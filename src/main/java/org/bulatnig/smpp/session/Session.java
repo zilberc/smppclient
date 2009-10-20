@@ -13,12 +13,12 @@ import java.io.IOException;
  *
  * @author Bulat Nigmatullin
  */
-public interface SMPPSession {
+public interface Session {
 
     /**
      * Stop interaction with SMSC.
      */
-    public void stop();
+    void stop();
     
     /**
      * Sends PDU to SMSC. Method blocks and returns SMSC response.
@@ -29,36 +29,36 @@ public interface SMPPSession {
      * @throws PDUException PDU parsing error
      * @throws NoResponseException response PDU not received in defined amount of time
      */
-    public PDU send(PDU pdu) throws IOException, PDUException, NoResponseException;
+    PDU send(PDU pdu) throws IOException, PDUException, NoResponseException;
 
     /**
      * Sets PDU handler for this SMPP session.
      *
      * @param pduHandler user PDUHandler interface implementation
      */
-    public void setPDUHandler(PDUHandler pduHandler);
+    void setPDUHandler(PDUHandler pduHandler);
 
     /**
      * Listens to SMPP session state changes such as disconnect or stop.
      *
      * @param listener  user SMPPSessionStateListener interface implementation
      */
-    public void setSMPPSessionStateListener(SMPPSessionStateListener listener);
+    void setSMPPSessionStateListener(SMPPSessionStateListener listener);
 
-    public ConnectionType getConnType();
+    ConnectionType getConnType();
 
-    public String getSystemId();
+    String getSystemId();
 
-    public String getPassword();
+    String getPassword();
 
-    public String getSystemType();
+    String getSystemType();
 
-    public short getInterfaceVersion();
+    short getInterfaceVersion();
 
-    public TON getAddrTon();
+    TON getAddrTon();
 
-    public NPI getAddrNpi();
+    NPI getAddrNpi();
 
-    public String getAddressRange();
+    String getAddressRange();
 
 }

@@ -1,6 +1,7 @@
 package org.bulatnig.smpp.session;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class SessionConnectTest implements PDUHandler {
     public void noResponseTest() throws SMPPException, Exception {
         long started = System.currentTimeMillis();
         try {
-            new SyncSMPPSession.Builder("localhost", PORT1).systemId("client").
+            new SyncSession.Builder("localhost", PORT1).systemId("client").
                     password("pass").systemType("test").pduHandler(this).build();
         } catch (SMPPException e) {
             if (System.currentTimeMillis() - started < 25000) {

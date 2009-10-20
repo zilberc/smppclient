@@ -1,13 +1,13 @@
 package org.bulatnig.smpp.session;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.PDUHandler;
-import org.bulatnig.smpp.session.SMPPSession;
-import org.bulatnig.smpp.session.SyncSMPPSession;
+import org.bulatnig.smpp.session.Session;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,7 +57,7 @@ public class SessionEnquireLinkTest implements PDUHandler {
 
     @Test(timeout = 45000)
     public void enquireLinkTimerTest() throws Exception {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT1).systemId("client").
+        Session session = new SyncSession.Builder("localhost", PORT1).systemId("client").
                 password("pass").systemType("test").pduHandler(this).build();
         Thread.sleep(40 * 1000);
         session.send(new SubmitSM());
@@ -66,7 +66,7 @@ public class SessionEnquireLinkTest implements PDUHandler {
 
     @Test(timeout = 45000)
     public void enquireLinkVerifTest() throws Exception {
-        SMPPSession session = new SyncSMPPSession.Builder("localhost", PORT2).systemId("client").
+        Session session = new SyncSession.Builder("localhost", PORT2).systemId("client").
                 password("pass").systemType("test").pduHandler(this).build();
         Thread.sleep(40 * 1000);
         session.send(new SubmitSM());
