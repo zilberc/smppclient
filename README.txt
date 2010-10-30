@@ -9,4 +9,4 @@ Features:
 
 
 Notice: There are a lot of junit tests, so library build may take up to 5 minutes.
-Notice: Some javadoc comments still in Russia, but I'll fix this soon.
+Notice: Some javadoc comments still in Russian, but I'll fix this soon.
