@@ -2,9 +2,10 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class SourceNetworkTypeTest {
@@ -16,7 +17,7 @@ public class SourceNetworkTypeTest {
 	
 	@Test
 	public void testSNTConstructor1() throws WrongParameterException, TLVException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x04);
@@ -24,12 +25,12 @@ public class SourceNetworkTypeTest {
 		assertEquals(ParameterTag.SOURCE_NETWORK_TYPE, snt.getTag());
 		assertEquals(5, snt.getBytes().length);
 		assertEquals(NetworkType.PDC, snt.getValue());
-		assertEquals("000e000104", new SMPPByteBuffer(snt.getBytes()).getHexDump());
+		assertEquals("000e000104", new SmppByteBuffer(snt.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testSNTConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
@@ -38,7 +39,7 @@ public class SourceNetworkTypeTest {
 	
 	@Test(expected= TLVException.class)
 	public void testSNTConstructor3() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
@@ -51,12 +52,12 @@ public class SourceNetworkTypeTest {
 		assertEquals(ParameterTag.SOURCE_NETWORK_TYPE, snt.getTag());
 		assertEquals(5, snt.getBytes().length);
 		assertEquals(NetworkType.PDC, snt.getValue());
-		assertEquals("000e000104", new SMPPByteBuffer(snt.getBytes()).getHexDump());
+		assertEquals("000e000104", new SmppByteBuffer(snt.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testSNTConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0014);
@@ -65,7 +66,7 @@ public class SourceNetworkTypeTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testSNTConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
@@ -74,7 +75,7 @@ public class SourceNetworkTypeTest {
 	
 	@Test
 	public void testSNTConstructor7() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x14);
@@ -83,7 +84,7 @@ public class SourceNetworkTypeTest {
 		assertEquals(5, snt.getBytes().length);
 		assertEquals(NetworkType.RESERVED, snt.getValue());
 		assertEquals(20, snt.getIntValue());
-		assertEquals("000e000114", new SMPPByteBuffer(snt.getBytes()).getHexDump());
+		assertEquals("000e000114", new SmppByteBuffer(snt.getBytes()).getHexDump());
 	}
 
 }

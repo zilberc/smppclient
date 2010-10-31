@@ -6,7 +6,7 @@ import org.bulatnig.smpp.pdu.tlv.MessageStateTlv;
 import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVNotFoundException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class MessageStateTLVTest {
 	
 	@Test
 	public void testMSConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x08);
@@ -28,12 +28,12 @@ public class MessageStateTLVTest {
 		assertEquals(ParameterTag.MESSAGE_STATE, das.getTag());
 		assertEquals(5, das.getBytes().length);
 		assertEquals(MessageState.REJECTED, das.getValue());
-		assertEquals("0427000108", new SMPPByteBuffer(das.getBytes()).getHexDump());
+		assertEquals("0427000108", new SmppByteBuffer(das.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testMSConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
@@ -42,7 +42,7 @@ public class MessageStateTLVTest {
 	
 	@Test(expected= TLVException.class)
 	public void testMSConstructor3() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
@@ -55,12 +55,12 @@ public class MessageStateTLVTest {
 		assertEquals(ParameterTag.MESSAGE_STATE, das.getTag());
 		assertEquals(5, das.getBytes().length);
 		assertEquals(MessageState.REJECTED, das.getValue());
-		assertEquals("0427000108", new SMPPByteBuffer(das.getBytes()).getHexDump());
+		assertEquals("0427000108", new SmppByteBuffer(das.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testSASConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x0002);
@@ -69,7 +69,7 @@ public class MessageStateTLVTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testMSConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
@@ -78,7 +78,7 @@ public class MessageStateTLVTest {
 	
 	@Test(expected=TLVException.class)
 	public void testMSConstructor7() throws WrongParameterException, TLVException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);

@@ -1,11 +1,11 @@
 package org.bulatnig.smpp.session;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.pdu.*;
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class  SessionSendTest implements PDUHandler {
     }
 
     @Test
-    public void successfulSendTest() throws IOException, SMPPException {
+    public void successfulSendTest() throws IOException, SmppException {
         Session session = new SyncSession.Builder("localhost", PORT1).systemId("client").
                 password("pass").systemType("test").pduHandler(this).build();
         session.send(new SubmitSM());
@@ -75,7 +75,7 @@ public class  SessionSendTest implements PDUHandler {
     }
 
     @Test(expected = NoResponseException.class)
-    public void wrongSequenceNumberTest() throws IOException, SMPPException {
+    public void wrongSequenceNumberTest() throws IOException, SmppException {
         Session session = new SyncSession.Builder("localhost", PORT2).systemId("client").
                 password("pass").systemType("test").pduHandler(this).build();
         session.send(new SubmitSM());
@@ -83,7 +83,7 @@ public class  SessionSendTest implements PDUHandler {
     }
 
     @Test(expected = NoResponseException.class)
-    public void wrongPDUTest() throws IOException,SMPPException {
+    public void wrongPDUTest() throws IOException,SmppException {
         Session session = new SyncSession.Builder("localhost", PORT3).systemId("client").
                 password("pass").systemType("test").pduHandler(this).build();
         session.send(new SubmitSM());

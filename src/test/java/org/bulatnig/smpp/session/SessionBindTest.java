@@ -1,17 +1,14 @@
 package org.bulatnig.smpp.session;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.session.impl.SyncSession;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.session.ConnectionType;
-import org.bulatnig.smpp.session.PDUHandler;
-import org.bulatnig.smpp.session.Session;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,34 +82,34 @@ public class SessionBindTest implements PDUHandler {
     }
 
     @Test
-    public void bindReceiverTest() throws SMPPException {
+    public void bindReceiverTest() throws SmppException {
         Session session = new SyncSession.Builder("localhost", PORT1).connectionType(ConnectionType.RECEIVER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
         session.stop();
     }
 
     @Test
-    public void bindTransceiverTest() throws SMPPException {
+    public void bindTransceiverTest() throws SmppException {
         Session session = new SyncSession.Builder("localhost", PORT2).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
         session.stop();
     }
 
     @Test
-    public void bindTransmitterTest() throws SMPPException {
+    public void bindTransmitterTest() throws SmppException {
         Session session = new SyncSession.Builder("localhost", PORT1).connectionType(ConnectionType.TRANSMITTER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
         session.stop();
     }
 
-    @Test(expected = SMPPException.class)
-    public void bindFailedTest() throws SMPPException {
+    @Test(expected = SmppException.class)
+    public void bindFailedTest() throws SmppException {
         new SyncSession.Builder("localhost", PORT4).connectionType(ConnectionType.TRANSMITTER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
     }
 
-    @Test(expected = SMPPException.class)
-    public void bindFailedTest2() throws SMPPException {
+    @Test(expected = SmppException.class)
+    public void bindFailedTest2() throws SmppException {
         new SyncSession.Builder("localhost", PORT5).connectionType(ConnectionType.TRANSMITTER).
                 systemId("client").password("pass").systemType("test").pduHandler(this).build();
     }
@@ -149,18 +146,18 @@ public class SessionBindTest implements PDUHandler {
                     pdu = factory.parsePDU(buffer);
                     switch (pdu.getCommandId()) {
                         case BIND_RECEIVER:
-                            assertEquals("00000025000000010000000000000001636c69656e74007061737300746573740034000000", new SMPPByteBuffer(pdu.getBytes()).getHexDump());
+                            assertEquals("00000025000000010000000000000001636c69656e74007061737300746573740034000000", new SmppByteBuffer(pdu.getBytes()).getHexDump());
                             break;
                         case BIND_TRANSCEIVER:
-                            assertEquals("00000025000000090000000000000001636c69656e74007061737300746573740034000000", new SMPPByteBuffer(pdu.getBytes()).getHexDump());
+                            assertEquals("00000025000000090000000000000001636c69656e74007061737300746573740034000000", new SmppByteBuffer(pdu.getBytes()).getHexDump());
                             break;
                         case BIND_TRANSMITTER:
-                            assertEquals("00000025000000020000000000000001636c69656e74007061737300746573740034000000", new SMPPByteBuffer(pdu.getBytes()).getHexDump());
+                            assertEquals("00000025000000020000000000000001636c69656e74007061737300746573740034000000", new SmppByteBuffer(pdu.getBytes()).getHexDump());
                             break;
                     }
                     out.write(((Responsable) pdu).getResponse().getBytes());
                     in.read(buffer2);
-                    assertEquals("00000010000000060000000000000002", new SMPPByteBuffer(buffer2).getHexDump());
+                    assertEquals("00000010000000060000000000000002", new SmppByteBuffer(buffer2).getHexDump());
                     out.close();
                     in.close();
                     client.close();

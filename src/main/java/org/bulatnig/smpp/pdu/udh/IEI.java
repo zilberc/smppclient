@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu.udh;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -37,7 +37,7 @@ public class IEI extends UDH {
             throw new ClassCastException();
         }
         if (TOTAL_LENGTH == bytes.length) {
-            SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+            SmppByteBuffer bb = new SmppByteBuffer(bytes);
             try {
                 if (IEIL == bb.removeByte()) {
                     msgRefNum = bb.removeByte();
@@ -54,7 +54,7 @@ public class IEI extends UDH {
 
     @Override
     protected byte[] getBodyBytes() throws UDHException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendByte(IEIL);
         } catch (WrongParameterException e) {

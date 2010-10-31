@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -113,7 +113,7 @@ public class CancelSM extends PDU implements Responsable {
         if (getCommandId() != CommandId.CANCEL_SM) {
             throw new ClassCastException();
         }
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             serviceType = bb.removeCString();
             if (serviceType.length() > MAX_SERVICETYPE_LENGTH) {
@@ -177,7 +177,7 @@ public class CancelSM extends PDU implements Responsable {
      */
     @Override
     protected final byte[] getBodyBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         if (serviceType != null && serviceType.length() > MAX_SERVICETYPE_LENGTH) {
             throw new PDUException("serviceType field is too long");
         }

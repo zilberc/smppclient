@@ -2,9 +2,10 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class SourceAddrSubunitTest {
@@ -16,7 +17,7 @@ public class SourceAddrSubunitTest {
 	
 	@Test
 	public void testSASConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x04);
@@ -24,12 +25,12 @@ public class SourceAddrSubunitTest {
 		assertEquals(ParameterTag.SOURCE_ADDR_SUBUNIT, sas.getTag());
 		assertEquals(5, sas.getBytes().length);
 		assertEquals(AddrSubunit.EXTERNAL_UNIT_1, sas.getValue());
-		assertEquals("000d000104", new SMPPByteBuffer(sas.getBytes()).getHexDump());
+		assertEquals("000d000104", new SmppByteBuffer(sas.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testSASConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
@@ -38,7 +39,7 @@ public class SourceAddrSubunitTest {
 	
 	@Test(expected= TLVException.class)
 	public void testSASConstructor3() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
@@ -51,12 +52,12 @@ public class SourceAddrSubunitTest {
 		assertEquals(ParameterTag.SOURCE_ADDR_SUBUNIT, sas.getTag());
 		assertEquals(5, sas.getBytes().length);
 		assertEquals(AddrSubunit.MOBILE_EQUIPMENT, sas.getValue());
-		assertEquals("000d000102", new SMPPByteBuffer(sas.getBytes()).getHexDump());
+		assertEquals("000d000102", new SmppByteBuffer(sas.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testSASConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x0012);
@@ -65,7 +66,7 @@ public class SourceAddrSubunitTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testSASConstructor6() throws WrongParameterException, TLVException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
@@ -74,7 +75,7 @@ public class SourceAddrSubunitTest {
 	
 	@Test
 	public void testSASConstructor7() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
@@ -83,7 +84,7 @@ public class SourceAddrSubunitTest {
 		assertEquals(5, sas.getBytes().length);
 		assertEquals(AddrSubunit.RESERVED, sas.getValue());
 		assertEquals((short) 18, sas.getIntValue());
-		assertEquals("000d000112", new SMPPByteBuffer(sas.getBytes()).getHexDump());
+		assertEquals("000d000112", new SmppByteBuffer(sas.getBytes()).getHexDump());
 	}
 	
 }

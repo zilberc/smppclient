@@ -3,7 +3,7 @@ package org.bulatnig.smpp.pdu.tlv;
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.pdu.SmscEsmClass;
 import org.bulatnig.smpp.pdu.udh.UDH;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
@@ -48,7 +48,7 @@ public class MessagePayload extends TLV {
         if (getTag() != ParameterTag.MESSAGE_PAYLOAD) {
             throw new ClassCastException();
         }
-        SMPPByteBuffer byteBuffer = new SMPPByteBuffer(bytes);
+        SmppByteBuffer byteBuffer = new SmppByteBuffer(bytes);
         if (esmClass instanceof SmscEsmClass &&
                 SmscEsmClass.SmscGSMFeatures.UDHI_INDICATOR == ((SmscEsmClass)esmClass).getFeatures()) {
             udh = parseUDH(byteBuffer);
@@ -62,7 +62,7 @@ public class MessagePayload extends TLV {
 
     @Override
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendString(value, getCharsetName(dataCoding));
         return sbb.getBuffer();
     }

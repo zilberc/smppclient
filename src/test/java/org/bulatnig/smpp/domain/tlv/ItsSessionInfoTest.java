@@ -2,12 +2,13 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.ItsSessionInfo;
 import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVNotFoundException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class ItsSessionInfoTest {
@@ -19,7 +20,7 @@ public class ItsSessionInfoTest {
 	
 	@Test
 	public void testISIConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x1383);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
@@ -27,12 +28,12 @@ public class ItsSessionInfoTest {
 		assertEquals(ParameterTag.ITS_SESSION_INFO, isi.getTag());
 		assertEquals(6, isi.getBytes().length);
 		assertEquals(4369, isi.getValue());
-		assertEquals("138300021111", new SMPPByteBuffer(isi.getBytes()).getHexDump());
+		assertEquals("138300021111", new SmppByteBuffer(isi.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testISIConstructor2() throws WrongParameterException, TLVException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
@@ -41,7 +42,7 @@ public class ItsSessionInfoTest {
 	
 	@Test(expected= TLVException.class)
 	public void testISIConstructor3() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x1383);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x1111);
@@ -54,12 +55,12 @@ public class ItsSessionInfoTest {
 		assertEquals(ParameterTag.ITS_SESSION_INFO, isi.getTag());
 		assertEquals(6, isi.getBytes().length);
 		assertEquals(112, isi.getValue());
-		assertEquals("138300020070", new SMPPByteBuffer(isi.getBytes()).getHexDump());
+		assertEquals("138300020070", new SmppByteBuffer(isi.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testISIConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x1383);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
@@ -68,7 +69,7 @@ public class ItsSessionInfoTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testISIConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x7fff);

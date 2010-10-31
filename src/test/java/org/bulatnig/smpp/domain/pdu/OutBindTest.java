@@ -2,12 +2,13 @@ package org.bulatnig.smpp.domain.pdu;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.OutBind;
 import org.bulatnig.smpp.pdu.PDUException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -26,7 +27,7 @@ public class OutBindTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(32L);
         sbb.appendInt(11L);
         sbb.appendInt(0);
@@ -51,7 +52,7 @@ public class OutBindTest {
         ob.setSequenceNumber(14);
         ob.setSystemId("");
         ob.setPassword(null);
-        assertEquals("000000120000000b000000fe0000000e0000", new SMPPByteBuffer(ob.getBytes()).getHexDump());
+        assertEquals("000000120000000b000000fe0000000e0000", new SmppByteBuffer(ob.getBytes()).getHexDump());
     }
 
 }

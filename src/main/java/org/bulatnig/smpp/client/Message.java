@@ -1,7 +1,5 @@
 package org.bulatnig.smpp.client;
 
-import org.bulatnig.smpp.SMPPObject;
-
 /**
  * SMS сообщениe.
  *
@@ -9,7 +7,7 @@ import org.bulatnig.smpp.SMPPObject;
  * Date: 18.07.2008
  * Time: 15:49:34
  */
-public class Message extends SMPPObject {
+public class Message {
 
     /**
      * Отправитель.

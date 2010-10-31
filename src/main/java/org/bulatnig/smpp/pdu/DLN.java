@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.SMPPObject;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
@@ -10,7 +9,7 @@ import org.bulatnig.smpp.util.WrongLengthException;
  * @author Bulat Nigmatullin
  * @see DestAddress
  */
-public class DLN extends SMPPObject {
+public class DLN {
 
     /**
      * Максимальная длина messageId поля.
@@ -35,7 +34,7 @@ public class DLN extends SMPPObject {
      * @throws PDUException ошибка обработки PDU
      */
     public DLN(final byte[] bytes) throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             dlName = bb.removeCString();
         } catch (WrongLengthException e) {
@@ -51,7 +50,7 @@ public class DLN extends SMPPObject {
      * @throws PDUException ошибка обработки PDU
      */
     protected final byte[] getBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         if (dlName != null && dlName.length() > MAX_DLNAME_LENGTH) {
             throw new PDUException("dlName field is invalid");
         }

@@ -3,12 +3,10 @@ package org.bulatnig.smpp.client;
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
-import org.bulatnig.smpp.client.MessageHandler;
-import org.bulatnig.smpp.client.ProcessingFailedException;
-import org.bulatnig.smpp.client.Message;
 import org.bulatnig.smpp.pdu.DeliverSM;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 
 /**
  * Comment here.
@@ -39,7 +37,7 @@ public class MessageHandlerTest {
         // 050003ef bfbd0201 59612c70 6f207072 61766465 20676f76 6f727961 2c6e6520 64796d61 79752c34 746f206e 61646f20 70727961 6d206973 6b617427
         // 214d6f6a 65742065 746f2062 6f6e616c 276e6f2c 6e6f2079 6120646f 20736978 20706f72 20766572 79752c34 746f2034 79767374 7661206b 616b2073
         // 6e656720 6e612067 6f6c6f76 7920646f 6c6a6e69 20737661 6c697427 73796121 45746f20 74616b20 72
-        SMPPByteBuffer sbb1 = new SMPPByteBuffer();
+        SmppByteBuffer sbb1 = new SmppByteBuffer();
         sbb1.appendInt(0x000000daL);
         sbb1.appendInt(0x00000005L);
         sbb1.appendInt(0x00000000L);
@@ -108,7 +106,7 @@ public class MessageHandlerTest {
         // 00000095 00000005 00000000 04b7d191 00 01 01 373930393939383537373700 03 01 3139353023323039323930333800 40 00 00 00 00 00 00 00 00 5c
         // 050003ef bfbd0202 6f6d616e 7469346e 6f213a2d 29412070 6f6b6120 6e61646f 20707269 6e696d61 74272076 7365206b 616b2065
         // 73742721 45746f20 73796427 62612154 616b2034 746f2067 796c7961 656d213a 2d503b2d 293a2d2a
-        SMPPByteBuffer sbb2 = new SMPPByteBuffer();
+        SmppByteBuffer sbb2 = new SmppByteBuffer();
         sbb2.appendInt(0x00000095L);
         sbb2.appendInt(0x00000005L);
         sbb2.appendInt(0x00000000L);

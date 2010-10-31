@@ -2,9 +2,10 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class MsAvailabilityStatusTest {
@@ -16,7 +17,7 @@ public class MsAvailabilityStatusTest {
 	
 	@Test
 	public void testMASConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x01);
@@ -24,12 +25,12 @@ public class MsAvailabilityStatusTest {
 		assertEquals(ParameterTag.MS_AVAILABILITY_STATUS, mas.getTag());
 		assertEquals(5, mas.getBytes().length);
 		assertEquals(AvailabilityStatus.DENIED, mas.getValue());
-		assertEquals("0422000101", new SMPPByteBuffer(mas.getBytes()).getHexDump());
+		assertEquals("0422000101", new SmppByteBuffer(mas.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testMASConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
@@ -38,7 +39,7 @@ public class MsAvailabilityStatusTest {
 	
 	@Test(expected= TLVException.class)
 	public void testMASConstructor3() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
@@ -51,12 +52,12 @@ public class MsAvailabilityStatusTest {
 		assertEquals(ParameterTag.MS_AVAILABILITY_STATUS, mas.getTag());
 		assertEquals(5, mas.getBytes().length);
 		assertEquals(AvailabilityStatus.DENIED, mas.getValue());
-		assertEquals("0422000101", new SMPPByteBuffer(mas.getBytes()).getHexDump());
+		assertEquals("0422000101", new SmppByteBuffer(mas.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testSASConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0002);
@@ -65,7 +66,7 @@ public class MsAvailabilityStatusTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testMASConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
@@ -74,7 +75,7 @@ public class MsAvailabilityStatusTest {
 	
 	@Test
 	public void testMASConstructor7() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
@@ -83,7 +84,7 @@ public class MsAvailabilityStatusTest {
 		assertEquals(5, mas.getBytes().length);
 		assertEquals(AvailabilityStatus.RESERVED, mas.getValue());
 		assertEquals((short) 18, mas.getIntValue());
-		assertEquals("0422000112", new SMPPByteBuffer(mas.getBytes()).getHexDump());
+		assertEquals("0422000112", new SmppByteBuffer(mas.getBytes()).getHexDump());
 	}
 
 }

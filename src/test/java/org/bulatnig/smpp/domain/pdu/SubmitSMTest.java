@@ -4,7 +4,7 @@ import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -23,7 +23,7 @@ public class SubmitSMTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(82);
         sbb.appendInt(4);
         sbb.appendInt(21);
@@ -78,6 +78,6 @@ public class SubmitSMTest {
     public void objectToBytes() throws PDUException {
         SubmitSM submit = new SubmitSM();
         assertEquals("000000210000000400000000000000000000000000000000000000000000000000",
-                new SMPPByteBuffer(submit.getBytes()).getHexDump());
+                new SmppByteBuffer(submit.getBytes()).getHexDump());
     }
 }

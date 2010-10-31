@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.client;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 
 /**
  * Interaction with SMSC is broken. This is critical error.
@@ -10,7 +10,7 @@ import org.bulatnig.smpp.SMPPException;
  * Date: 22.04.2009
  * Time: 18:42:48
  */
-public class ProtocolException extends SMPPException {
+public class ProtocolException extends SmppException {
 
     public ProtocolException() {
         super();

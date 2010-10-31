@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu.tlv;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 import org.bulatnig.smpp.pdu.EsmClass;
@@ -48,7 +48,7 @@ public class DestinationPort extends TLV {
         }
         if (bytes.length == LENGTH) {
             try {
-                value = new SMPPByteBuffer(bytes).removeShort();
+                value = new SmppByteBuffer(bytes).removeShort();
             } catch (WrongLengthException e) {
                 throw new TLVException("Buffer error during parsing value", e);
             }
@@ -59,7 +59,7 @@ public class DestinationPort extends TLV {
 
     @Override
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         try {
             sbb.appendShort(value);
         } catch (WrongParameterException e) {

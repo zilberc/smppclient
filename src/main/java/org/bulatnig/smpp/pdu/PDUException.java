@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 
 
 /**
@@ -9,7 +9,7 @@ import org.bulatnig.smpp.SMPPException;
  * @author Bulat Nigmatullin
  *
  */
-public class PDUException extends SMPPException {
+public class PDUException extends SmppException {
 
     public PDUException() {
         super();

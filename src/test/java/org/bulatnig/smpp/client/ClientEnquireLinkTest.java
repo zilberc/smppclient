@@ -6,7 +6,6 @@ import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.bulatnig.smpp.client.Message;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.ConnectionType;
 
@@ -66,7 +65,7 @@ public class ClientEnquireLinkTest extends MessageHandler {
                 addrTon(TON.UNKNOWN).
                 addrNpi(NPI.UNKNOWN).
                 build();
-        SMPPClient client = new SMPPClientImpl(session, this, false);
+        SmppClient client = new SmppClientImpl(session, this, false);
         Thread.sleep(40 * 1000);
         client.send(new Message("", "", ""));
         client.stop();
@@ -83,7 +82,7 @@ public class ClientEnquireLinkTest extends MessageHandler {
                 addrTon(TON.UNKNOWN).
                 addrNpi(NPI.UNKNOWN).
                 build();
-        SMPPClient client = new SMPPClientImpl(session, this, false);
+        SmppClient client = new SmppClientImpl(session, this, false);
         Thread.sleep(40 * 1000);
         client.send(new Message("", "", ""));
         client.stop();

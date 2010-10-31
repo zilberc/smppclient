@@ -1,12 +1,12 @@
 package org.bulatnig.smpp.net.impl;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.pdu.PDU;
 import org.bulatnig.smpp.pdu.PDUException;
 import org.bulatnig.smpp.pdu.PDUFactory;
 import org.bulatnig.smpp.pdu.PDUFactoryImpl;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public final class TCPConnection implements Connection {
 
     private InputStream in;
     private OutputStream out;
-    private SMPPByteBuffer sbb = new SMPPByteBuffer();
+    private SmppByteBuffer sbb = new SmppByteBuffer();
     /**
      * PDUFactory actually handles pdu creation from bytes.
      */
@@ -161,22 +161,22 @@ public final class TCPConnection implements Connection {
                 pduLength = sbb.readInt();
                 if (pduLength < PDU.HEADER_LENGTH || pduLength > maxAcceptedPduLength) {
                     logger.warn("Wrong length PDU received. Buffer hex dump: {}", sbb.getHexDump());
-                    // there is no certainty that all SMPPByteBuffer contain correct values, so invalidate it
-                    sbb = new SMPPByteBuffer();
+                    // there is no certainty that all SmppByteBuffer contain correct values, so invalidate it
+                    sbb = new SmppByteBuffer();
                     break;
                 } else if (pduLength <= sbb.length()) {
                     try {
                         buffer = sbb.removeBytes((int) pduLength).getBuffer();
-                    } catch (SMPPException e) {
-                        sbb = new SMPPByteBuffer();
+                    } catch (SmppException e) {
+                        sbb = new SmppByteBuffer();
                         throw new IOException("FATAL ERROR while removing bytes from buffer", e);
                     }
                     try {
                         pdu = factory.parsePDU(buffer);
-                        logger.info(">>> {}", new SMPPByteBuffer(pdu.getBytes()).getHexDump());
+                        logger.info(">>> {}", new SmppByteBuffer(pdu.getBytes()).getHexDump());
                         pdus.add(pdu);
                     } catch (PDUException e) {
-                        logger.warn("PDU parsing failed. Hexdump: {}", new SMPPByteBuffer(buffer).getHexDump());
+                        logger.warn("PDU parsing failed. Hexdump: {}", new SmppByteBuffer(buffer).getHexDump());
                     }
                 } else {
                     // bytes not enough to assemble full PDU, retain them to the next read call
@@ -194,7 +194,7 @@ public final class TCPConnection implements Connection {
      */
     public void write(PDU pdu) throws IOException, PDUException {
         out.write(pdu.getBytes());
-        logger.info("<<< {}", new SMPPByteBuffer(pdu.getBytes()).getHexDump());
+        logger.info("<<< {}", new SmppByteBuffer(pdu.getBytes()).getHexDump());
     }
 
     public String getHost() {

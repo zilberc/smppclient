@@ -7,7 +7,7 @@ package org.bulatnig.smpp.session;
  * Date: 06.07.2008
  * Time: 19:28:27
  */
-public enum SMPPSessionState {
+public enum SmppSessionState {
     /**
      * Connected. All ok.
      */

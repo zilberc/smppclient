@@ -1,6 +1,5 @@
 package org.bulatnig.smpp.client;
 
-import org.bulatnig.smpp.SMPPObject;
 import org.bulatnig.smpp.pdu.CommandStatus;
 
 /**
@@ -9,7 +8,7 @@ import org.bulatnig.smpp.pdu.CommandStatus;
  * @author Bulat Nigmatullin
  * 
  */
-public class PDUError extends SMPPObject {
+public class PDUError {
 
 	/**
 	 * Код ошибки.

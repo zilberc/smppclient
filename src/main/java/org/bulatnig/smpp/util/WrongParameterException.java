@@ -7,7 +7,7 @@ package org.bulatnig.smpp.util;
  * Date: 08.06.2008
  * Time: 18:44:03
  */
-public final class WrongParameterException extends SMPPByteBufferException {
+public final class WrongParameterException extends SmppByteBufferException {
 
     WrongParameterException() {
         super();

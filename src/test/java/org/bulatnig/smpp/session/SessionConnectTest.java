@@ -1,11 +1,11 @@
 package org.bulatnig.smpp.session;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.pdu.PDU;
 
 import java.io.IOException;
@@ -50,13 +50,13 @@ public class SessionConnectTest implements PDUHandler {
         return null;
     }
 
-    @Test(expected = SMPPException.class, timeout = 26000)
-    public void noResponseTest() throws SMPPException, Exception {
+    @Test(expected = SmppException.class, timeout = 26000)
+    public void noResponseTest() throws SmppException, Exception {
         long started = System.currentTimeMillis();
         try {
             new SyncSession.Builder("localhost", PORT1).systemId("client").
                     password("pass").systemType("test").pduHandler(this).build();
-        } catch (SMPPException e) {
+        } catch (SmppException e) {
             if (System.currentTimeMillis() - started < 25000) {
                 throw new Exception("Wrong timeouts!!! Fix this!", e);
             } else {

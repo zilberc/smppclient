@@ -7,7 +7,7 @@ import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.GenericNack;
 import org.bulatnig.smpp.pdu.PDUException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -26,7 +26,7 @@ public class GenericNackTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(16L);
         sbb.appendInt(2147483648L);
         sbb.appendInt(88);
@@ -45,7 +45,7 @@ public class GenericNackTest {
         GenericNack gn = new GenericNack();
         gn.setCommandStatus(CommandStatus.ESME_RSUBMITFAIL);
         gn.setSequenceNumber(0);
-        assertEquals("00000010800000000000004500000000", new SMPPByteBuffer(gn.getBytes()).getHexDump());
+        assertEquals("00000010800000000000004500000000", new SmppByteBuffer(gn.getBytes()).getHexDump());
     }
 
 }

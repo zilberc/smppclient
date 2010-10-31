@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu.udh;
 
-import org.bulatnig.smpp.SMPPObject;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -12,7 +11,7 @@ import org.bulatnig.smpp.util.WrongParameterException;
  * Date: 04.05.2009
  * Time: 15:22:23
  */
-public abstract class UDH extends SMPPObject {
+public abstract class UDH {
 
     /**
      * udhLength field length + udhType field length = 2 octets
@@ -36,7 +35,7 @@ public abstract class UDH extends SMPPObject {
     }
 
     protected UDH(byte[] bytes) throws UDHException {
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             parseHeader(bb.removeBytes(HEADER_LENGTH));
         } catch (WrongParameterException e) {
@@ -51,7 +50,7 @@ public abstract class UDH extends SMPPObject {
         }
     }
 
-    private void parseHeader(final SMPPByteBuffer bb) throws UDHException {
+    private void parseHeader(final SmppByteBuffer bb) throws UDHException {
         try {
             length = (short) (bb.removeByte() + 1);
             type = helper.getUDHType(bb.removeByte());
@@ -66,7 +65,7 @@ public abstract class UDH extends SMPPObject {
         byte[] body = getBodyBytes();
         if (body.length > 0) {
             length = (short) (HEADER_LENGTH + body.length);
-            SMPPByteBuffer bb = getHeader();
+            SmppByteBuffer bb = getHeader();
             bb.appendBytes(body, body.length);
             return bb.getBuffer();
         } else {
@@ -74,8 +73,8 @@ public abstract class UDH extends SMPPObject {
         }
     }
 
-    private SMPPByteBuffer getHeader() throws UDHException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+    private SmppByteBuffer getHeader() throws UDHException {
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendByte(length);
         } catch (WrongParameterException e) {

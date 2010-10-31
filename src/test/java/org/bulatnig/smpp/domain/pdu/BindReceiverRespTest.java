@@ -2,13 +2,14 @@ package org.bulatnig.smpp.domain.pdu;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.BindReceiverResp;
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.PDUException;
 import org.bulatnig.smpp.pdu.tlv.ScInterfaceVersion;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -27,7 +28,7 @@ public class BindReceiverRespTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(33L);
         sbb.appendInt(2147483649L);
         sbb.appendInt(0);
@@ -53,7 +54,7 @@ public class BindReceiverRespTest {
         brr.setSequenceNumber(100000000L);
         brr.setSystemId("systemaida");
         brr.setScInterfaceVersion(new ScInterfaceVersion((short)0x40));
-        assertEquals("00000020800000010000000005f5e10073797374656d61696461000210000140", new SMPPByteBuffer(brr.getBytes()).getHexDump());
+        assertEquals("00000020800000010000000005f5e10073797374656d61696461000210000140", new SmppByteBuffer(brr.getBytes()).getHexDump());
     }
 
     @Test
@@ -63,7 +64,7 @@ public class BindReceiverRespTest {
         brr.setSequenceNumber(100000000L);
         brr.setSystemId("systemaida");
         brr.setScInterfaceVersion(new ScInterfaceVersion((short)0x40));
-        assertEquals("00000010800000010000004405f5e100", new SMPPByteBuffer(brr.getBytes()).getHexDump());
+        assertEquals("00000010800000010000004405f5e100", new SmppByteBuffer(brr.getBytes()).getHexDump());
     }
 
 }

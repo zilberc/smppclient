@@ -1,13 +1,12 @@
 package org.bulatnig.smpp.client;
 
 import junit.framework.JUnit4TestAdapter;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.session.*;
 import org.bulatnig.smpp.session.impl.SyncSession;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.bulatnig.smpp.SMPPException;
-import org.bulatnig.smpp.client.Message;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.Session;
 
@@ -72,7 +71,7 @@ public class ClientSimplestSendTest extends MessageHandler {
     }
 
     @Test
-    public void clientSuccessfulSendTest() throws IOException, SMPPException {
+    public void clientSuccessfulSendTest() throws IOException, SmppException {
         Session session = new SyncSession.Builder("localhost", PORT1).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
@@ -81,13 +80,13 @@ public class ClientSimplestSendTest extends MessageHandler {
                 addrTon(TON.UNKNOWN).
                 addrNpi(NPI.UNKNOWN).
                 build();
-        SMPPClient client = new SMPPClientImpl(session, this, false);
+        SmppClient client = new SmppClientImpl(session, this, false);
         client.send(new Message("source", "dest", "message"));
         client.stop();
     }
 
     @Test(expected = NoResponseException.class)
-    public void clientWrongSequenceNumberTest() throws IOException, SMPPException {
+    public void clientWrongSequenceNumberTest() throws IOException, SmppException {
         Session session = new SyncSession.Builder("localhost", PORT2).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
@@ -96,13 +95,13 @@ public class ClientSimplestSendTest extends MessageHandler {
                 addrTon(TON.UNKNOWN).
                 addrNpi(NPI.UNKNOWN).
                 build();
-        SMPPClient client = new SMPPClientImpl(session, this, false);
+        SmppClient client = new SmppClientImpl(session, this, false);
         client.send(new Message("source", "dest", "message"));
         client.stop();
     }
 
     @Test(expected = NoResponseException.class)
-    public void clientWrongPDUTest() throws IOException,SMPPException {
+    public void clientWrongPDUTest() throws IOException,SmppException {
         Session session = new SyncSession.Builder("localhost", PORT3).
                 connectionType(ConnectionType.TRANSCEIVER).
                 systemId("client").
@@ -111,7 +110,7 @@ public class ClientSimplestSendTest extends MessageHandler {
                 addrTon(TON.UNKNOWN).
                 addrNpi(NPI.UNKNOWN).
                 build();
-        SMPPClient client = new SMPPClientImpl(session, this, false);
+        SmppClient client = new SmppClientImpl(session, this, false);
         client.send(new Message("source", "dest", "message"));
         client.stop();
     }

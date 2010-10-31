@@ -12,7 +12,7 @@ import org.bulatnig.smpp.session.NoResponseException;
  * Date: 25.07.2008
  * Time: 20:27:38
  */
-public interface SMPPClient {
+public interface SmppClient {
 
     /**
      * Stop Client and close session with SMSC.

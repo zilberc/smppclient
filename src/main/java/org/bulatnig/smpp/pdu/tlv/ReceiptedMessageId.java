@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu.tlv;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.pdu.EsmClass;
 
@@ -54,7 +54,7 @@ public class ReceiptedMessageId extends TLV {
         }
         if (bytes.length < MAX_LENGTH) {
             try {
-                value = new SMPPByteBuffer(bytes).removeCString();
+                value = new SmppByteBuffer(bytes).removeCString();
             } catch (WrongLengthException e) {
                 throw new TLVException("Buffer error during parsing value", e);
             }
@@ -65,7 +65,7 @@ public class ReceiptedMessageId extends TLV {
 
     @Override
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendCString(value);
         return sbb.getBuffer();
     }

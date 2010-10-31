@@ -2,9 +2,10 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class MsValidityTest {
@@ -16,7 +17,7 @@ public class MsValidityTest {
 	
 	@Test
 	public void testMVConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x02);
@@ -24,12 +25,12 @@ public class MsValidityTest {
 		assertEquals(ParameterTag.MS_VALIDITY, mv.getTag());
 		assertEquals(5, mv.getBytes().length);
 		assertEquals(Validity.SID_BASED, mv.getValue());
-		assertEquals("1204000102", new SMPPByteBuffer(mv.getBytes()).getHexDump());
+		assertEquals("1204000102", new SmppByteBuffer(mv.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testMVConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
@@ -38,7 +39,7 @@ public class MsValidityTest {
 	
 	@Test(expected= TLVException.class)
 	public void testMVConstructor3() throws WrongParameterException, TLVException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
@@ -51,12 +52,12 @@ public class MsValidityTest {
 		assertEquals(ParameterTag.MS_VALIDITY, mv.getTag());
 		assertEquals(5, mv.getBytes().length);
 		assertEquals(Validity.SID_BASED, mv.getValue());
-		assertEquals("1204000102", new SMPPByteBuffer(mv.getBytes()).getHexDump());
+		assertEquals("1204000102", new SmppByteBuffer(mv.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testSASConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0002);
@@ -65,7 +66,7 @@ public class MsValidityTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testMVConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
@@ -74,7 +75,7 @@ public class MsValidityTest {
 	
 	@Test
 	public void testMVConstructor7() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
@@ -83,7 +84,7 @@ public class MsValidityTest {
 		assertEquals(5, mv.getBytes().length);
 		assertEquals(Validity.RESERVED, mv.getValue());
 		assertEquals((short) 18, mv.getIntValue());
-		assertEquals("1204000112", new SMPPByteBuffer(mv.getBytes()).getHexDump());
+		assertEquals("1204000112", new SmppByteBuffer(mv.getBytes()).getHexDump());
 	}
 
 }

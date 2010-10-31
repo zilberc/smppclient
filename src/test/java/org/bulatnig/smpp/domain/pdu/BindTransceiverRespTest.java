@@ -8,7 +8,7 @@ import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.PDUException;
 import org.bulatnig.smpp.pdu.tlv.ScInterfaceVersion;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -27,7 +27,7 @@ public class BindTransceiverRespTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(37L);
         sbb.appendInt(2147483657L);
         sbb.appendInt(0);
@@ -54,7 +54,7 @@ public class BindTransceiverRespTest {
         btr.setSequenceNumber(123456789L);
         btr.setSystemId("COMMANDOS!");
         btr.setScInterfaceVersion(new ScInterfaceVersion((short)100));
-        assertEquals("000000208000000900000000075bcd15434f4d4d414e444f5321000210000164", new SMPPByteBuffer(btr.getBytes()).getHexDump());
+        assertEquals("000000208000000900000000075bcd15434f4d4d414e444f5321000210000164", new SmppByteBuffer(btr.getBytes()).getHexDump());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class BindTransceiverRespTest {
         btr.setSequenceNumber(123456789L);
         btr.setSystemId("COMMANDOS!");
         btr.setScInterfaceVersion(new ScInterfaceVersion((short)100));
-        assertEquals("0000001080000009000000ff075bcd15", new SMPPByteBuffer(btr.getBytes()).getHexDump());
+        assertEquals("0000001080000009000000ff075bcd15", new SmppByteBuffer(btr.getBytes()).getHexDump());
     }
     
 }

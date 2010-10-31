@@ -7,7 +7,7 @@ import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.PDUException;
 import org.bulatnig.smpp.pdu.UnbindResp;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -26,7 +26,7 @@ public class UnbindRespTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(16L);
         sbb.appendInt(2147483654L);
         sbb.appendInt(0L);
@@ -45,7 +45,7 @@ public class UnbindRespTest {
         UnbindResp ur = new UnbindResp();
         ur.setCommandStatus(CommandStatus.ESME_RINVDLNAME);
         ur.setSequenceNumber(4294967295L);
-        assertEquals("000000108000000600000034ffffffff", new SMPPByteBuffer(ur.getBytes()).getHexDump());
+        assertEquals("000000108000000600000034ffffffff", new SmppByteBuffer(ur.getBytes()).getHexDump());
     }
 
 }

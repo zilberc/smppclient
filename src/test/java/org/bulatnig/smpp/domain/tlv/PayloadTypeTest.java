@@ -2,12 +2,13 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.PayloadType;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVNotFoundException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class PayloadTypeTest {
@@ -19,7 +20,7 @@ public class PayloadTypeTest {
 	
 	@Test
 	public void testPTTConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0019);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
@@ -27,12 +28,12 @@ public class PayloadTypeTest {
 		assertEquals(ParameterTag.PAYLOAD_TYPE, pt.getTag());
 		assertEquals(5, pt.getBytes().length);
 		assertEquals((short)17, pt.getValue());
-		assertEquals("0019000111", new SMPPByteBuffer(pt.getBytes()).getHexDump());
+		assertEquals("0019000111", new SmppByteBuffer(pt.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testPTTConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
@@ -41,7 +42,7 @@ public class PayloadTypeTest {
 	
 	@Test(expected= TLVException.class)
 	public void testPTTConstructor3() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0019);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
@@ -54,12 +55,12 @@ public class PayloadTypeTest {
 		assertEquals(ParameterTag.PAYLOAD_TYPE, pt.getTag());
 		assertEquals(5, pt.getBytes().length);
 		assertEquals((short)112, pt.getValue());
-		assertEquals("0019000170", new SMPPByteBuffer(pt.getBytes()).getHexDump());
+		assertEquals("0019000170", new SmppByteBuffer(pt.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testPTTConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0019);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0011);
@@ -68,7 +69,7 @@ public class PayloadTypeTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testPTTConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);

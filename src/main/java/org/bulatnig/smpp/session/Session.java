@@ -41,9 +41,9 @@ public interface Session {
     /**
      * Listens to SMPP session state changes such as disconnect or stop.
      *
-     * @param listener  user SMPPSessionStateListener interface implementation
+     * @param listener  user SmppSessionStateListener interface implementation
      */
-    void setSMPPSessionStateListener(SMPPSessionStateListener listener);
+    void setSMPPSessionStateListener(SmppSessionStateListener listener);
 
     ConnectionType getConnType();
 

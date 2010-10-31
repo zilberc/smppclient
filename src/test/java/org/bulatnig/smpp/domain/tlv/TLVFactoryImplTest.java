@@ -2,13 +2,14 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.SmppException;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
-import org.bulatnig.smpp.SMPPException;
 import org.bulatnig.smpp.pdu.PDUException;
 import org.bulatnig.smpp.pdu.SmscEsmClass;
 import org.bulatnig.smpp.pdu.EsmeEsmClass;
 import org.bulatnig.smpp.pdu.tlv.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class TLVFactoryImplTest {
     @Test(expected = TLVException.class)
     public void testTLVFactory2() throws TLVException, PDUException, WrongParameterException {
         TLVFactory factory = TLVFactoryImpl.INSTANCE;
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0017);
         bb.appendShort(0x0004);
         bb.appendInt(999999999);
@@ -50,12 +51,12 @@ public class TLVFactoryImplTest {
     }
 
     @Test
-    public void testTLVFactory4() throws SMPPException {
+    public void testTLVFactory4() throws SmppException {
         TLVFactory factory = TLVFactoryImpl.INSTANCE;
         SarMsgRefNum smrn = new SarMsgRefNum(10);
         PayloadType pt = new PayloadType((short) 150);
         MessagePayload mp = new MessagePayload("СерПантиН");
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendBytes(smrn.getBytes(), smrn.getBytes().length);
         sbb.appendBytes(pt.getBytes(), pt.getBytes().length);
         sbb.appendBytes(mp.getBytes(new EsmeEsmClass(), (short) 8), mp.getBytes(new EsmeEsmClass(), (short) 8).length);
@@ -75,18 +76,18 @@ public class TLVFactoryImplTest {
                     assertEquals("СерПантиН", mp.getValue());
                     break;
                 default:
-                    throw new SMPPException("We should not be here");
+                    throw new SmppException("We should not be here");
             }
         }
     }
 
     @Test(expected = TLVException.class)
-    public void testTLVFactory5() throws SMPPException {
+    public void testTLVFactory5() throws SmppException {
         TLVFactory factory = TLVFactoryImpl.INSTANCE;
         SarMsgRefNum smrn = new SarMsgRefNum(10);
         PayloadType pt = new PayloadType((short) 150);
         MessagePayload mp = new MessagePayload("СерПантиН");
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendBytes(smrn.getBytes(), smrn.getBytes().length);
         sbb.appendBytes(pt.getBytes(), pt.getBytes().length);
         sbb.appendBytes(mp.getBytes(new EsmeEsmClass(), (short) 8), mp.getBytes(new EsmeEsmClass(), (short) 8).length);
@@ -107,7 +108,7 @@ public class TLVFactoryImplTest {
                     assertEquals("СерПантиН", mp.getValue());
                     break;
                 default:
-                    throw new SMPPException("We should not be here");
+                    throw new SmppException("We should not be here");
             }
         }
     }

@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
@@ -23,7 +23,7 @@ public enum PDUFactoryImpl implements PDUFactory {
         if (bytes.length >= PDU.HEADER_LENGTH) {
             byte[] header = new byte[PDU.HEADER_LENGTH];
             System.arraycopy(bytes, 0, header, 0, header.length);
-            SMPPByteBuffer headerSbb = new SMPPByteBuffer(header);
+            SmppByteBuffer headerSbb = new SmppByteBuffer(header);
             long length;
             try {
                 length = headerSbb.removeInt();

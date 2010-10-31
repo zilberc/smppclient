@@ -2,12 +2,13 @@ package org.bulatnig.smpp.domain.pdu;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.PDUException;
 import org.bulatnig.smpp.pdu.Unbind;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -26,7 +27,7 @@ public class UnbindTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(16L);
         sbb.appendInt(6L);
         sbb.appendInt(88);
@@ -45,7 +46,7 @@ public class UnbindTest {
         Unbind u = new Unbind();
         u.setCommandStatus(CommandStatus.ESME_RSUBMITFAIL);
         u.setSequenceNumber(0);
-        assertEquals("00000010000000060000004500000000", new SMPPByteBuffer(u.getBytes()).getHexDump());
+        assertEquals("00000010000000060000004500000000", new SmppByteBuffer(u.getBytes()).getHexDump());
     }
 
 }

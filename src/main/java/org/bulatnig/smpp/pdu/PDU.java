@@ -1,6 +1,5 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.SMPPObject;
 import org.bulatnig.smpp.pdu.tlv.TLV;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVFactory;
@@ -9,7 +8,7 @@ import org.bulatnig.smpp.pdu.udh.UDHException;
 import org.bulatnig.smpp.pdu.udh.UDH;
 import org.bulatnig.smpp.pdu.udh.UDHFactory;
 import org.bulatnig.smpp.pdu.udh.UDHFactoryImpl;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -20,7 +19,7 @@ import java.util.List;
  *
  * @author Bulat Nigmatullin
  */
-public abstract class PDU extends SMPPObject {
+public abstract class PDU {
 
     /**
      * Длина заголовка.
@@ -75,7 +74,7 @@ public abstract class PDU extends SMPPObject {
      * @throws PDUException ошибка разбора PDU
      */
     protected PDU(final byte[] bytes) throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             parseHeader(bb.removeBytes(HEADER_LENGTH));
         } catch (WrongParameterException e) {
@@ -96,7 +95,7 @@ public abstract class PDU extends SMPPObject {
      * @param bb заголовок PDU
      * @throws PDUException ошибка разбора PDU
      */
-    private void parseHeader(final SMPPByteBuffer bb) throws PDUException {
+    private void parseHeader(final SmppByteBuffer bb) throws PDUException {
         try {
             commandLength = bb.removeInt();
             commandId = helper.getCommandId(bb.removeInt());
@@ -197,7 +196,7 @@ public abstract class PDU extends SMPPObject {
         byte[] body = getBodyBytes();
         commandLength = HEADER_LENGTH + body.length;
         if (body.length > 0) {
-            SMPPByteBuffer bb = getHeader();
+            SmppByteBuffer bb = getHeader();
             bb.appendBytes(body, body.length);
             return bb.getBuffer();
         } else {
@@ -211,8 +210,8 @@ public abstract class PDU extends SMPPObject {
      * @return байты заголовка
      * @throws PDUException ошибка обработки PDU
      */
-    private SMPPByteBuffer getHeader() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+    private SmppByteBuffer getHeader() throws PDUException {
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendInt(commandLength);
         } catch (WrongParameterException e) {
@@ -272,7 +271,7 @@ public abstract class PDU extends SMPPObject {
         }
     }
 
-    protected final UDH parseUDH(SMPPByteBuffer byteBuffer) throws PDUException {
+    protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws PDUException {
         try {
             short length = byteBuffer.readBytes(1).removeByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).getBuffer());

@@ -2,12 +2,13 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.ScInterfaceVersion;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVNotFoundException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class ScInterfaceVersionTest {
@@ -19,7 +20,7 @@ public class ScInterfaceVersionTest {
 	
 	@Test
 	public void testSIVConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0210);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
@@ -27,12 +28,12 @@ public class ScInterfaceVersionTest {
 		assertEquals(ParameterTag.SC_INTERFACE_VERSION, siv.getTag());
 		assertEquals(5, siv.getBytes().length);
 		assertEquals((short)112, siv.getValue());
-		assertEquals("0210000170", new SMPPByteBuffer(siv.getBytes()).getHexDump());
+		assertEquals("0210000170", new SmppByteBuffer(siv.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testSIVConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
@@ -41,7 +42,7 @@ public class ScInterfaceVersionTest {
 	
 	@Test(expected= TLVException.class)
 	public void testSIVConstructor3() throws WrongParameterException, TLVException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0210);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
@@ -54,12 +55,12 @@ public class ScInterfaceVersionTest {
 		assertEquals(ParameterTag.SC_INTERFACE_VERSION, siv.getTag());
 		assertEquals(5, siv.getBytes().length);
 		assertEquals((short)112, siv.getValue());
-		assertEquals("0210000170", new SMPPByteBuffer(siv.getBytes()).getHexDump());
+		assertEquals("0210000170", new SmppByteBuffer(siv.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testSIVConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0210);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
@@ -68,7 +69,7 @@ public class ScInterfaceVersionTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testSIVConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);

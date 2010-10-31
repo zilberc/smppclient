@@ -2,12 +2,13 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.DestTelematicsId;
 import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVNotFoundException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class DestTelematicsIdTest {
@@ -19,7 +20,7 @@ public class DestTelematicsIdTest {
 
     @Test
     public void testDTIConstructor1() throws WrongParameterException, TLVException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0008);
         bb.appendShort(0x0002);
         bb.appendShort(0x1111);
@@ -27,12 +28,12 @@ public class DestTelematicsIdTest {
         assertEquals(ParameterTag.DEST_TELEMATICS_ID, dti.getTag());
         assertEquals(6, dti.getBytes().length);
         assertEquals(4369, dti.getValue());
-        assertEquals("000800021111", new SMPPByteBuffer(dti.getBytes()).getHexDump());
+        assertEquals("000800021111", new SmppByteBuffer(dti.getBytes()).getHexDump());
     }
 
     @Test(expected = TLVNotFoundException.class)
     public void testDTIConstructor2() throws WrongParameterException, TLVException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0000);
         bb.appendShort(0x0002);
         bb.appendByte((byte) 0x1111);
@@ -41,7 +42,7 @@ public class DestTelematicsIdTest {
 
     @Test(expected = TLVException.class)
     public void testDTIConstructor3() throws WrongParameterException, TLVException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0008);
         bb.appendShort(0x0001);
         bb.appendShort(0x1111);
@@ -54,12 +55,12 @@ public class DestTelematicsIdTest {
         assertEquals(ParameterTag.DEST_TELEMATICS_ID, dti.getTag());
         assertEquals(6, dti.getBytes().length);
         assertEquals(112, dti.getValue());
-        assertEquals("000800020070", new SMPPByteBuffer(dti.getBytes()).getHexDump());
+        assertEquals("000800020070", new SmppByteBuffer(dti.getBytes()).getHexDump());
     }
 
     @Test(expected = TLVException.class)
     public void testDTIConstructor5() throws WrongParameterException, TLVException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0008);
         bb.appendShort(0x0001);
         bb.appendByte((byte) 0x11);
@@ -68,7 +69,7 @@ public class DestTelematicsIdTest {
 
     @Test(expected = ClassCastException.class)
     public void testDTIConstructor6() throws WrongParameterException, TLVException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0005);
         bb.appendShort(0x0002);
         bb.appendShort(0x7fff);

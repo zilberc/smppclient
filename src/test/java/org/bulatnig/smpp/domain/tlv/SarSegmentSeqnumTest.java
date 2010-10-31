@@ -2,12 +2,13 @@ package org.bulatnig.smpp.domain.tlv;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.SarSegmentSeqnum;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVNotFoundException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 public class SarSegmentSeqnumTest {
@@ -19,7 +20,7 @@ public class SarSegmentSeqnumTest {
 	
 	@Test
 	public void testSSSConstructor1() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x020f);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
@@ -27,12 +28,12 @@ public class SarSegmentSeqnumTest {
 		assertEquals(ParameterTag.SAR_SEGMENT_SEQNUM, sss.getTag());
 		assertEquals(5, sss.getBytes().length);
 		assertEquals((short)112, sss.getValue());
-		assertEquals("020f000170", new SMPPByteBuffer(sss.getBytes()).getHexDump());
+		assertEquals("020f000170", new SmppByteBuffer(sss.getBytes()).getHexDump());
 	}
 
     @Test(expected = TLVNotFoundException.class)
 	public void testSSSConstructor2() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
@@ -41,7 +42,7 @@ public class SarSegmentSeqnumTest {
 	
 	@Test(expected= TLVException.class)
 	public void testSSSConstructor3() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x020f);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
@@ -54,12 +55,12 @@ public class SarSegmentSeqnumTest {
 		assertEquals(ParameterTag.SAR_SEGMENT_SEQNUM, sss.getTag());
 		assertEquals(5, sss.getBytes().length);
 		assertEquals((short)112, sss.getValue());
-		assertEquals("020f000170", new SMPPByteBuffer(sss.getBytes()).getHexDump());
+		assertEquals("020f000170", new SmppByteBuffer(sss.getBytes()).getHexDump());
 	}
 	
 	@Test(expected= TLVException.class)
 	public void testSSSConstructor5() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x020f);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
@@ -68,7 +69,7 @@ public class SarSegmentSeqnumTest {
 	
 	@Test(expected=ClassCastException.class)
 	public void testSSSConstructor6() throws TLVException, WrongParameterException {
-		SMPPByteBuffer bb = new SMPPByteBuffer();
+		SmppByteBuffer bb = new SmppByteBuffer();
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);

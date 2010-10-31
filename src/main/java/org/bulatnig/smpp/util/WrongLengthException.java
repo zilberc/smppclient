@@ -6,7 +6,7 @@ package org.bulatnig.smpp.util;
  * @author Bulat Nigmatullin
  *
  */
-public final class WrongLengthException extends SMPPByteBufferException {
+public final class WrongLengthException extends SmppByteBufferException {
 
     WrongLengthException() {
         super();

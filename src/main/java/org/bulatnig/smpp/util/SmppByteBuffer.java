@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
  *
  * @author Bulat Nigmatullin
  */
-public final class SMPPByteBuffer {
+public final class SmppByteBuffer {
 
     /**
      * C-Octet String encoding and default Octet String encoding.
@@ -68,7 +68,7 @@ public final class SMPPByteBuffer {
     /**
      * Конструктор без инциализириющего массива.
      */
-    public SMPPByteBuffer() {
+    public SmppByteBuffer() {
         buffer = new byte[0];
     }
 
@@ -77,7 +77,7 @@ public final class SMPPByteBuffer {
      *
      * @param b массив байтов
      */
-    public SMPPByteBuffer(final byte[] b) {
+    public SmppByteBuffer(final byte[] b) {
         buffer = b;
     }
 
@@ -372,9 +372,9 @@ public final class SMPPByteBuffer {
      * @throws WrongLengthException    wrong length of bytes to remove
      * @throws WrongParameterException неверный параметр
      */
-    public SMPPByteBuffer removeBytes(final int count)
+    public SmppByteBuffer removeBytes(final int count)
             throws WrongParameterException, WrongLengthException {
-        SMPPByteBuffer result = readBytes(count);
+        SmppByteBuffer result = readBytes(count);
         removeBytes0(count);
         return result;
     }
@@ -410,17 +410,17 @@ public final class SMPPByteBuffer {
      * @return readed bytes
      * @throws WrongLengthException wrong count of bytes to read
      */
-    public SMPPByteBuffer readBytes(final int count) throws WrongLengthException {
+    public SmppByteBuffer readBytes(final int count) throws WrongLengthException {
         if (count > 0) {
             if (length() >= count) {
                 byte[] resBuf = new byte[count];
                 System.arraycopy(buffer, 0, resBuf, 0, count);
-                return new SMPPByteBuffer(resBuf);
+                return new SmppByteBuffer(resBuf);
             } else {
                 throw new WrongLengthException("buffer have not enough length");
             }
         } else {
-            return new SMPPByteBuffer();
+            return new SmppByteBuffer();
         }
     }
 

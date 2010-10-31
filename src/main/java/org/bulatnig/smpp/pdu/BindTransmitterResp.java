@@ -4,7 +4,7 @@ import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.ScInterfaceVersion;
 import org.bulatnig.smpp.pdu.tlv.TLV;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class BindTransmitterResp extends PDU {
     @Override
     protected final byte[] getBodyBytes() throws PDUException {
         if (getCommandStatus() == CommandStatus.ESME_ROK) {
-            SMPPByteBuffer bb = new SMPPByteBuffer();
+            SmppByteBuffer bb = new SmppByteBuffer();
             if (systemId != null && systemId.length() > MAX_SYSTEMID_LENGTH) {
                 throw new PDUException("systemId field is too long");
             }
@@ -83,7 +83,7 @@ public class BindTransmitterResp extends PDU {
             throw new ClassCastException();
         }
         if (getCommandStatus() == CommandStatus.ESME_ROK) {
-            SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+            SmppByteBuffer bb = new SmppByteBuffer(bytes);
             try {
                 systemId = bb.removeCString();
             } catch (WrongLengthException e) {

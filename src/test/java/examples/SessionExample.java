@@ -1,6 +1,6 @@
 package examples;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.*;
 import org.bulatnig.smpp.session.impl.SyncSession;
@@ -22,7 +22,7 @@ public class SessionExample {
                     systemId("login").password("pass").
                     addrTon(TON.INTERNATIONAL).addrNpi(NPI.ISDN).
                     pduHandler(new PDUHandlerExampleImpl()).
-                    stateListener(new SMPPSessionStateListenerExampleImpl()).
+                    stateListener(new SmppSessionStateListenerExampleImpl()).
                     build();
             SubmitSM submit = new SubmitSM();
             submit.setSourceAddr("1010");
@@ -52,7 +52,7 @@ public class SessionExample {
                 attempts++;
             } while (recoverable && attempts < 3);
             session.stop();
-        } catch (SMPPException e) {
+        } catch (SmppException e) {
             e.printStackTrace();
         }
     }
@@ -89,11 +89,11 @@ public class SessionExample {
         }
     }
 
-    private class SMPPSessionStateListenerExampleImpl implements SMPPSessionStateListener {
+    private class SmppSessionStateListenerExampleImpl implements SmppSessionStateListener {
 
-        private SMPPSessionState lastState;
+        private SmppSessionState lastState;
 
-        public void stateChanged(SMPPSessionState state) {
+        public void stateChanged(SmppSessionState state) {
             switch (state) {
                 case OK:
                     if (lastState == null) {

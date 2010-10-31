@@ -1,7 +1,7 @@
 package org.bulatnig.smpp.pdu.tlv;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
-import org.bulatnig.smpp.util.SMPPByteBufferException;
+import org.bulatnig.smpp.util.SmppByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBufferException;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.pdu.EsmClass;
 
@@ -25,7 +25,7 @@ public enum TLVFactoryImpl implements TLVFactory {
      */
     public TLV parseTLV(byte[] bytes, EsmClass esmClass, short dataCoding) throws TLVException {
         TLV tlv;
-        SMPPByteBuffer param = new SMPPByteBuffer(bytes);
+        SmppByteBuffer param = new SmppByteBuffer(bytes);
         int paramTag;
         try {
             paramTag = param.removeShort();
@@ -179,12 +179,12 @@ public enum TLVFactoryImpl implements TLVFactory {
      */
     public List<TLV> parseTLVs(byte[] bytes, EsmClass esmClass, short dataCoding) throws TLVException {
         List<TLV> list = new ArrayList<TLV>();
-        SMPPByteBuffer params = new SMPPByteBuffer(bytes);
-        SMPPByteBuffer buffer;
+        SmppByteBuffer params = new SmppByteBuffer(bytes);
+        SmppByteBuffer buffer;
         int length;
         try {
             while (params.length() > 0) {
-                buffer = new SMPPByteBuffer();
+                buffer = new SmppByteBuffer();
                 buffer.appendShort(params.removeShort());
                 length = params.removeShort();
                 buffer.appendShort(length);
@@ -197,8 +197,8 @@ public enum TLVFactoryImpl implements TLVFactory {
                     // omit it
                 }
             }
-        } catch (SMPPByteBufferException e) {
-            throw new TLVException("SMPPByteBuffer error during tlv parsing", e);
+        } catch (SmppByteBufferException e) {
+            throw new TLVException("SmppByteBuffer error during tlv parsing", e);
         }
         return list;
     }

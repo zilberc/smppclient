@@ -2,10 +2,11 @@ package org.bulatnig.smpp.domain.pdu;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.pdu.udh.IEI;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -24,7 +25,7 @@ public class DeliverSMTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(82);
         sbb.appendInt(5);
         sbb.appendInt(21);
@@ -79,14 +80,14 @@ public class DeliverSMTest {
     public void objectToBytes() throws PDUException {
         DeliverSM deliver = new DeliverSM();
         assertEquals("000000210000000500000000000000000000000000000000000000000000000000",
-                new SMPPByteBuffer(deliver.getBytes()).getHexDump());
+                new SmppByteBuffer(deliver.getBytes()).getHexDump());
     }
 
     @Test
     public void udhiIgnoreTest() throws Exception {
         // 000000480000000500000000047f3a78000101373930353738393639383000030135313531233139393430393439004000000000000000000f050a03000904372b37373730323437
         // 00000048 00000005 00000000 047f3a78 00 01 01 373930353738393639383000 03 01 3531353123313939343039343900 40 00 00 00 00 00 00 00 00 0f 050a03000904 372b37373730323437
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(72);
         sbb.appendInt(5);
         sbb.appendInt(0);
@@ -124,7 +125,7 @@ public class DeliverSMTest {
         // 0500030b 0202616b 20766564 65772c20 74692073 65626961 206e6520 76696465 77206920 64756d61 65772034 746f2076
         // 7365206e 6f726d61 6c6e6f2c 20706f64 756d6169 2034746f 20746920 64656c61 65772c20 74766f69 20616c6b 6f676f6c
         // 20767365 20746562 65206973 706f7274 69742e
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(0x000000a3L);
         sbb.appendInt(0x00000005L);
         sbb.appendInt(0x00000000L);
@@ -193,7 +194,7 @@ public class DeliverSMTest {
         // 04240060 041a043e 0442043e 0440044b 04390020 04410435 0433043e 0434043d 044f0020 0434043e 043b0436 0435043d
         // 00200431 044b0442 044c0020 0438043b 04380020 043a043e 0442043e 0440044b 04390020 04320447 04350440 0430003a
         // 002d0029
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(0x00000094L);
         sbb.appendInt(0x00000005L);
         sbb.appendInt(0x00000000L);
@@ -249,7 +250,7 @@ public class DeliverSMTest {
         // 00000046000000050000000000000ecd000101373931373435343530383000040938313831004000000000000000000004240012050a03000c0839332b323032373431303337
         // 00000046 00000005 00000000 00000ecd 00 01 01 373931373435343530383000 04 09 3831383100 40 00 00 00 00 00 00 00 00 00
         // 04240012 050a0300 0c083933 2b323032 37343130 33 37
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(0x00000046L);
         sbb.appendInt(0x00000005L);
         sbb.appendInt(0x00000000L);
@@ -281,7 +282,7 @@ public class DeliverSMTest {
         assertEquals("00000046000000050000000000000ecd000101373931373435343530383000040938313831004000000000000000000004240012050a03000c0839332b323032373431303337", sbb.getHexDump());
         DeliverSM deliver = new DeliverSM(sbb.getBuffer());
         assertEquals("93+202741037", deliver.getMessagePayload().getValue());
-        assertEquals("00000040000000050000000000000ecd00010137393137343534353038300004093831383100400000000000000000000424000c39332b323032373431303337", new SMPPByteBuffer(deliver.getBytes()).getHexDump());
+        assertEquals("00000040000000050000000000000ecd00010137393137343534353038300004093831383100400000000000000000000424000c39332b323032373431303337", new SmppByteBuffer(deliver.getBytes()).getHexDump());
     }
 
 }

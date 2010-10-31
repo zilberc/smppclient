@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.session.impl;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.net.impl.TCPConnection;
 import org.bulatnig.smpp.pdu.*;
@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Synchronous SMPP session.
  * Connects on create to SMSC and works until stop() call. If there are no inconming or outcoming messages,
  * then ping packets (Enquire Link) sends. It ping fails, then session moves to recovery mode and trying
- * reconnect to SMSC. All changes in session states are notified to SMPPSessionStateListener.
+ * reconnect to SMSC. All changes in session states are notified to SmppSessionStateListener.
  * If error occurs during message sending, then user responsibility to take a corresponding action: resend or
  * stop current session and create new one.
  * As activity considered only SMSC messages. There is 30 second activity timeout, then ping packet sends to server.
@@ -110,12 +110,12 @@ public final class SyncSession implements Session {
     /**
      * Session state listener.
      */
-    private SMPPSessionStateListener stateListener;
+    private SmppSessionStateListener stateListener;
 
     /**
      * Session state.
      */
-    private SMPPSessionState state = SMPPSessionState.OK;
+    private SmppSessionState state = SmppSessionState.OK;
     /**
      * Время последней активности в миллисекундах.
      * Т.е. время последнего получения PDU.
@@ -140,7 +140,7 @@ public final class SyncSession implements Session {
      */
     protected boolean work = true;
 
-    private SyncSession(Builder builder) throws SMPPException {
+    private SyncSession(Builder builder) throws SmppException {
         this.host = builder.host;
         this.port = builder.port;
         this.connection = builder.connection;
@@ -169,7 +169,7 @@ public final class SyncSession implements Session {
         private NPI addrNpi = NPI.UNKNOWN;
         private String addressRange;
         private PDUHandler pduHandler = new PDUHandlerStub();
-        private SMPPSessionStateListener stateListener;
+        private SmppSessionStateListener stateListener;
 
         public Builder(String host, int port) {
             this.host = host;
@@ -223,18 +223,18 @@ public final class SyncSession implements Session {
             return this;
         }
 
-        public Builder stateListener(SMPPSessionStateListener stateListener) {
+        public Builder stateListener(SmppSessionStateListener stateListener) {
             this.stateListener = stateListener;
             return this;
         }
 
-        public SyncSession build() throws SMPPException {
+        public SyncSession build() throws SmppException {
             return new SyncSession(this);
         }
 
     }
 
-    private void start() throws SMPPException {
+    private void start() throws SmppException {
         ioLock.lock();
         try {
             PDU bindPDU = getBindPDU();
@@ -253,9 +253,9 @@ public final class SyncSession implements Session {
                 }
             } while (bindResponse == null && connectAttempts < MAX_CONNECT_ATTEMPTS && work);
             if (bindResponse == null) {
-                throw new SMPPException("Bind failed. No response received to bind request");
+                throw new SmppException("Bind failed. No response received to bind request");
             } else if (bindResponse.getCommandStatus() != CommandStatus.ESME_ROK) {
-                throw new SMPPException("Bind failed. SMSC response: " + bindResponse.getCommandStatus());
+                throw new SmppException("Bind failed. SMSC response: " + bindResponse.getCommandStatus());
             }
             timer = new Timer();
             timer.schedule(new EnquireLinkTimerTask(), 30000, 1000);
@@ -265,7 +265,7 @@ public final class SyncSession implements Session {
                 connection.close();
                 connection = null;
             }
-            throw new SMPPException("Bind error: " + e.getMessage(), e);
+            throw new SmppException("Bind error: " + e.getMessage(), e);
         } finally {
             ioLock.unlock();
         }
@@ -341,16 +341,16 @@ public final class SyncSession implements Session {
     }
 
     private void reconnect() {
-        stateChanged(SMPPSessionState.RECOVERING);
+        stateChanged(SmppSessionState.RECOVERING);
         stop();
         work = true;
         try {
             Thread.sleep(RECONNECT_TIMEOUT);
             start();
-            stateChanged(SMPPSessionState.OK);
+            stateChanged(SmppSessionState.OK);
         } catch (Exception e) {
             work = false;
-            stateChanged(SMPPSessionState.DISCONNECTED);
+            stateChanged(SmppSessionState.DISCONNECTED);
             logger.error("Reconnect failed");
         }
     }
@@ -439,7 +439,7 @@ public final class SyncSession implements Session {
         return sequenceNumber++;
     }
 
-    private void stateChanged(SMPPSessionState newState) {
+    private void stateChanged(SmppSessionState newState) {
         state = newState;
         if (stateListener != null) {
             stateListener.stateChanged(newState);
@@ -450,11 +450,11 @@ public final class SyncSession implements Session {
         this.pduHandler = pduHandler;
     }
 
-    public void setSMPPSessionStateListener(SMPPSessionStateListener listener) {
+    public void setSMPPSessionStateListener(SmppSessionStateListener listener) {
         this.stateListener = listener;
     }
 
-    public SMPPSessionState getState() {
+    public SmppSessionState getState() {
         return state;
     }
 

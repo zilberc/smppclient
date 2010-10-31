@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
@@ -45,7 +45,7 @@ public class SubmitSMResp extends PDU {
     @Override
     protected final byte[] getBodyBytes() throws PDUException {
         if (getCommandStatus() == CommandStatus.ESME_ROK) {
-            SMPPByteBuffer bb = new SMPPByteBuffer();
+            SmppByteBuffer bb = new SmppByteBuffer();
             if (messageId != null && messageId.length() > MAX_MESSAGEID_LENGTH) {
                 throw new PDUException("messageId field is invalid");
             }
@@ -66,7 +66,7 @@ public class SubmitSMResp extends PDU {
             throw new ClassCastException();
         }
         if (getCommandStatus() == CommandStatus.ESME_ROK) {
-            SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+            SmppByteBuffer bb = new SmppByteBuffer(bytes);
             if (bb.length() > 0) {
                 try {
                     messageId = bb.removeCString();

@@ -1,6 +1,6 @@
 package examples;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.client.*;
 import org.bulatnig.smpp.pdu.NPI;
 import org.bulatnig.smpp.pdu.TON;
@@ -8,7 +8,7 @@ import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.session.impl.SyncSession;
 
 /**
- * SMPPClient usage example.
+ * SmppClient usage example.
  * User: Bulat Nigmatullin
  * Date: 02.06.2009
  * Time: 11:20:43
@@ -16,7 +16,7 @@ import org.bulatnig.smpp.session.impl.SyncSession;
 public class ClientExample {
 
     public void run() {
-        SMPPClient client = null;
+        SmppClient client = null;
         try {
             // create Session with SMSC
             Session session = new SyncSession.Builder("smschost", 9999).
@@ -24,7 +24,7 @@ public class ClientExample {
                     addrTon(TON.INTERNATIONAL).addrNpi(NPI.ISDN).
                     build();
             // create Client
-            client = new SMPPClientImpl(session, new MessageHandler() {
+            client = new SmppClientImpl(session, new MessageHandler() {
 
                 @Override
                 public void handle(Message message) throws ProcessingFailedException {
@@ -48,7 +48,7 @@ public class ClientExample {
 
             // Store smscMessageId in database to update message state on delivery
 
-        } catch (SMPPException e) {
+        } catch (SmppException e) {
             e.printStackTrace();
         } finally {
             // Close client connection

@@ -2,9 +2,10 @@ package org.bulatnig.smpp.domain.pdu;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -23,7 +24,7 @@ public class BindTransceiverTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(65L);
         sbb.appendInt(9L);
         sbb.appendInt(194);
@@ -61,7 +62,7 @@ public class BindTransceiverTest {
         bt.setAddrTon(TON.INTERNATIONAL);
         bt.setAddrNpi(null);
         bt.setAddressRange(")(*&^%$#@!");
-        assertEquals("000000360000000900000000000000006b697270696368002e24232f607e37002d2d2d2d2d2d2d0073010029282a265e252423402100", new SMPPByteBuffer(bt.getBytes()).getHexDump());
+        assertEquals("000000360000000900000000000000006b697270696368002e24232f607e37002d2d2d2d2d2d2d0073010029282a265e252423402100", new SmppByteBuffer(bt.getBytes()).getHexDump());
     }
 
 }

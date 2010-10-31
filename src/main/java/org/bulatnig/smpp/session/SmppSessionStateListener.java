@@ -7,13 +7,13 @@ package org.bulatnig.smpp.session;
  * Date: Apr 5, 2009
  * Time: 2:45:22 PM
  */
-public interface SMPPSessionStateListener {
+public interface SmppSessionStateListener {
 
     /**
      * Notifies about state changes.
      *
      * @param state     new session state
      */
-    void stateChanged(SMPPSessionState state);
+    void stateChanged(SmppSessionState state);
 
 }

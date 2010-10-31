@@ -4,7 +4,7 @@ import org.bulatnig.smpp.pdu.tlv.MsAvailabilityStatus;
 import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.TLV;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -84,7 +84,7 @@ public class AlertNotification extends PDU {
         if (getCommandId() != CommandId.ALERT_NOTIFICATION) {
             throw new ClassCastException();
         }
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             short b = bb.removeByte();
             for (TON ton : TON.values()) {
@@ -148,7 +148,7 @@ public class AlertNotification extends PDU {
      */
     @Override
     protected final byte[] getBodyBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
         } catch (WrongParameterException e) {

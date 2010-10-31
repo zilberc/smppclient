@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.client;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 
 /**
  * Comment here.
@@ -9,7 +9,7 @@ import org.bulatnig.smpp.SMPPException;
  * Date: Nov 19, 2008
  * Time: 3:34:11 PM
  */
-public class UnknownErrorException extends SMPPException {
+public class UnknownErrorException extends SmppException {
 
     public UnknownErrorException() {
         super();

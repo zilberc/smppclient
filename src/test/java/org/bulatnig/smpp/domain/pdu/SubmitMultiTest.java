@@ -4,7 +4,7 @@ import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class SubmitMultiTest {
         sm.setNumberOfDests((short) dests.size());
         sm.setShortMessage("bulat");
         assertEquals("0000003600000021000000000000000000000137353100010101013739313633393739373132000000000000000000000562756c6174",
-                new SMPPByteBuffer(sm.getBytes()).getHexDump());
+                new SmppByteBuffer(sm.getBytes()).getHexDump());
     }
 
 }

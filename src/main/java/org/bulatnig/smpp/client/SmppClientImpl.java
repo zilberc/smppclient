@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.client;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.session.NoResponseException;
 import org.bulatnig.smpp.session.Session;
@@ -17,12 +17,12 @@ import java.util.List;
  * Date: 18.07.2008
  * Time: 15:48:04
  */
-public class SMPPClientImpl implements SMPPClient {
+public class SmppClientImpl implements SmppClient {
 
     /**
      * Logger for this class and subclasses
      */
-    final static Logger logger = LoggerFactory.getLogger(SMPPClientImpl.class);
+    final static Logger logger = LoggerFactory.getLogger(SmppClientImpl.class);
 
     private static final MessageCodingHelper codingHelper = MessageCodingHelper.INSTANCE;
 
@@ -87,7 +87,7 @@ public class SMPPClientImpl implements SMPPClient {
 
     private boolean work = true;
 
-    public SMPPClientImpl(Session session, MessageHandler handler, boolean registeredDelivery) throws SMPPException {
+    public SmppClientImpl(Session session, MessageHandler handler, boolean registeredDelivery) throws SmppException {
         this.session = session;
         this.handler = handler;
         sourceAddrTon = session.getAddrTon();

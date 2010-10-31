@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu.udh;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
@@ -19,7 +19,7 @@ public enum UDHFactoryImpl implements UDHFactory {
     public UDH parseUDH(byte[] bytes) throws UDHException {
         UDH udh;
         if (bytes.length >= UDH.HEADER_LENGTH) {
-            SMPPByteBuffer byteBuffer = new SMPPByteBuffer(bytes);
+            SmppByteBuffer byteBuffer = new SmppByteBuffer(bytes);
             short length;
             try {
                 length = (short) (byteBuffer.removeByte() + 1);

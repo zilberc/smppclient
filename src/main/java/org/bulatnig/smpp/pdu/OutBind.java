@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
@@ -52,7 +52,7 @@ public class OutBind extends PDU {
      */
     @Override
     protected final byte[] getBodyBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         if (systemId != null && systemId.length() > MAX_SYSTEMID_LENGTH) {
             throw new PDUException("systemId field is too long");
         }
@@ -73,7 +73,7 @@ public class OutBind extends PDU {
         if (getCommandId() != CommandId.OUTBIND) {
             throw new ClassCastException();
         }
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             systemId = bb.removeCString();
             if (systemId.length() > MAX_SYSTEMID_LENGTH) {

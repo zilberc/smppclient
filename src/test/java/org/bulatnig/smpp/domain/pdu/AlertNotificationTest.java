@@ -2,11 +2,12 @@ package org.bulatnig.smpp.domain.pdu;
 
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.Test;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.pdu.tlv.AvailabilityStatus;
 import org.bulatnig.smpp.pdu.tlv.MsAvailabilityStatus;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
@@ -26,7 +27,7 @@ public class AlertNotificationTest {
 
     @Test
     public void bytesToObject() throws WrongParameterException, PDUException {
-        SMPPByteBuffer sbb = new SMPPByteBuffer();
+        SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(49L);
         sbb.appendInt(258L);
         sbb.appendInt(0);
@@ -68,7 +69,7 @@ public class AlertNotificationTest {
         an.setEsmeAddrNpi(NPI.WAP_CLIENT_ID);
         an.setEsmeAddr("destmy");
         an.setMsAvailabilityStatus(new MsAvailabilityStatus(AvailabilityStatus.AVAILABLE));
-        SMPPByteBuffer sbb = new SMPPByteBuffer(an.getBytes());
+        SmppByteBuffer sbb = new SmppByteBuffer(an.getBytes());
         assertEquals("00000029000001020000000000000073010672656d6172656d61000012646573746d79000422000100", sbb.getHexDump());
     }
 

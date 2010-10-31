@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.SMPPObject;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -11,7 +10,7 @@ import org.bulatnig.smpp.util.WrongParameterException;
  * @author Bulat Nigmatullin
  * @see DestAddress
  */
-public class SMEAddress extends SMPPObject {
+public class SMEAddress {
 
     /**
      * Максимальная длина messageId поля.
@@ -44,7 +43,7 @@ public class SMEAddress extends SMPPObject {
      * @throws PDUException ошибка обработки PDU
      */
     public SMEAddress(final byte[] bytes) throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             short b = bb.removeByte();
             for (TON ton : TON.values()) {
@@ -78,7 +77,7 @@ public class SMEAddress extends SMPPObject {
      * @throws PDUException ошибка обработки PDU
      */
     protected final byte[] getBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
         } catch (

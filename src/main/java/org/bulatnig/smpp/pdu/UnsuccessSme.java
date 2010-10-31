@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.SMPPObject;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -11,7 +10,7 @@ import org.bulatnig.smpp.util.WrongParameterException;
  * @author Bulat Nigmatullin
  * @see SubmitMulti
  */
-public class UnsuccessSme extends SMPPObject {
+public class UnsuccessSme {
 
     /**
      * Максимальная длина messageId поля.
@@ -49,7 +48,7 @@ public class UnsuccessSme extends SMPPObject {
      * @throws PDUException ошибка обработки PDU
      */
     public UnsuccessSme(final byte[] bytes) throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             short b = bb.removeByte();
             for (TON ton : TON.values()) {
@@ -84,7 +83,7 @@ public class UnsuccessSme extends SMPPObject {
      * @throws PDUException ошибка обработки PDU
      */
     protected final byte[] getBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
         } catch (WrongParameterException e) {

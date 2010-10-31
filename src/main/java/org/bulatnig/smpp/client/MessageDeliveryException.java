@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.client;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 
 /**
  * Comment here.
@@ -9,7 +9,7 @@ import org.bulatnig.smpp.SMPPException;
  * Date: 22.04.2009
  * Time: 18:57:09
  */
-public class MessageDeliveryException extends SMPPException {
+public class MessageDeliveryException extends SmppException {
 
     private final PDUError pduError;
 

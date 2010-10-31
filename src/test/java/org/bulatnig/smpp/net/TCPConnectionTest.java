@@ -1,8 +1,8 @@
 package org.bulatnig.smpp.net;
 
 import junit.framework.JUnit4TestAdapter;
-import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.net.impl.TCPConnection;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
@@ -11,7 +11,6 @@ import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.PDU;
 import org.bulatnig.smpp.pdu.PDUException;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -193,7 +192,7 @@ public class TCPConnectionTest {
                 serverSocket = new ServerSocket(port);
                 Socket client;
                 OutputStream out;
-                SMPPByteBuffer sbb = new SMPPByteBuffer();
+                SmppByteBuffer sbb = new SmppByteBuffer();
                 sbb.appendInt(16);
                 sbb.appendInt(0x00000015L);
                 sbb.appendInt(0);
@@ -289,13 +288,13 @@ public class TCPConnectionTest {
                 serverSocket = new ServerSocket(port);
                 Socket client;
                 OutputStream out;
-                SMPPByteBuffer sbb = new SMPPByteBuffer();
+                SmppByteBuffer sbb = new SmppByteBuffer();
                 sbb.appendInt(16);
                 sbb.appendInt(0x00000015L);
                 sbb.appendInt(0);
                 sbb.appendInt(5);
                 sbb.appendInt(16);
-                SMPPByteBuffer sbb2 = new SMPPByteBuffer();
+                SmppByteBuffer sbb2 = new SmppByteBuffer();
                 sbb2.appendInt(0x00000005L);
                 sbb2.appendInt(0x00000000L);
                 sbb2.appendInt(4);
@@ -351,7 +350,7 @@ public class TCPConnectionTest {
                 serverSocket = new ServerSocket(port);
                 Socket client;
                 OutputStream out;
-                SMPPByteBuffer sbb = new SMPPByteBuffer();
+                SmppByteBuffer sbb = new SmppByteBuffer();
                 sbb.appendInt(0);
                 sbb.appendInt(0x00000015L);
                 sbb.appendInt(0);

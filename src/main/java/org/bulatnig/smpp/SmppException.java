@@ -6,21 +6,21 @@ package org.bulatnig.smpp;
  * @author Bulat Nigmatullin
  *
  */
-public class SMPPException extends Exception {
+public class SmppException extends Exception {
 
-    public SMPPException() {
+    public SmppException() {
         super();
     }
 
-    public SMPPException(String message) {
+    public SmppException(String message) {
         super(message);
     }
 
-    public SMPPException(String message, Throwable cause) {
+    public SmppException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public SMPPException(Throwable cause) {
+    public SmppException(Throwable cause) {
         super(cause);
     }
 }

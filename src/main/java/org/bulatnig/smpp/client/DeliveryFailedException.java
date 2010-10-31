@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.client;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 
 /**
  * Comment here.
@@ -9,6 +9,6 @@ import org.bulatnig.smpp.SMPPException;
  * Date: 22.04.2009
  * Time: 19:11:34
  */
-public class DeliveryFailedException extends SMPPException {
+public class DeliveryFailedException extends SmppException {
 
 }

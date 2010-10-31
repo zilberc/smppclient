@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -77,7 +77,7 @@ public class QuerySM extends PDU implements Responsable {
         if (getCommandId() != CommandId.QUERY_SM) {
             throw new ClassCastException();
         }
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             messageId = bb.removeCString();
             if (messageId.length() > MAX_MESSAGEID_LENGTH) {
@@ -115,7 +115,7 @@ public class QuerySM extends PDU implements Responsable {
      */
     @Override
     protected final byte[] getBodyBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         if (messageId != null && messageId.length() > MAX_MESSAGEID_LENGTH) {
             throw new PDUException("messageId field is too long");
         }

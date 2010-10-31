@@ -1,6 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -41,7 +41,7 @@ public class DestAddress {
      * @throws PDUException ошибка обработки PDU
      */
     public DestAddress(final byte[] bytes) throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
             destFlag = bb.removeByte();
             if (destFlag == 1) {
@@ -52,7 +52,7 @@ public class DestAddress {
         } catch (WrongLengthException e) {
             throw new PDUException("Wrong parameters supplied", e);
         } catch (WrongParameterException e) {
-            throw new PDUException("FATAL ERROR wrong SMPPByteBuffer work", e);
+            throw new PDUException("FATAL ERROR wrong SmppByteBuffer work", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class DestAddress {
      * @throws PDUException ошибка обработки PDU
      */
     protected final byte[] getBytes() throws PDUException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendByte(destFlag);
         } catch (WrongParameterException e) {

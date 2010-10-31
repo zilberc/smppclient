@@ -1,13 +1,13 @@
 package org.bulatnig.smpp.session;
 
-import org.bulatnig.smpp.SMPPException;
+import org.bulatnig.smpp.SmppException;
 
 /**
  * No response on sent message from SMSC received.
  *
  * @author Bulat nigmatullin
  */
-public final class NoResponseException extends SMPPException {
+public final class NoResponseException extends SmppException {
 
     public NoResponseException() {
         super();

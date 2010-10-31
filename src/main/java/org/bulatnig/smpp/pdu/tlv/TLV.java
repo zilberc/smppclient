@@ -1,9 +1,8 @@
 package org.bulatnig.smpp.pdu.tlv;
 
-import org.bulatnig.smpp.SMPPObject;
 import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.pdu.udh.*;
-import org.bulatnig.smpp.util.SMPPByteBuffer;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.util.WrongParameterException;
 
@@ -24,7 +23,7 @@ import org.bulatnig.smpp.util.WrongParameterException;
  *
  * @author Bulat Nigmatullin
  */
-public abstract class TLV extends SMPPObject {
+public abstract class TLV {
 
     private static final TLVHelper helper = TLVHelperImpl.INSTANCE;
 
@@ -66,7 +65,7 @@ public abstract class TLV extends SMPPObject {
      * @throws TLVException ошибка разбора TLV
      */
     protected TLV(final byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SMPPByteBuffer bb = new SMPPByteBuffer(bytes);
+        SmppByteBuffer bb = new SmppByteBuffer(bytes);
         parseHead(bb);
         int length;
         try {
@@ -84,11 +83,11 @@ public abstract class TLV extends SMPPObject {
     /**
      * Обрабатывает заголовок, который является обязательной частью любого TLV.
      *
-     * @param bb TLV SMPPByteBuffer
+     * @param bb TLV SmppByteBuffer
      * @return тело TLV
      * @throws TLVException ошибка разбора TLV
      */
-    private SMPPByteBuffer parseHead(final SMPPByteBuffer bb) throws TLVException {
+    private SmppByteBuffer parseHead(final SmppByteBuffer bb) throws TLVException {
         int tagValue;
         try {
             tagValue = bb.removeShort();
@@ -120,7 +119,7 @@ public abstract class TLV extends SMPPObject {
      * @throws TLVException ошибка обработки TLV
      */
     public final byte[] getBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SMPPByteBuffer bb = new SMPPByteBuffer();
+        SmppByteBuffer bb = new SmppByteBuffer();
         try {
             bb.appendShort(tag.getValue());
             byte[] value = getValueBytes(esmClass, dataCoding);
@@ -171,7 +170,7 @@ public abstract class TLV extends SMPPObject {
     protected abstract byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException;
 
 
-    protected final UDH parseUDH(SMPPByteBuffer byteBuffer) throws TLVException {
+    protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws TLVException {
         try {
             short length = byteBuffer.readBytes(1).removeByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).getBuffer());
