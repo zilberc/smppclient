@@ -21,7 +21,7 @@ public class MsAvailabilityStatusTest {
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x01);
-		MsAvailabilityStatus mas = new MsAvailabilityStatus(bb.getBuffer());
+		MsAvailabilityStatus mas = new MsAvailabilityStatus(bb.array());
 		assertEquals(ParameterTag.MS_AVAILABILITY_STATUS, mas.getTag());
 		assertEquals(5, mas.getBytes().length);
 		assertEquals(AvailabilityStatus.DENIED, mas.getValue());
@@ -34,7 +34,7 @@ public class MsAvailabilityStatusTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new MsAvailabilityStatus(bb.getBuffer());
+		new MsAvailabilityStatus(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class MsAvailabilityStatusTest {
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new MsAvailabilityStatus(bb.getBuffer());
+		new MsAvailabilityStatus(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class MsAvailabilityStatusTest {
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0002);
-		new MsAvailabilityStatus(bb.getBuffer());
+		new MsAvailabilityStatus(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class MsAvailabilityStatusTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new MsAvailabilityStatus(bb.getBuffer());
+		new MsAvailabilityStatus(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class MsAvailabilityStatusTest {
 		bb.appendShort(0x0422);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		MsAvailabilityStatus mas = new MsAvailabilityStatus(bb.getBuffer());
+		MsAvailabilityStatus mas = new MsAvailabilityStatus(bb.array());
 		assertEquals(ParameterTag.MS_AVAILABILITY_STATUS, mas.getTag());
 		assertEquals(5, mas.getBytes().length);
 		assertEquals(AvailabilityStatus.RESERVED, mas.getValue());

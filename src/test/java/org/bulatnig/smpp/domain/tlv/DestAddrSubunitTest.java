@@ -21,7 +21,7 @@ public class DestAddrSubunitTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x04);
-		DestAddrSubunit das = new DestAddrSubunit(bb.getBuffer());
+		DestAddrSubunit das = new DestAddrSubunit(bb.array());
 		assertEquals(ParameterTag.DEST_ADDR_SUBUNIT, das.getTag());
 		assertEquals(5, das.getBytes().length);
 		assertEquals(AddrSubunit.EXTERNAL_UNIT_1, das.getValue());
@@ -34,7 +34,7 @@ public class DestAddrSubunitTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new DestAddrSubunit(bb.getBuffer());
+		new DestAddrSubunit(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class DestAddrSubunitTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new DestAddrSubunit(bb.getBuffer());
+		new DestAddrSubunit(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class DestAddrSubunitTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0002);
-		new DestAddrSubunit(bb.getBuffer());
+		new DestAddrSubunit(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class DestAddrSubunitTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new DestAddrSubunit(bb.getBuffer());
+		new DestAddrSubunit(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class DestAddrSubunitTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		DestAddrSubunit das = new DestAddrSubunit(bb.getBuffer());
+		DestAddrSubunit das = new DestAddrSubunit(bb.array());
 		assertEquals(ParameterTag.DEST_ADDR_SUBUNIT, das.getTag());
 		assertEquals(5, das.getBytes().length);
 		assertEquals(AddrSubunit.RESERVED, das.getValue());

@@ -24,7 +24,7 @@ public class UserMessageReferenceTest {
 		bb.appendShort(0x0204);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		UserMessageReference umr = new UserMessageReference(bb.getBuffer());
+		UserMessageReference umr = new UserMessageReference(bb.array());
 		assertEquals(ParameterTag.USER_MESSAGE_REFERENCE, umr.getTag());
 		assertEquals(6, umr.getBytes().length);
 		assertEquals(4369, umr.getValue());
@@ -37,7 +37,7 @@ public class UserMessageReferenceTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new UserMessageReference(bb.getBuffer());
+		new UserMessageReference(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class UserMessageReferenceTest {
 		bb.appendShort(0x0204);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x1111);
-		new UserMessageReference(bb.getBuffer());
+		new UserMessageReference(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class UserMessageReferenceTest {
 		bb.appendShort(0x0204);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new UserMessageReference(bb.getBuffer());
+		new UserMessageReference(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class UserMessageReferenceTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x7fff);
-		new UserMessageReference(bb.getBuffer());
+		new UserMessageReference(bb.array());
 	}
 
 }

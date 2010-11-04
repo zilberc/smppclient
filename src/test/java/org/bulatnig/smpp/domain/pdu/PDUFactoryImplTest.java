@@ -39,7 +39,7 @@ public class PDUFactoryImplTest {
         submit.setSequenceNumber(5);
         SmppByteBuffer bb = new SmppByteBuffer(submit.getBytes());
         bb.appendShort(0x0004);
-        factory.parsePDU(bb.getBuffer());
+        factory.parsePDU(bb.array());
     }
 
     @Test(expected = PDUException.class)
@@ -59,7 +59,7 @@ public class PDUFactoryImplTest {
         sbb.appendCString("5265798795445664047");
         assertEquals("000000248000000400000000000000023532363537393837393534343536363430343700", sbb.getHexDump());
         PDUFactory factory = PDUFactoryImpl.INSTANCE;
-        factory.parsePDU(sbb.getBuffer());
+        factory.parsePDU(sbb.array());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class PDUFactoryImplTest {
         sbb.appendString("85+3275876");
         assertEquals("000000550000000500000000000009b300020138393031353732393535310002013731373100000000000001000000000204000201a91401000d303831313037313535333338000424000a38352b33323735383736", sbb.getHexDump());
         PDUFactory factory = PDUFactoryImpl.INSTANCE;
-        factory.parsePDU(sbb.getBuffer());
+        factory.parsePDU(sbb.array());
     }
 
     @Test
@@ -151,7 +151,7 @@ public class PDUFactoryImplTest {
         sbb.appendShort(0x0441);
         assertEquals("0000007e00000004000000000000000e000001313935300001013739323631373537323633000000000000000008004e00280421043e043d044f002c00200049004300510029000a043f044004380432000a0020041e044204320435044204380442044c0020043200200049004300510020044104350439044704300441", sbb.getHexDump());
         PDUFactory factory = PDUFactoryImpl.INSTANCE;
-        factory.parsePDU(sbb.getBuffer());
+        factory.parsePDU(sbb.array());
     }
 
     @Test
@@ -219,7 +219,7 @@ public class PDUFactoryImplTest {
         sbb.appendInt(0x002000b7L);
         assertEquals("000000bc0000000400000000000001f0000001313935330001013737303131353734383430000000000000000008008c00270061007300640061007300640027002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000b7", sbb.getHexDump());
         PDUFactory factory = PDUFactoryImpl.INSTANCE;
-        SubmitSM submit = (SubmitSM)factory.parsePDU(sbb.getBuffer());
+        SubmitSM submit = (SubmitSM)factory.parsePDU(sbb.array());
         assertEquals("'asdasd'                                                             ·", submit.getShortMessage());
     }
 
@@ -263,7 +263,7 @@ public class PDUFactoryImplTest {
         sbb.appendByte((short) 0x23);
         assertEquals("0000004f0000000500000000076af6d40001013739303238313437323233000101383138312332333933393932370083000000000000000005592b31303413830002000002040002005f0501000123", sbb.getHexDump());
         PDUFactory factory = PDUFactoryImpl.INSTANCE;
-        factory.parsePDU(sbb.getBuffer());
+        factory.parsePDU(sbb.array());
     }
 
     @Test
@@ -275,7 +275,7 @@ public class PDUFactoryImplTest {
         sbb.appendInt(0x000dff13L);
         assertEquals("000000108000000400000443000dff13", sbb.getHexDump());
         PDUFactory factory = PDUFactoryImpl.INSTANCE;
-        PDU pdu = factory.parsePDU(sbb.getBuffer());
+        PDU pdu = factory.parsePDU(sbb.array());
         assertEquals(16, pdu.getCommandLength());
         assertEquals(CommandId.SUBMIT_SM_RESP, pdu.getCommandId());
         assertEquals(CommandStatus.RESERVED, pdu.getCommandStatus());

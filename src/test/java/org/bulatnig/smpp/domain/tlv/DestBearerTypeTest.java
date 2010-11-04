@@ -21,7 +21,7 @@ public class DestBearerTypeTest {
 		bb.appendShort(0x0007);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x05);
-		DestBearerType dbt = new DestBearerType(bb.getBuffer());
+		DestBearerType dbt = new DestBearerType(bb.array());
 		assertEquals(ParameterTag.DEST_BEARER_TYPE, dbt.getTag());
 		assertEquals(5, dbt.getBytes().length);
 		assertEquals(BearerType.CDPD, dbt.getValue());
@@ -34,7 +34,7 @@ public class DestBearerTypeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x05);
-		new DestBearerType(bb.getBuffer());
+		new DestBearerType(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class DestBearerTypeTest {
 		bb.appendShort(0x0007);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new DestBearerType(bb.getBuffer());
+		new DestBearerType(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class DestBearerTypeTest {
 		bb.appendShort(0x0007);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0014);
-		new DestBearerType(bb.getBuffer());
+		new DestBearerType(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class DestBearerTypeTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new DestBearerType(bb.getBuffer());
+		new DestBearerType(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class DestBearerTypeTest {
 		bb.appendShort(0x0007);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x14);
-		DestBearerType dbt = new DestBearerType(bb.getBuffer());
+		DestBearerType dbt = new DestBearerType(bb.array());
 		assertEquals(ParameterTag.DEST_BEARER_TYPE, dbt.getTag());
 		assertEquals(5, dbt.getBytes().length);
 		assertEquals(BearerType.RESERVED, dbt.getValue());

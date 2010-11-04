@@ -24,7 +24,7 @@ public class SetDpfTest {
 		bb.appendShort(0x0421);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		SetDpf sd = new SetDpf(bb.getBuffer());
+		SetDpf sd = new SetDpf(bb.array());
 		assertEquals(ParameterTag.SET_DPF, sd.getTag());
 		assertEquals(5, sd.getBytes().length);
 		assertEquals((short)112, sd.getValue());
@@ -37,7 +37,7 @@ public class SetDpfTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new SetDpf(bb.getBuffer());
+		new SetDpf(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class SetDpfTest {
 		bb.appendShort(0x0421);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new SetDpf(bb.getBuffer());
+		new SetDpf(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class SetDpfTest {
 		bb.appendShort(0x0421);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new SetDpf(bb.getBuffer());
+		new SetDpf(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class SetDpfTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new SetDpf(bb.getBuffer());
+		new SetDpf(bb.array());
 	}
 
 }

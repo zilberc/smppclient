@@ -45,9 +45,9 @@ public class DestAddress {
         try {
             destFlag = bb.removeByte();
             if (destFlag == 1) {
-                smeAddress = new SMEAddress(bb.removeBytes(bb.length()).getBuffer());
+                smeAddress = new SMEAddress(bb.removeBytes(bb.length()).array());
             } else {
-                dlnAddress = new DLN(bb.removeBytes(bb.length()).getBuffer());
+                dlnAddress = new DLN(bb.removeBytes(bb.length()).array());
             }
         } catch (WrongLengthException e) {
             throw new PDUException("Wrong parameters supplied", e);
@@ -68,11 +68,11 @@ public class DestAddress {
             throw new PDUException("destFlag field is invalid", e);
         }
         if (destFlag == 1) {
-            bb.appendBytes(smeAddress.getBytes(), smeAddress.getBytes().length);
+            bb.appendBytes(smeAddress.getBytes());
         } else {
-            bb.appendBytes(dlnAddress.getBytes(), dlnAddress.getBytes().length);
+            bb.appendBytes(dlnAddress.getBytes());
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

@@ -38,7 +38,7 @@ public class DeliverSMResp extends PDU {
     protected final byte[] getBodyBytes() {
         SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendCString(messageId);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

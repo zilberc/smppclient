@@ -189,10 +189,10 @@ public enum TLVFactoryImpl implements TLVFactory {
                 length = params.removeShort();
                 buffer.appendShort(length);
                 if (length > 0) {
-                    buffer.appendBytes(params.removeBytes(length).getBuffer(), length);
+                    buffer.appendBytes(params.removeBytes(length).array());
                 }
                 try {
-                    list.add(parseTLV(buffer.getBuffer(), esmClass, dataCoding));
+                    list.add(parseTLV(buffer.array(), esmClass, dataCoding));
                 } catch (TLVNotFoundException e) {
                     // omit it
                 }

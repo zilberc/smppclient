@@ -21,7 +21,7 @@ public class SourceNetworkTypeTest {
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x04);
-		SourceNetworkType snt = new SourceNetworkType(bb.getBuffer());
+		SourceNetworkType snt = new SourceNetworkType(bb.array());
 		assertEquals(ParameterTag.SOURCE_NETWORK_TYPE, snt.getTag());
 		assertEquals(5, snt.getBytes().length);
 		assertEquals(NetworkType.PDC, snt.getValue());
@@ -34,7 +34,7 @@ public class SourceNetworkTypeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new SourceNetworkType(bb.getBuffer());
+		new SourceNetworkType(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class SourceNetworkTypeTest {
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new SourceNetworkType(bb.getBuffer());
+		new SourceNetworkType(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class SourceNetworkTypeTest {
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0014);
-		new SourceNetworkType(bb.getBuffer());
+		new SourceNetworkType(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class SourceNetworkTypeTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new SourceNetworkType(bb.getBuffer());
+		new SourceNetworkType(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class SourceNetworkTypeTest {
 		bb.appendShort(0x000E);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x14);
-		SourceNetworkType snt = new SourceNetworkType(bb.getBuffer());
+		SourceNetworkType snt = new SourceNetworkType(bb.array());
 		assertEquals(ParameterTag.SOURCE_NETWORK_TYPE, snt.getTag());
 		assertEquals(5, snt.getBytes().length);
 		assertEquals(NetworkType.RESERVED, snt.getValue());

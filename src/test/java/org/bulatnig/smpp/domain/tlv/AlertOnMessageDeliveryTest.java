@@ -23,8 +23,8 @@ public class AlertOnMessageDeliveryTest {
         SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x130c);
         bb.appendShort(0x0000);
-        new AlertOnMessageDelivery(bb.getBuffer());
-        AlertOnMessageDelivery aomd = new AlertOnMessageDelivery(bb.getBuffer());
+        new AlertOnMessageDelivery(bb.array());
+        AlertOnMessageDelivery aomd = new AlertOnMessageDelivery(bb.array());
         assertEquals(ParameterTag.ALERT_ON_MESSAGE_DELIVERY, aomd.getTag());
         assertEquals(4, aomd.getBytes().length);
         assertEquals("130c0000", new SmppByteBuffer(aomd.getBytes()).getHexDump());
@@ -35,7 +35,7 @@ public class AlertOnMessageDeliveryTest {
         SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0000);
         bb.appendShort(0x0000);
-        new AlertOnMessageDelivery(bb.getBuffer());
+        new AlertOnMessageDelivery(bb.array());
     }
 
     @Test(expected = TLVException.class)
@@ -44,7 +44,7 @@ public class AlertOnMessageDeliveryTest {
         bb.appendShort(0x130c);
         bb.appendShort(0x0001);
         bb.appendShort(0x1111);
-        new AlertOnMessageDelivery(bb.getBuffer());
+        new AlertOnMessageDelivery(bb.array());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class AlertOnMessageDeliveryTest {
         bb.appendShort(0x130c);
         bb.appendShort(0x0001);
         bb.appendByte((byte) 0x11);
-        new AlertOnMessageDelivery(bb.getBuffer());
+        new AlertOnMessageDelivery(bb.array());
     }
 
     @Test(expected = ClassCastException.class)
@@ -69,7 +69,7 @@ public class AlertOnMessageDeliveryTest {
         SmppByteBuffer bb = new SmppByteBuffer();
         bb.appendShort(0x0005);
         bb.appendShort(0x0000);
-        new AlertOnMessageDelivery(bb.getBuffer());
+        new AlertOnMessageDelivery(bb.array());
     }
 
 }

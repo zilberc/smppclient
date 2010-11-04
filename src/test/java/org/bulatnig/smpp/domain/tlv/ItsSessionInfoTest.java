@@ -24,7 +24,7 @@ public class ItsSessionInfoTest {
 		bb.appendShort(0x1383);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		ItsSessionInfo isi = new ItsSessionInfo(bb.getBuffer());
+		ItsSessionInfo isi = new ItsSessionInfo(bb.array());
 		assertEquals(ParameterTag.ITS_SESSION_INFO, isi.getTag());
 		assertEquals(6, isi.getBytes().length);
 		assertEquals(4369, isi.getValue());
@@ -37,7 +37,7 @@ public class ItsSessionInfoTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new ItsSessionInfo(bb.getBuffer());
+		new ItsSessionInfo(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class ItsSessionInfoTest {
 		bb.appendShort(0x1383);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x1111);
-		new ItsSessionInfo(bb.getBuffer());
+		new ItsSessionInfo(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class ItsSessionInfoTest {
 		bb.appendShort(0x1383);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new ItsSessionInfo(bb.getBuffer());
+		new ItsSessionInfo(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class ItsSessionInfoTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x7fff);
-		new ItsSessionInfo(bb.getBuffer());
+		new ItsSessionInfo(bb.array());
 	}
 
 }

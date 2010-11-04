@@ -24,7 +24,7 @@ public class DestinationPortTest {
 		bb.appendShort(0x020b);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		DestinationPort dp = new DestinationPort(bb.getBuffer());
+		DestinationPort dp = new DestinationPort(bb.array());
 		assertEquals(ParameterTag.DESTINATION_PORT, dp.getTag());
 		assertEquals(6, dp.getBytes().length);
 		assertEquals(4369, dp.getValue());
@@ -37,7 +37,7 @@ public class DestinationPortTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new DestinationPort(bb.getBuffer());
+		new DestinationPort(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class DestinationPortTest {
 		bb.appendShort(0x020b);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x1111);
-		new DestinationPort(bb.getBuffer());
+		new DestinationPort(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class DestinationPortTest {
 		bb.appendShort(0x020b);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new DestinationPort(bb.getBuffer());
+		new DestinationPort(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class DestinationPortTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x7fff);
-		new DestinationPort(bb.getBuffer());
+		new DestinationPort(bb.array());
 	}
 
 }

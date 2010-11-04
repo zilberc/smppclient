@@ -75,7 +75,7 @@ public class IEI extends UDH {
         } catch (WrongParameterException e) {
             throw new UDHException("msgRefNum field is invalid", e);
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     public short getMsgRefNum() {

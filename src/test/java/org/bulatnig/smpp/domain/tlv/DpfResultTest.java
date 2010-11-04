@@ -24,7 +24,7 @@ public class DpfResultTest {
 		bb.appendShort(0x0420);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		DpfResult dr = new DpfResult(bb.getBuffer());
+		DpfResult dr = new DpfResult(bb.array());
 		assertEquals(ParameterTag.DPF_RESULT, dr.getTag());
 		assertEquals(5, dr.getBytes().length);
 		assertEquals((short)112, dr.getValue());
@@ -37,7 +37,7 @@ public class DpfResultTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new DpfResult(bb.getBuffer());
+		new DpfResult(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class DpfResultTest {
 		bb.appendShort(0x0420);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new DpfResult(bb.getBuffer());
+		new DpfResult(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class DpfResultTest {
 		bb.appendShort(0x0420);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new DpfResult(bb.getBuffer());
+		new DpfResult(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class DpfResultTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new DpfResult(bb.getBuffer());
+		new DpfResult(bb.array());
 	}
 
 }

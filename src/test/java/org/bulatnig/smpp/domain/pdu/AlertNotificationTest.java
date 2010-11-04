@@ -41,7 +41,7 @@ public class AlertNotificationTest {
         sbb.appendShort(0x0422);
         sbb.appendShort(1);
         sbb.appendByte((short) 2);
-        AlertNotification an = new AlertNotification(sbb.getBuffer());
+        AlertNotification an = new AlertNotification(sbb.array());
         assertEquals(49L, an.getCommandLength());
         assertEquals(CommandId.ALERT_NOTIFICATION, an.getCommandId());
         assertEquals(258L, an.getCommandId().getValue());

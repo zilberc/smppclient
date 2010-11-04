@@ -24,7 +24,7 @@ public class SarMsgRefNumTest {
 		bb.appendShort(0x020c);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		SarMsgRefNum smrn = new SarMsgRefNum(bb.getBuffer());
+		SarMsgRefNum smrn = new SarMsgRefNum(bb.array());
 		assertEquals(ParameterTag.SAR_MSG_REF_NUM, smrn.getTag());
 		assertEquals(6, smrn.getBytes().length);
 		assertEquals(4369, smrn.getValue());
@@ -37,7 +37,7 @@ public class SarMsgRefNumTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new SarMsgRefNum(bb.getBuffer());
+		new SarMsgRefNum(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class SarMsgRefNumTest {
 		bb.appendShort(0x020c);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x1111);
-		new SarMsgRefNum(bb.getBuffer());
+		new SarMsgRefNum(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class SarMsgRefNumTest {
 		bb.appendShort(0x020c);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new SarMsgRefNum(bb.getBuffer());
+		new SarMsgRefNum(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class SarMsgRefNumTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x7fff);
-		new SarMsgRefNum(bb.getBuffer());
+		new SarMsgRefNum(bb.array());
 	}
 
 }

@@ -78,7 +78,7 @@ public class UssdServiceOp extends TLV {
         } catch (WrongParameterException e) {
             throw new TLVException("Buffer error during parsing value", e);
         }
-        return sbb.getBuffer();
+        return sbb.array();
     }
 
     private void defineValue(final short intValue) {

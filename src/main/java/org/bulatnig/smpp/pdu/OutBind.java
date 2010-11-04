@@ -61,7 +61,7 @@ public class OutBind extends PDU {
             throw new PDUException("password field is too long");
         }
         bb.appendCString(password);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

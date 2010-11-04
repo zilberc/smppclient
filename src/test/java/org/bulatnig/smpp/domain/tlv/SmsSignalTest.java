@@ -24,7 +24,7 @@ public class SmsSignalTest {
 		bb.appendShort(0x1203);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		SmsSignal ss = new SmsSignal(bb.getBuffer());
+		SmsSignal ss = new SmsSignal(bb.array());
 		assertEquals(ParameterTag.SMS_SIGNAL, ss.getTag());
 		assertEquals(6, ss.getBytes().length);
 		assertEquals(4369, ss.getValue());
@@ -37,7 +37,7 @@ public class SmsSignalTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new SmsSignal(bb.getBuffer());
+		new SmsSignal(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class SmsSignalTest {
 		bb.appendShort(0x1203);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x1111);
-		new SmsSignal(bb.getBuffer());
+		new SmsSignal(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class SmsSignalTest {
 		bb.appendShort(0x1203);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new SmsSignal(bb.getBuffer());
+		new SmsSignal(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class SmsSignalTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x7fff);
-		new SmsSignal(bb.getBuffer());
+		new SmsSignal(bb.array());
 	}
 
 }

@@ -23,7 +23,7 @@ public class CallbackNumTest {
 		bb.appendShort(0x0381);
 		bb.appendShort(0x0005);
 		bb.appendString("bulat");
-		CallbackNum cn = new CallbackNum(bb.getBuffer());
+		CallbackNum cn = new CallbackNum(bb.array());
 		assertEquals(ParameterTag.CALLBACK_NUM, cn.getTag());
 		assertEquals(9, cn.getBytes().length);
 		assertEquals("bulat", cn.getValue());
@@ -36,7 +36,7 @@ public class CallbackNumTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new CallbackNum(bb.getBuffer());
+		new CallbackNum(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -45,7 +45,7 @@ public class CallbackNumTest {
 		bb.appendShort(0x0381);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
-		new CallbackNum(bb.getBuffer());
+		new CallbackNum(bb.array());
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class CallbackNumTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new CallbackNum(bb.getBuffer());
+		new CallbackNum(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -72,7 +72,7 @@ public class CallbackNumTest {
 		bb.appendShort(0x0381);
 		bb.appendShort(0x0003);
 		bb.appendByte((byte)0x110101);
-		new CallbackNum(bb.getBuffer());
+		new CallbackNum(bb.array());
 	}
 
 }

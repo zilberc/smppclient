@@ -66,7 +66,7 @@ public class AdditionalStatusInfoText extends TLV {
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendCString(value);
-        return sbb.getBuffer();
+        return sbb.array();
     }
 
     /**

@@ -25,7 +25,7 @@ public class SourceSubaddressTest {
 		bb.appendShort(0x0202);
 		bb.appendShort(0x0003);
 		bb.appendString("smx");
-		SourceSubaddress ss = new SourceSubaddress(bb.getBuffer());
+		SourceSubaddress ss = new SourceSubaddress(bb.array());
 		assertEquals(ParameterTag.SOURCE_SUBADDRESS, ss.getTag());
 		assertEquals(7, ss.getBytes().length);
 		assertEquals("smx", ss.getValue());
@@ -38,7 +38,7 @@ public class SourceSubaddressTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new SourceSubaddress(bb.getBuffer());
+		new SourceSubaddress(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -47,7 +47,7 @@ public class SourceSubaddressTest {
 		bb.appendShort(0x0202);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
-		new SourceSubaddress(bb.getBuffer());
+		new SourceSubaddress(bb.array());
 	}
 	
 	@Test
@@ -65,7 +65,7 @@ public class SourceSubaddressTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new SourceSubaddress(bb.getBuffer());
+		new SourceSubaddress(bb.array());
 	}
 
 	@Test(expected=TLVException.class)
@@ -74,7 +74,7 @@ public class SourceSubaddressTest {
 		bb.appendShort(0x0202);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new SourceSubaddress(bb.getBuffer());
+		new SourceSubaddress(bb.array());
 	}
 
 	@Test(expected=TLVException.class)

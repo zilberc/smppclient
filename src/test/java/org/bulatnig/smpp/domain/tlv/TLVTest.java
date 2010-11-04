@@ -22,7 +22,7 @@ public class TLVTest {
         bb.appendShort(0x0005);
         bb.appendShort(0x0001);
         bb.appendByte((short) 0x04);
-        TLV tlv = TLVFactoryImpl.INSTANCE.parseTLV(bb.getBuffer(), new SmscEsmClass(), (short) 0);
+        TLV tlv = TLVFactoryImpl.INSTANCE.parseTLV(bb.array(), new SmscEsmClass(), (short) 0);
         assertEquals(ParameterTag.DEST_ADDR_SUBUNIT, tlv.getTag());
         assertEquals(5, tlv.getBytes().length);
         assertEquals(AddrSubunit.EXTERNAL_UNIT_1, ((DestAddrSubunit) tlv).getValue());
@@ -35,7 +35,7 @@ public class TLVTest {
         bb.appendShort(0x0000);
         bb.appendShort(0x0002);
         bb.appendShort(0x1234);
-        TLVFactoryImpl.INSTANCE.parseTLV(bb.getBuffer(), new SmscEsmClass(), (short) 0);
+        TLVFactoryImpl.INSTANCE.parseTLV(bb.array(), new SmscEsmClass(), (short) 0);
     }
 
     @Test(expected = TLVException.class)
@@ -44,7 +44,7 @@ public class TLVTest {
         bb.appendShort(0x0005);
         bb.appendShort(0x0001);
         bb.appendShort(0x1234);
-        TLVFactoryImpl.INSTANCE.parseTLV(bb.getBuffer(), new SmscEsmClass(), (short) 0);
+        TLVFactoryImpl.INSTANCE.parseTLV(bb.array(), new SmscEsmClass(), (short) 0);
     }
 
 }

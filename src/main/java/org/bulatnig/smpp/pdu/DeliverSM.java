@@ -324,80 +324,63 @@ public class DeliverSM extends PDU implements Responsable {
         bb.appendString(shortMessage, getCharsetName(dataCoding));
         try {
             if (userMessageReference != null) {
-                bb.appendBytes(userMessageReference.getBytes(),
-                        userMessageReference.getBytes().length);
+                bb.appendBytes(userMessageReference.getBytes());
             }
             if (sourcePort != null) {
-                bb.appendBytes(sourcePort.getBytes(), sourcePort.getBytes().length);
+                bb.appendBytes(sourcePort.getBytes());
             }
             if (destinationPort != null) {
-                bb.appendBytes(destinationPort.getBytes(), destinationPort
-                        .getBytes().length);
+                bb.appendBytes(destinationPort.getBytes());
             }
             if (sarMsgRefNum != null) {
-                bb.appendBytes(sarMsgRefNum.getBytes(),
-                        sarMsgRefNum.getBytes().length);
+                bb.appendBytes(sarMsgRefNum.getBytes());
             }
             if (sarTotalSegments != null) {
-                bb.appendBytes(sarTotalSegments.getBytes(), sarTotalSegments
-                        .getBytes().length);
+                bb.appendBytes(sarTotalSegments.getBytes());
             }
             if (sarSegmentSeqnum != null) {
-                bb.appendBytes(sarSegmentSeqnum.getBytes(), sarSegmentSeqnum
-                        .getBytes().length);
+                bb.appendBytes(sarSegmentSeqnum.getBytes());
             }
             if (payloadType != null) {
-                bb.appendBytes(payloadType.getBytes(),
-                        payloadType.getBytes().length);
+                bb.appendBytes(payloadType.getBytes());
             }
             if (messagePayload != null) {
-                bb.appendBytes(messagePayload.getBytes(),
-                        messagePayload.getBytes().length);
+                bb.appendBytes(messagePayload.getBytes());
             }
             if (privacyIndicator != null) {
-                bb.appendBytes(privacyIndicator.getBytes(), privacyIndicator
-                        .getBytes().length);
+                bb.appendBytes(privacyIndicator.getBytes());
             }
             if (callbackNum != null) {
-                bb.appendBytes(callbackNum.getBytes(),
-                        callbackNum.getBytes().length);
+                bb.appendBytes(callbackNum.getBytes());
             }
             if (sourceSubaddress != null) {
-                bb.appendBytes(sourceSubaddress.getBytes(), sourceSubaddress
-                        .getBytes().length);
+                bb.appendBytes(sourceSubaddress.getBytes());
             }
             if (destSubaddress != null) {
-                bb.appendBytes(destSubaddress.getBytes(),
-                        destSubaddress.getBytes().length);
+                bb.appendBytes(destSubaddress.getBytes());
             }
             if (userResponseCode != null) {
-                bb.appendBytes(userResponseCode.getBytes(), userResponseCode
-                        .getBytes().length);
+                bb.appendBytes(userResponseCode.getBytes());
             }
             if (languageIndicator != null) {
-                bb.appendBytes(languageIndicator.getBytes(), languageIndicator
-                        .getBytes().length);
+                bb.appendBytes(languageIndicator.getBytes());
             }
             if (itsSessionInfo != null) {
-                bb.appendBytes(itsSessionInfo.getBytes(),
-                        itsSessionInfo.getBytes().length);
+                bb.appendBytes(itsSessionInfo.getBytes());
             }
             if (networkErrorCode != null) {
-                bb.appendBytes(networkErrorCode.getBytes(), networkErrorCode
-                        .getBytes().length);
+                bb.appendBytes(networkErrorCode.getBytes());
             }
             if (messageStateTlv != null) {
-                bb.appendBytes(messageStateTlv.getBytes(),
-                        messageStateTlv.getBytes().length);
+                bb.appendBytes(messageStateTlv.getBytes());
             }
             if (receiptedMessageId != null) {
-                bb.appendBytes(receiptedMessageId.getBytes(), receiptedMessageId
-                        .getBytes().length);
+                bb.appendBytes(receiptedMessageId.getBytes());
             }
         } catch (TLVException e) {
             throw new PDUException("TLVs parsing failed", e);
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**
@@ -478,7 +461,7 @@ public class DeliverSM extends PDU implements Responsable {
             throw new PDUException("PDU parsing error", e);
         }
         if (bb.length() > 0) {
-            List<TLV> list = getOptionalParams(bb.getBuffer(), esmClass, dataCoding);
+            List<TLV> list = getOptionalParams(bb.array(), esmClass, dataCoding);
             for (TLV tlv : list) {
                 switch (tlv.getTag()) {
                     case USER_MESSAGE_REFERENCE:

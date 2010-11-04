@@ -31,7 +31,7 @@ public class GenericNackTest {
         sbb.appendInt(2147483648L);
         sbb.appendInt(88);
         sbb.appendInt(987654321L);
-        GenericNack gn = new GenericNack(sbb.getBuffer());
+        GenericNack gn = new GenericNack(sbb.array());
         assertEquals(16L, gn.getCommandLength());
         assertEquals(CommandId.GENERIC_NACK, gn.getCommandId());
         assertEquals(2147483648L, gn.getCommandId().getValue());

@@ -377,118 +377,93 @@ public class SubmitSM extends PDU implements Responsable {
         bb.appendString(shortMessage, getCharsetName(dataCoding));
         try {
             if (userMessageReference != null) {
-                bb.appendBytes(userMessageReference.getBytes(),
-                        userMessageReference.getBytes().length);
+                bb.appendBytes(userMessageReference.getBytes());
             }
             if (sourcePort != null) {
-                bb.appendBytes(sourcePort.getBytes(), sourcePort.getBytes().length);
+                bb.appendBytes(sourcePort.getBytes());
             }
             if (sourceAddrSubunit != null) {
-                bb.appendBytes(sourceAddrSubunit.getBytes(), sourceAddrSubunit
-                        .getBytes().length);
+                bb.appendBytes(sourceAddrSubunit.getBytes());
             }
             if (destinationPort != null) {
-                bb.appendBytes(destinationPort.getBytes(), destinationPort
-                        .getBytes().length);
+                bb.appendBytes(destinationPort.getBytes());
             }
             if (destAddrSubunit != null) {
-                bb.appendBytes(destAddrSubunit.getBytes(), destAddrSubunit
-                        .getBytes().length);
+                bb.appendBytes(destAddrSubunit.getBytes());
             }
             if (sarMsgRefNum != null) {
-                bb.appendBytes(sarMsgRefNum.getBytes(),
-                        sarMsgRefNum.getBytes().length);
+                bb.appendBytes(sarMsgRefNum.getBytes());
             }
             if (sarTotalSegments != null) {
-                bb.appendBytes(sarTotalSegments.getBytes(), sarTotalSegments
-                        .getBytes().length);
+                bb.appendBytes(sarTotalSegments.getBytes());
             }
             if (sarSegmentSeqnum != null) {
-                bb.appendBytes(sarSegmentSeqnum.getBytes(), sarSegmentSeqnum
-                        .getBytes().length);
+                bb.appendBytes(sarSegmentSeqnum.getBytes());
             }
             if (moreMessagesToSend != null) {
-                bb.appendBytes(moreMessagesToSend.getBytes(), moreMessagesToSend
-                        .getBytes().length);
+                bb.appendBytes(moreMessagesToSend.getBytes());
             }
             if (payloadType != null) {
-                bb.appendBytes(payloadType.getBytes(),
-                        payloadType.getBytes().length);
+                bb.appendBytes(payloadType.getBytes());
             }
             if (messagePayload != null) {
-                bb.appendBytes(messagePayload.getBytes(),
-                        messagePayload.getBytes().length);
+                bb.appendBytes(messagePayload.getBytes());
             }
             if (privacyIndicator != null) {
-                bb.appendBytes(privacyIndicator.getBytes(), privacyIndicator
-                        .getBytes().length);
+                bb.appendBytes(privacyIndicator.getBytes());
             }
             if (callbackNum != null) {
-                bb.appendBytes(callbackNum.getBytes(),
-                        callbackNum.getBytes().length);
+                bb.appendBytes(callbackNum.getBytes());
             }
             if (callbackNumPresInd != null) {
-                bb.appendBytes(callbackNumPresInd.getBytes(), callbackNumPresInd
-                        .getBytes().length);
+                bb.appendBytes(callbackNumPresInd.getBytes());
             }
             if (callbackNumAtag != null) {
-                bb.appendBytes(callbackNumAtag.getBytes(), callbackNumAtag
-                        .getBytes().length);
+                bb.appendBytes(callbackNumAtag.getBytes());
             }
             if (sourceSubaddress != null) {
-                bb.appendBytes(sourceSubaddress.getBytes(), sourceSubaddress
-                        .getBytes().length);
+                bb.appendBytes(sourceSubaddress.getBytes());
             }
             if (destSubaddress != null) {
-                bb.appendBytes(destSubaddress.getBytes(),
-                        destSubaddress.getBytes().length);
+                bb.appendBytes(destSubaddress.getBytes());
             }
             if (userResponseCode != null) {
-                bb.appendBytes(userResponseCode.getBytes(), userResponseCode
-                        .getBytes().length);
+                bb.appendBytes(userResponseCode.getBytes());
             }
             if (displayTime != null) {
-                bb.appendBytes(displayTime.getBytes(),
-                        displayTime.getBytes().length);
+                bb.appendBytes(displayTime.getBytes());
             }
             if (smsSignal != null) {
-                bb.appendBytes(smsSignal.getBytes(), smsSignal.getBytes().length);
+                bb.appendBytes(smsSignal.getBytes());
             }
             if (msValidity != null) {
-                bb.appendBytes(msValidity.getBytes(), msValidity.getBytes().length);
+                bb.appendBytes(msValidity.getBytes());
             }
             if (msMsgWaitFacilities != null) {
-                bb.appendBytes(msMsgWaitFacilities.getBytes(), msMsgWaitFacilities
-                        .getBytes().length);
+                bb.appendBytes(msMsgWaitFacilities.getBytes());
             }
             if (numberOfMessages != null) {
-                bb.appendBytes(numberOfMessages.getBytes(), numberOfMessages
-                        .getBytes().length);
+                bb.appendBytes(numberOfMessages.getBytes());
             }
             if (alertOnMessageDelivery != null) {
-                bb.appendBytes(alertOnMessageDelivery.getBytes(),
-                        alertOnMessageDelivery.getBytes().length);
+                bb.appendBytes(alertOnMessageDelivery.getBytes());
             }
             if (languageIndicator != null) {
-                bb.appendBytes(languageIndicator.getBytes(), languageIndicator
-                        .getBytes().length);
+                bb.appendBytes(languageIndicator.getBytes());
             }
             if (itsReplyType != null) {
-                bb.appendBytes(itsReplyType.getBytes(),
-                        itsReplyType.getBytes().length);
+                bb.appendBytes(itsReplyType.getBytes());
             }
             if (itsSessionInfo != null) {
-                bb.appendBytes(itsSessionInfo.getBytes(),
-                        itsSessionInfo.getBytes().length);
+                bb.appendBytes(itsSessionInfo.getBytes());
             }
             if (ussdServiceOp != null) {
-                bb.appendBytes(ussdServiceOp.getBytes(),
-                        ussdServiceOp.getBytes().length);
+                bb.appendBytes(ussdServiceOp.getBytes());
             }
         } catch (TLVException e) {
             throw new PDUException("TLVs parsing failed", e);
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**
@@ -571,7 +546,7 @@ public class SubmitSM extends PDU implements Responsable {
             throw new PDUException("PDU parsing error", e);
         }
         if (bb.length() > 0) {
-            List<TLV> list = getOptionalParams(bb.getBuffer(), esmClass, dataCoding);
+            List<TLV> list = getOptionalParams(bb.array(), esmClass, dataCoding);
             for (TLV tlv : list) {
                 switch (tlv.getTag()) {
                     case USER_MESSAGE_REFERENCE:

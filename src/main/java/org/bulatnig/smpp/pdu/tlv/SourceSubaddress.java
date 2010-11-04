@@ -69,7 +69,7 @@ public class SourceSubaddress extends TLV {
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendString(value);
-        return sbb.getBuffer();
+        return sbb.array();
     }
 
     /**

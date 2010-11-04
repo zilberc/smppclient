@@ -24,7 +24,7 @@ public class MessageStateTLVTest {
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x08);
-		MessageStateTlv das = new MessageStateTlv(bb.getBuffer());
+		MessageStateTlv das = new MessageStateTlv(bb.array());
 		assertEquals(ParameterTag.MESSAGE_STATE, das.getTag());
 		assertEquals(5, das.getBytes().length);
 		assertEquals(MessageState.REJECTED, das.getValue());
@@ -37,7 +37,7 @@ public class MessageStateTLVTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new MessageStateTlv(bb.getBuffer());
+		new MessageStateTlv(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class MessageStateTLVTest {
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new MessageStateTlv(bb.getBuffer());
+		new MessageStateTlv(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class MessageStateTLVTest {
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x0002);
-		new MessageStateTlv(bb.getBuffer());
+		new MessageStateTlv(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class MessageStateTLVTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new MessageStateTlv(bb.getBuffer());
+		new MessageStateTlv(bb.array());
 	}
 	
 	@Test(expected=TLVException.class)
@@ -82,7 +82,7 @@ public class MessageStateTLVTest {
 		bb.appendShort(0x0427);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		new MessageStateTlv(bb.getBuffer());
+		new MessageStateTlv(bb.array());
 	}
 
 }

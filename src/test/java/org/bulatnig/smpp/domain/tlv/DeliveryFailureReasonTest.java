@@ -21,7 +21,7 @@ public class DeliveryFailureReasonTest {
 		bb.appendShort(0x0425);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x02);
-		DeliveryFailureReason dfr = new DeliveryFailureReason(bb.getBuffer());
+		DeliveryFailureReason dfr = new DeliveryFailureReason(bb.array());
 		assertEquals(ParameterTag.DELIVERY_FAILURE_REASON, dfr.getTag());
 		assertEquals(5, dfr.getBytes().length);
 		assertEquals(FailureReason.PERMANENT_NETWORK_ERROR, dfr.getValue());
@@ -34,7 +34,7 @@ public class DeliveryFailureReasonTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new DeliveryFailureReason(bb.getBuffer());
+		new DeliveryFailureReason(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class DeliveryFailureReasonTest {
 		bb.appendShort(0x0425);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x00);
-		new DeliveryFailureReason(bb.getBuffer());
+		new DeliveryFailureReason(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class DeliveryFailureReasonTest {
 		bb.appendShort(0x0425);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0002);
-		new DeliveryFailureReason(bb.getBuffer());
+		new DeliveryFailureReason(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class DeliveryFailureReasonTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x02);
-		new DeliveryFailureReason(bb.getBuffer());
+		new DeliveryFailureReason(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class DeliveryFailureReasonTest {
 		bb.appendShort(0x0425);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		DeliveryFailureReason dfr = new DeliveryFailureReason(bb.getBuffer());
+		DeliveryFailureReason dfr = new DeliveryFailureReason(bb.array());
 		assertEquals(ParameterTag.DELIVERY_FAILURE_REASON, dfr.getTag());
 		assertEquals(5, dfr.getBytes().length);
 		assertEquals(FailureReason.RESERVED, dfr.getValue());

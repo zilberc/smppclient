@@ -37,7 +37,7 @@ public class BindTransmitterRespTest {
         sbb.appendShort(0x0210);
         sbb.appendShort(1);
         sbb.appendByte((short)51);
-        BindTransmitterResp btr = new BindTransmitterResp(sbb.getBuffer());
+        BindTransmitterResp btr = new BindTransmitterResp(sbb.array());
         assertEquals(37L, btr.getCommandLength());
         assertEquals(CommandId.BIND_TRANSMITTER_RESP, btr.getCommandId());
         assertEquals(2147483650L, btr.getCommandId().getValue());

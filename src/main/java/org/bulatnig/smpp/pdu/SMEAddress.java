@@ -93,7 +93,7 @@ public class SMEAddress {
             throw new PDUException("destinationAddr field is invalid");
         }
         bb.appendCString(destinationAddr);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

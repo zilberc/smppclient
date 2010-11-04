@@ -294,7 +294,7 @@ public class SubmitMulti extends PDU implements Responsable {
         }
         if (numberOfDests > 0) {
             for (DestAddress da : destAddresses) {
-                bb.appendBytes(da.getBytes(), da.getBytes().length);
+                bb.appendBytes(da.getBytes());
             }
         } else {
             try {
@@ -355,94 +355,75 @@ public class SubmitMulti extends PDU implements Responsable {
         bb.appendString(shortMessage, getCharsetName(dataCoding));
         try {
             if (userMessageReference != null) {
-                bb.appendBytes(userMessageReference.getBytes(),
-                        userMessageReference.getBytes().length);
+                bb.appendBytes(userMessageReference.getBytes());
             }
             if (sourcePort != null) {
-                bb.appendBytes(sourcePort.getBytes(), sourcePort.getBytes().length);
+                bb.appendBytes(sourcePort.getBytes());
             }
             if (sourceAddrSubunit != null) {
-                bb.appendBytes(sourceAddrSubunit.getBytes(), sourceAddrSubunit
-                        .getBytes().length);
+                bb.appendBytes(sourceAddrSubunit.getBytes());
             }
             if (destinationPort != null) {
-                bb.appendBytes(destinationPort.getBytes(), destinationPort
-                        .getBytes().length);
+                bb.appendBytes(destinationPort.getBytes());
             }
             if (destAddrSubunit != null) {
-                bb.appendBytes(destAddrSubunit.getBytes(), destAddrSubunit
-                        .getBytes().length);
+                bb.appendBytes(destAddrSubunit.getBytes());
             }
             if (sarMsgRefNum != null) {
-                bb.appendBytes(sarMsgRefNum.getBytes(),
-                        sarMsgRefNum.getBytes().length);
+                bb.appendBytes(sarMsgRefNum.getBytes());
             }
             if (sarTotalSegments != null) {
-                bb.appendBytes(sarTotalSegments.getBytes(), sarTotalSegments
-                        .getBytes().length);
+                bb.appendBytes(sarTotalSegments.getBytes());
             }
             if (sarSegmentSeqnum != null) {
-                bb.appendBytes(sarSegmentSeqnum.getBytes(), sarSegmentSeqnum
-                        .getBytes().length);
+                bb.appendBytes(sarSegmentSeqnum.getBytes());
             }
             if (payloadType != null) {
-                bb.appendBytes(payloadType.getBytes(),
-                        payloadType.getBytes().length);
+                bb.appendBytes(payloadType.getBytes());
             }
             if (messagePayload != null) {
-                bb.appendBytes(messagePayload.getBytes(),
-                        messagePayload.getBytes().length);
+                bb.appendBytes(messagePayload.getBytes());
             }
             if (privacyIndicator != null) {
-                bb.appendBytes(privacyIndicator.getBytes(), privacyIndicator
-                        .getBytes().length);
+                bb.appendBytes(privacyIndicator.getBytes());
             }
             if (callbackNum != null) {
-                bb.appendBytes(callbackNum.getBytes(),
-                        callbackNum.getBytes().length);
+                bb.appendBytes(callbackNum.getBytes());
             }
             if (callbackNumPresInd != null) {
-                bb.appendBytes(callbackNumPresInd.getBytes(), callbackNumPresInd
-                        .getBytes().length);
+                bb.appendBytes(callbackNumPresInd.getBytes());
             }
             if (callbackNumAtag != null) {
-                bb.appendBytes(callbackNumAtag.getBytes(), callbackNumAtag
-                        .getBytes().length);
+                bb.appendBytes(callbackNumAtag.getBytes());
             }
             if (sourceSubaddress != null) {
-                bb.appendBytes(sourceSubaddress.getBytes(), sourceSubaddress
-                        .getBytes().length);
+                bb.appendBytes(sourceSubaddress.getBytes());
             }
             if (destSubaddress != null) {
-                bb.appendBytes(destSubaddress.getBytes(),
-                        destSubaddress.getBytes().length);
+                bb.appendBytes(destSubaddress.getBytes());
             }
             if (displayTime != null) {
-                bb.appendBytes(displayTime.getBytes(),
-                        displayTime.getBytes().length);
+                bb.appendBytes(displayTime.getBytes());
             }
             if (smsSignal != null) {
-                bb.appendBytes(smsSignal.getBytes(), smsSignal.getBytes().length);
+                bb.appendBytes(smsSignal.getBytes());
             }
             if (msValidity != null) {
-                bb.appendBytes(msValidity.getBytes(), msValidity.getBytes().length);
+                bb.appendBytes(msValidity.getBytes());
             }
             if (msMsgWaitFacilities != null) {
-                bb.appendBytes(msMsgWaitFacilities.getBytes(), msMsgWaitFacilities
-                        .getBytes().length);
+                bb.appendBytes(msMsgWaitFacilities.getBytes());
             }
             if (alertOnMessageDelivery != null) {
-                bb.appendBytes(alertOnMessageDelivery.getBytes(),
-                        alertOnMessageDelivery.getBytes().length);
+                bb.appendBytes(alertOnMessageDelivery.getBytes());
             }
             if (languageIndicator != null) {
-                bb.appendBytes(languageIndicator.getBytes(), languageIndicator
-                        .getBytes().length);
+                bb.appendBytes(languageIndicator.getBytes());
             }
         } catch (TLVException e) {
             throw new PDUException("TLVs parsing failed", e);
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**
@@ -484,7 +465,7 @@ public class SubmitMulti extends PDU implements Responsable {
             numberOfDests = bb.removeByte();
             try {
                 for (int i = 0; i < numberOfDests; i++) {
-                    DestAddress da = new DestAddress(bb.getBuffer());
+                    DestAddress da = new DestAddress(bb.array());
                     bb.removeBytes(da.getBytes().length);
                     destAddresses.add(da);
                 }
@@ -512,7 +493,7 @@ public class SubmitMulti extends PDU implements Responsable {
             throw new PDUException("PDU parsing error", e);
         }
         if (bb.length() > 0) {
-            List<TLV> list = getOptionalParams(bb.getBuffer(), esmClass, dataCoding);
+            List<TLV> list = getOptionalParams(bb.array(), esmClass, dataCoding);
             for (TLV tlv : list) {
                 switch (tlv.getTag()) {
                     case USER_MESSAGE_REFERENCE:
@@ -589,7 +570,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * {@inheritDoc}
      */
     public final SubmitSMResp getResponse
-            () {
+    () {
         SubmitSMResp resp = new SubmitSMResp();
         resp.setSequenceNumber(getSequenceNumber());
         return resp;
@@ -599,7 +580,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return SMS Application service associated with the message
      */
     public final String getServiceType
-            () {
+    () {
         return serviceType;
     }
 
@@ -607,8 +588,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param serviceType SMS Application service associated with the message
      */
     public final void setServiceType
-            (
-                    final String serviceType) {
+    (
+            final String serviceType) {
         this.serviceType = serviceType;
     }
 
@@ -616,7 +597,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return Type of Number for source address
      */
     public final TON getSourceAddrTon
-            () {
+    () {
         return sourceAddrTon;
     }
 
@@ -624,8 +605,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param sourceAddrTon Type of Number for source address
      */
     public final void setSourceAddrTon
-            (
-                    final TON sourceAddrTon) {
+    (
+            final TON sourceAddrTon) {
         this.sourceAddrTon = sourceAddrTon;
     }
 
@@ -633,7 +614,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return Numbering Plan Indicator for source
      */
     public final NPI getSourceAddrNpi
-            () {
+    () {
         return sourceAddrNpi;
     }
 
@@ -641,8 +622,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param sourceAddrNpi Numbering Plan Indicator for source
      */
     public final void setSourceAddrNpi
-            (
-                    final NPI sourceAddrNpi) {
+    (
+            final NPI sourceAddrNpi) {
         this.sourceAddrNpi = sourceAddrNpi;
     }
 
@@ -650,7 +631,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return address of SME which originated this message
      */
     public final String getSourceAddr
-            () {
+    () {
         return sourceAddr;
     }
 
@@ -658,8 +639,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param sourceAddr address of SME which originated this message
      */
     public final void setSourceAddr
-            (
-                    final String sourceAddr) {
+    (
+            final String sourceAddr) {
         this.sourceAddr = sourceAddr;
     }
 
@@ -667,7 +648,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the number of dest_address structures
      */
     public final short getNumberOfDests
-            () {
+    () {
         return numberOfDests;
     }
 
@@ -675,8 +656,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param numberOfDests the number of dest_address structures
      */
     public final void setNumberOfDests
-            (
-                    final short numberOfDests) {
+    (
+            final short numberOfDests) {
         this.numberOfDests = numberOfDests;
     }
 
@@ -684,7 +665,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return SME addresses or/and Distribution List names
      */
     public final List<DestAddress> getDestAddresses
-            () {
+    () {
         return destAddresses;
     }
 
@@ -692,16 +673,15 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param destAddresses SME addresses or/and Distribution List names
      */
     public final void setDestAddresses
-            (
-                    final List<DestAddress> destAddresses) {
+    (
+            final List<DestAddress> destAddresses) {
         this.destAddresses = destAddresses;
     }
 
     /**
      * @return Message Mode & Message Type
      */
-    public final EsmeEsmClass getEsmClass
-            () {
+    public final EsmeEsmClass getEsmClass() {
         return esmClass;
     }
 
@@ -709,8 +689,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param esmClass Message Mode & Message Type
      */
     public final void setEsmClass
-            (
-                    final EsmeEsmClass esmClass) {
+    (
+            final EsmeEsmClass esmClass) {
         this.esmClass = esmClass;
     }
 
@@ -718,7 +698,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return Protocol Identifier
      */
     public final short getProtocolId
-            () {
+    () {
         return protocolId;
     }
 
@@ -726,8 +706,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param protocolId Protocol Identifier
      */
     public final void setProtocolId
-            (
-                    final short protocolId) {
+    (
+            final short protocolId) {
         this.protocolId = protocolId;
     }
 
@@ -735,7 +715,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the priority level of the message
      */
     public final short getPriorityFlag
-            () {
+    () {
         return priorityFlag;
     }
 
@@ -743,8 +723,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param priorityFlag the priority level of the message
      */
     public final void setPriorityFlag
-            (
-                    final short priorityFlag) {
+    (
+            final short priorityFlag) {
         this.priorityFlag = priorityFlag;
     }
 
@@ -752,7 +732,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the schedule delivery time
      */
     public final String getScheduleDeliveryTime
-            () {
+    () {
         return scheduleDeliveryTime;
     }
 
@@ -760,8 +740,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param scheduleDeliveryTime the schedule delivery time
      */
     public final void setScheduleDeliveryTime
-            (
-                    final String scheduleDeliveryTime) {
+    (
+            final String scheduleDeliveryTime) {
         this.scheduleDeliveryTime = scheduleDeliveryTime;
     }
 
@@ -769,7 +749,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the validity period of this message
      */
     public final String getValidityPeriod
-            () {
+    () {
         return validityPeriod;
     }
 
@@ -777,8 +757,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param validityPeriod the validity period of this message
      */
     public final void setValidityPeriod
-            (
-                    final String validityPeriod) {
+    (
+            final String validityPeriod) {
         this.validityPeriod = validityPeriod;
     }
 
@@ -787,7 +767,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         acknowledgement is required
      */
     public final short getRegisteredDelivery
-            () {
+    () {
         return registeredDelivery;
     }
 
@@ -796,8 +776,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                           acknowledgement is required
      */
     public final void setRegisteredDelivery
-            (
-                    final short registeredDelivery) {
+    (
+            final short registeredDelivery) {
         this.registeredDelivery = registeredDelivery;
     }
 
@@ -805,7 +785,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return not used
      */
     public final short getReplaceIfPresentFlag
-            () {
+    () {
         return replaceIfPresentFlag;
     }
 
@@ -813,7 +793,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the indicator of the encoding scheme of the short message
      */
     public final short getDataCoding
-            () {
+    () {
         return dataCoding;
     }
 
@@ -821,8 +801,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param dataCoding the indicator of the encoding scheme of the short message
      */
     public final void setDataCoding
-            (
-                    final short dataCoding) {
+    (
+            final short dataCoding) {
         this.dataCoding = dataCoding;
     }
 
@@ -831,7 +811,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         (“canned”) short messages stored on the SMSC
      */
     public final short getSmDefaultMsgId
-            () {
+    () {
         return smDefaultMsgId;
     }
 
@@ -840,8 +820,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                       predefined (“canned”) short messages stored on the SMSC
      */
     public final void setSmDefaultMsgId
-            (
-                    final short smDefaultMsgId) {
+    (
+            final short smDefaultMsgId) {
         this.smDefaultMsgId = smDefaultMsgId;
     }
 
@@ -849,7 +829,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return length in octets of the short_message user data
      */
     public final short getSmLength
-            () {
+    () {
         return smLength;
     }
 
@@ -857,8 +837,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param smLength length in octets of the short_message user data
      */
     public final void setSmLength
-            (
-                    final short smLength) {
+    (
+            final short smLength) {
         this.smLength = smLength;
     }
 
@@ -866,7 +846,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return short message user data
      */
     public final String getShortMessage
-            () {
+    () {
         return shortMessage;
     }
 
@@ -874,8 +854,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param shortMessage short message user data
      */
     public final void setShortMessage
-            (
-                    final String shortMessage) {
+    (
+            final String shortMessage) {
         this.shortMessage = shortMessage;
     }
 
@@ -883,7 +863,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return ESME assigned message reference number
      */
     public final UserMessageReference getUserMessageReference
-            () {
+    () {
         return userMessageReference;
     }
 
@@ -891,8 +871,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param userMessageReference ESME assigned message reference number
      */
     public final void setUserMessageReference
-            (
-                    final UserMessageReference userMessageReference) {
+    (
+            final UserMessageReference userMessageReference) {
         this.userMessageReference = userMessageReference;
     }
 
@@ -901,7 +881,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         the message
      */
     public final SourcePort getSourcePort
-            () {
+    () {
         return sourcePort;
     }
 
@@ -910,8 +890,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                   of the message
      */
     public final void setSourcePort
-            (
-                    final SourcePort sourcePort) {
+    (
+            final SourcePort sourcePort) {
         this.sourcePort = sourcePort;
     }
 
@@ -920,7 +900,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         data
      */
     public final SourceAddrSubunit getSourceAddrSubunit
-            () {
+    () {
         return sourceAddrSubunit;
     }
 
@@ -929,8 +909,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                          user data
      */
     public final void setSourceAddrSubunit
-            (
-                    final SourceAddrSubunit sourceAddrSubunit) {
+    (
+            final SourceAddrSubunit sourceAddrSubunit) {
         this.sourceAddrSubunit = sourceAddrSubunit;
     }
 
@@ -939,7 +919,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         address of the message
      */
     public final DestinationPort getDestinationPort
-            () {
+    () {
         return destinationPort;
     }
 
@@ -948,8 +928,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                        address of the message
      */
     public final void setDestinationPort
-            (
-                    final DestinationPort destinationPort) {
+    (
+            final DestinationPort destinationPort) {
         this.destinationPort = destinationPort;
     }
 
@@ -958,7 +938,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         data is intended
      */
     public final DestAddrSubunit getDestAddrSubunit
-            () {
+    () {
         return destAddrSubunit;
     }
 
@@ -967,8 +947,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                        data is intended
      */
     public final void setDestAddrSubunit
-            (
-                    final DestAddrSubunit destAddrSubunit) {
+    (
+            final DestAddrSubunit destAddrSubunit) {
         this.destAddrSubunit = destAddrSubunit;
     }
 
@@ -976,7 +956,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the reference number for a particular concatenated short message
      */
     public final SarMsgRefNum getSarMsgRefNum
-            () {
+    () {
         return sarMsgRefNum;
     }
 
@@ -985,8 +965,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                     message
      */
     public final void setSarMsgRefNum
-            (
-                    final SarMsgRefNum sarMsgRefNum) {
+    (
+            final SarMsgRefNum sarMsgRefNum) {
         this.sarMsgRefNum = sarMsgRefNum;
     }
 
@@ -995,7 +975,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         message
      */
     public final SarTotalSegments getSarTotalSegments
-            () {
+    () {
         return sarTotalSegments;
     }
 
@@ -1004,8 +984,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                         short message
      */
     public final void setSarTotalSegments
-            (
-                    final SarTotalSegments sarTotalSegments) {
+    (
+            final SarTotalSegments sarTotalSegments) {
         this.sarTotalSegments = sarTotalSegments;
     }
 
@@ -1014,7 +994,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         the concatenated short message
      */
     public final SarSegmentSeqnum getSarSegmentSeqnum
-            () {
+    () {
         return sarSegmentSeqnum;
     }
 
@@ -1023,8 +1003,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                         within the concatenated short message
      */
     public final void setSarSegmentSeqnum
-            (
-                    final SarSegmentSeqnum sarSegmentSeqnum) {
+    (
+            final SarSegmentSeqnum sarSegmentSeqnum) {
         this.sarSegmentSeqnum = sarSegmentSeqnum;
     }
 
@@ -1032,7 +1012,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the type of payload
      */
     public final PayloadType getPayloadType
-            () {
+    () {
         return payloadType;
     }
 
@@ -1040,8 +1020,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param payloadType the type of payload
      */
     public final void setPayloadType
-            (
-                    final PayloadType payloadType) {
+    (
+            final PayloadType payloadType) {
         this.payloadType = payloadType;
     }
 
@@ -1049,7 +1029,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the extended short message user data
      */
     public final MessagePayload getMessagePayload
-            () {
+    () {
         return messagePayload;
     }
 
@@ -1057,8 +1037,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param messagePayload the extended short message user data
      */
     public final void setMessagePayload
-            (
-                    final MessagePayload messagePayload) {
+    (
+            final MessagePayload messagePayload) {
         this.messagePayload = messagePayload;
     }
 
@@ -1066,7 +1046,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the level of privacy associated with the message
      */
     public final PrivacyIndicator getPrivacyIndicator
-            () {
+    () {
         return privacyIndicator;
     }
 
@@ -1074,8 +1054,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param privacyIndicator the level of privacy associated with the message
      */
     public final void setPrivacyIndicator
-            (
-                    final PrivacyIndicator privacyIndicator) {
+    (
+            final PrivacyIndicator privacyIndicator) {
         this.privacyIndicator = privacyIndicator;
     }
 
@@ -1083,7 +1063,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return callback number associated with the short message
      */
     public final CallbackNum getCallbackNum
-            () {
+    () {
         return callbackNum;
     }
 
@@ -1091,8 +1071,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param callbackNum callback number associated with the short message
      */
     public final void setCallbackNum
-            (
-                    final CallbackNum callbackNum) {
+    (
+            final CallbackNum callbackNum) {
         this.callbackNum = callbackNum;
     }
 
@@ -1101,7 +1081,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         number
      */
     public final CallbackNumPresInd getCallbackNumPresInd
-            () {
+    () {
         return callbackNumPresInd;
     }
 
@@ -1110,8 +1090,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                           number
      */
     public final void setCallbackNumPresInd
-            (
-                    final CallbackNumPresInd callbackNumPresInd) {
+    (
+            final CallbackNumPresInd callbackNumPresInd) {
         this.callbackNumPresInd = callbackNumPresInd;
     }
 
@@ -1120,7 +1100,7 @@ public class SubmitMulti extends PDU implements Responsable {
      *         number
      */
     public final CallbackNumAtag getCallbackNumAtag
-            () {
+    () {
         return callbackNumAtag;
     }
 
@@ -1129,8 +1109,8 @@ public class SubmitMulti extends PDU implements Responsable {
      *                        number
      */
     public final void setCallbackNumAtag
-            (
-                    final CallbackNumAtag callbackNumAtag) {
+    (
+            final CallbackNumAtag callbackNumAtag) {
         this.callbackNumAtag = callbackNumAtag;
     }
 
@@ -1138,7 +1118,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the subaddress of the message originator
      */
     public final SourceSubaddress getSourceSubaddress
-            () {
+    () {
         return sourceSubaddress;
     }
 
@@ -1146,8 +1126,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param sourceSubaddress the subaddress of the message originator
      */
     public final void setSourceSubaddress
-            (
-                    final SourceSubaddress sourceSubaddress) {
+    (
+            final SourceSubaddress sourceSubaddress) {
         this.sourceSubaddress = sourceSubaddress;
     }
 
@@ -1155,7 +1135,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the subaddress of the message destination
      */
     public final DestSubaddress getDestSubaddress
-            () {
+    () {
         return destSubaddress;
     }
 
@@ -1163,8 +1143,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param destSubaddress the subaddress of the message destination
      */
     public final void setDestSubaddress
-            (
-                    final DestSubaddress destSubaddress) {
+    (
+            final DestSubaddress destSubaddress) {
         this.destSubaddress = destSubaddress;
     }
 
@@ -1172,7 +1152,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the display time associated with the message
      */
     public final DisplayTime getDisplayTime
-            () {
+    () {
         return displayTime;
     }
 
@@ -1180,8 +1160,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param displayTime the display time associated with the message
      */
     public final void setDisplayTime
-            (
-                    final DisplayTime displayTime) {
+    (
+            final DisplayTime displayTime) {
         this.displayTime = displayTime;
     }
 
@@ -1189,7 +1169,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the alerting mechanism when the message is received by an MS
      */
     public final SmsSignal getSmsSignal
-            () {
+    () {
         return smsSignal;
     }
 
@@ -1197,8 +1177,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param smsSignal the alerting mechanism when the message is received by an MS
      */
     public final void setSmsSignal
-            (
-                    final SmsSignal smsSignal) {
+    (
+            final SmsSignal smsSignal) {
         this.smsSignal = smsSignal;
     }
 
@@ -1206,7 +1186,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return validity information for this message to the recipient MS
      */
     public final MsValidity getMsValidity
-            () {
+    () {
         return msValidity;
     }
 
@@ -1214,8 +1194,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param msValidity validity information for this message to the recipient MS
      */
     public final void setMsValidity
-            (
-                    final MsValidity msValidity) {
+    (
+            final MsValidity msValidity) {
         this.msValidity = msValidity;
     }
 
@@ -1223,7 +1203,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the indication and specifies the message type controller
      */
     public final MsMsgWaitFacilities getMsMsgWaitFacilities
-            () {
+    () {
         return msMsgWaitFacilities;
     }
 
@@ -1231,8 +1211,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param msMsgWaitFacilities the indication and specifies the message type controller
      */
     public final void setMsMsgWaitFacilities
-            (
-                    final MsMsgWaitFacilities msMsgWaitFacilities) {
+    (
+            final MsMsgWaitFacilities msMsgWaitFacilities) {
         this.msMsgWaitFacilities = msMsgWaitFacilities;
     }
 
@@ -1240,7 +1220,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return requests an MS alert signal be invoked on message delivery
      */
     public final AlertOnMessageDelivery getAlertOnMessageDelivery
-            () {
+    () {
         return alertOnMessageDelivery;
     }
 
@@ -1248,8 +1228,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param alertOnMessageDelivery requests an MS alert signal be invoked on message delivery
      */
     public final void setAlertOnMessageDelivery
-            (
-                    final AlertOnMessageDelivery alertOnMessageDelivery) {
+    (
+            final AlertOnMessageDelivery alertOnMessageDelivery) {
         this.alertOnMessageDelivery = alertOnMessageDelivery;
     }
 
@@ -1257,7 +1237,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return the language of an alphanumeric text message
      */
     public final LanguageIndicator getLanguageIndicator
-            () {
+    () {
         return languageIndicator;
     }
 
@@ -1265,8 +1245,8 @@ public class SubmitMulti extends PDU implements Responsable {
      * @param languageIndicator the language of an alphanumeric text message
      */
     public final void setLanguageIndicator
-            (
-                    final LanguageIndicator languageIndicator) {
+    (
+            final LanguageIndicator languageIndicator) {
         this.languageIndicator = languageIndicator;
     }
 
@@ -1275,7 +1255,7 @@ public class SubmitMulti extends PDU implements Responsable {
      */
     @Override
     public final String toString
-            () {
+    () {
         return getClass().getName() + " Object {" + "\nserviceType : "
                 + serviceType + "\nsourceAddrTon : " + sourceAddrTon
                 + "\nsourceAddrNpi : " + sourceAddrNpi + "\nsourceAddr : "

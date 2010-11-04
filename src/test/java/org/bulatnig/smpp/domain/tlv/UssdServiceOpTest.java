@@ -21,7 +21,7 @@ public class UssdServiceOpTest {
 		bb.appendShort(0x0501);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		UssdServiceOp uso = new UssdServiceOp(bb.getBuffer());
+		UssdServiceOp uso = new UssdServiceOp(bb.array());
 		assertEquals(ParameterTag.USSD_SERVICE_OP, uso.getTag());
 		assertEquals(5, uso.getBytes().length);
 		assertEquals(ServiceOperation.USSR_CONFIRM, uso.getValue());
@@ -35,7 +35,7 @@ public class UssdServiceOpTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new UssdServiceOp(bb.getBuffer());
+		new UssdServiceOp(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -44,7 +44,7 @@ public class UssdServiceOpTest {
 		bb.appendShort(0x0501);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new UssdServiceOp(bb.getBuffer());
+		new UssdServiceOp(bb.array());
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class UssdServiceOpTest {
 		bb.appendShort(0x0501);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0002);
-		new UssdServiceOp(bb.getBuffer());
+		new UssdServiceOp(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -72,7 +72,7 @@ public class UssdServiceOpTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new UssdServiceOp(bb.getBuffer());
+		new UssdServiceOp(bb.array());
 	}
 	
 	public void testUSOConstructor7() throws TLVException, WrongParameterException {
@@ -80,7 +80,7 @@ public class UssdServiceOpTest {
 		bb.appendShort(0x0501);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x08);
-		UssdServiceOp uso = new UssdServiceOp(bb.getBuffer());
+		UssdServiceOp uso = new UssdServiceOp(bb.array());
 		assertEquals(ParameterTag.USSD_SERVICE_OP, uso.getTag());
 		assertEquals(5, uso.getBytes().length);
 		assertEquals(ServiceOperation.RESERVED, uso.getValue());

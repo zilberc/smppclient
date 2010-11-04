@@ -24,7 +24,7 @@ public class NumberOfMessagesTest {
 		bb.appendShort(0x0304);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		NumberOfMessages nom = new NumberOfMessages(bb.getBuffer());
+		NumberOfMessages nom = new NumberOfMessages(bb.array());
 		assertEquals(ParameterTag.NUMBER_OF_MESSAGES, nom.getTag());
 		assertEquals(5, nom.getBytes().length);
 		assertEquals((short)112, nom.getValue());
@@ -37,7 +37,7 @@ public class NumberOfMessagesTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new NumberOfMessages(bb.getBuffer());
+		new NumberOfMessages(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class NumberOfMessagesTest {
 		bb.appendShort(0x0304);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new NumberOfMessages(bb.getBuffer());
+		new NumberOfMessages(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class NumberOfMessagesTest {
 		bb.appendShort(0x0304);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new NumberOfMessages(bb.getBuffer());
+		new NumberOfMessages(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class NumberOfMessagesTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new NumberOfMessages(bb.getBuffer());
+		new NumberOfMessages(bb.array());
 	}
 
 }

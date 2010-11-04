@@ -21,7 +21,7 @@ public class PrivacyIndicatorTest {
 		bb.appendShort(0x0201);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x02);
-		PrivacyIndicator pi = new PrivacyIndicator(bb.getBuffer());
+		PrivacyIndicator pi = new PrivacyIndicator(bb.array());
 		assertEquals(ParameterTag.PRIVACY_INDICATOR, pi.getTag());
 		assertEquals(5, pi.getBytes().length);
 		assertEquals(Privacy.CONFIDENTIAL, pi.getValue());
@@ -34,7 +34,7 @@ public class PrivacyIndicatorTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x02);
-		new PrivacyIndicator(bb.getBuffer());
+		new PrivacyIndicator(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class PrivacyIndicatorTest {
 		bb.appendShort(0x0201);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new PrivacyIndicator(bb.getBuffer());
+		new PrivacyIndicator(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class PrivacyIndicatorTest {
 		bb.appendShort(0x0201);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x0012);
-		new PrivacyIndicator(bb.getBuffer());
+		new PrivacyIndicator(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class PrivacyIndicatorTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new PrivacyIndicator(bb.getBuffer());
+		new PrivacyIndicator(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class PrivacyIndicatorTest {
 		bb.appendShort(0x0201);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		PrivacyIndicator pi = new PrivacyIndicator(bb.getBuffer());
+		PrivacyIndicator pi = new PrivacyIndicator(bb.array());
 		assertEquals(ParameterTag.PRIVACY_INDICATOR, pi.getTag());
 		assertEquals(5, pi.getBytes().length);
 		assertEquals(Privacy.RESERVED, pi.getValue());

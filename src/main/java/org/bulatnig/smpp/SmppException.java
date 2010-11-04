@@ -4,7 +4,6 @@ package org.bulatnig.smpp;
  * General SMPP exception.
  * 
  * @author Bulat Nigmatullin
- *
  */
 public class SmppException extends Exception {
 

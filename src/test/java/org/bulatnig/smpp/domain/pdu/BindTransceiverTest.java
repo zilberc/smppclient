@@ -36,7 +36,7 @@ public class BindTransceiverTest {
         sbb.appendByte((short) 0);
         sbb.appendByte((short) 0);
         sbb.appendCString("adresatos poluchatos");
-        BindTransceiver bt = new BindTransceiver(sbb.getBuffer());
+        BindTransceiver bt = new BindTransceiver(sbb.array());
         assertEquals(65L, bt.getCommandLength());
         assertEquals(CommandId.BIND_TRANSCEIVER, bt.getCommandId());
         assertEquals(9L, bt.getCommandId().getValue());

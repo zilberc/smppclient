@@ -104,7 +104,7 @@ public class UnsuccessSme {
                 WrongParameterException e) {
             throw new PDUException("errorStatusCode field is invalid", e);
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

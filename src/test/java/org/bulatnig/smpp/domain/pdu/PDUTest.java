@@ -36,7 +36,7 @@ public class PDUTest {
 		bb.appendByte((byte) 0x01);
 		bb.appendByte((byte) 0x01);
 		bb.appendCString("11*");
-        PDU pdu = new BindTransceiver(bb.getBuffer());
+        PDU pdu = new BindTransceiver(bb.array());
         assertEquals(41,pdu.getCommandLength());
         assertEquals("0000002900000009000000000000000162756c6174006a617661004c6f676963610034010131312a00", new SmppByteBuffer(pdu.getBytes()).getHexDump());
         assertEquals(CommandId.BIND_TRANSCEIVER,pdu.getCommandId());
@@ -53,7 +53,7 @@ public class PDUTest {
 		bb.appendInt(9);
 		bb.appendInt(0);
 		bb.appendInt(1);
-        new BindTransceiver(bb.getBuffer());
+        new BindTransceiver(bb.array());
     }
 
     @Test(expected = PDUException.class)
@@ -64,6 +64,6 @@ public class PDUTest {
 		bb.appendInt(0);
 		bb.appendShort(1);
         bb.appendByte((short)1);
-        new BindTransceiver(bb.getBuffer());
+        new BindTransceiver(bb.array());
     }
 }

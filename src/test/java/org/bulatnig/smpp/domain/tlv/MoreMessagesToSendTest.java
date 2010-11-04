@@ -24,7 +24,7 @@ public class MoreMessagesToSendTest {
 		bb.appendShort(0x0426);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		MoreMessagesToSend mmts = new MoreMessagesToSend(bb.getBuffer());
+		MoreMessagesToSend mmts = new MoreMessagesToSend(bb.array());
 		assertEquals(ParameterTag.MORE_MESSAGES_TO_SEND, mmts.getTag());
 		assertEquals(5, mmts.getBytes().length);
 		assertEquals((short)112, mmts.getValue());
@@ -37,7 +37,7 @@ public class MoreMessagesToSendTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new MoreMessagesToSend(bb.getBuffer());
+		new MoreMessagesToSend(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class MoreMessagesToSendTest {
 		bb.appendShort(0x0426);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new MoreMessagesToSend(bb.getBuffer());
+		new MoreMessagesToSend(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class MoreMessagesToSendTest {
 		bb.appendShort(0x0426);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new MoreMessagesToSend(bb.getBuffer());
+		new MoreMessagesToSend(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class MoreMessagesToSendTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new MoreMessagesToSend(bb.getBuffer());
+		new MoreMessagesToSend(bb.array());
 	}
 
 }

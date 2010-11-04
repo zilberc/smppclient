@@ -173,7 +173,7 @@ public class BindTransmitter extends PDU implements Responsable {
             throw new PDUException("addressRange field is too long");
         }
         bb.appendCString(addressRange);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

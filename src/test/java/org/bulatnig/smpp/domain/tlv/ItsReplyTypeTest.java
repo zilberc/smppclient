@@ -21,7 +21,7 @@ public class ItsReplyTypeTest {
 		bb.appendShort(0x1380);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x07);
-		ItsReplyType irt = new ItsReplyType(bb.getBuffer());
+		ItsReplyType irt = new ItsReplyType(bb.array());
 		assertEquals(ParameterTag.ITS_REPLY_TYPE, irt.getTag());
 		assertEquals(5, irt.getBytes().length);
 		assertEquals(ReplyType.TIME, irt.getValue());
@@ -34,7 +34,7 @@ public class ItsReplyTypeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new ItsReplyType(bb.getBuffer());
+		new ItsReplyType(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class ItsReplyTypeTest {
 		bb.appendShort(0x1380);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new ItsReplyType(bb.getBuffer());
+		new ItsReplyType(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class ItsReplyTypeTest {
 		bb.appendShort(0x1380);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0007);
-		new ItsReplyType(bb.getBuffer());
+		new ItsReplyType(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class ItsReplyTypeTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new ItsReplyType(bb.getBuffer());
+		new ItsReplyType(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class ItsReplyTypeTest {
 		bb.appendShort(0x1380);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		ItsReplyType irt = new ItsReplyType(bb.getBuffer());
+		ItsReplyType irt = new ItsReplyType(bb.array());
 		assertEquals(ParameterTag.ITS_REPLY_TYPE, irt.getTag());
 		assertEquals(5, irt.getBytes().length);
 		assertEquals(ReplyType.RESERVED, irt.getValue());

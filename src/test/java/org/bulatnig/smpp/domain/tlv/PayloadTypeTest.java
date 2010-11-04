@@ -24,7 +24,7 @@ public class PayloadTypeTest {
 		bb.appendShort(0x0019);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		PayloadType pt = new PayloadType(bb.getBuffer());
+		PayloadType pt = new PayloadType(bb.array());
 		assertEquals(ParameterTag.PAYLOAD_TYPE, pt.getTag());
 		assertEquals(5, pt.getBytes().length);
 		assertEquals((short)17, pt.getValue());
@@ -37,7 +37,7 @@ public class PayloadTypeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new PayloadType(bb.getBuffer());
+		new PayloadType(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class PayloadTypeTest {
 		bb.appendShort(0x0019);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
-		new PayloadType(bb.getBuffer());
+		new PayloadType(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class PayloadTypeTest {
 		bb.appendShort(0x0019);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0011);
-		new PayloadType(bb.getBuffer());
+		new PayloadType(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class PayloadTypeTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new PayloadType(bb.getBuffer());
+		new PayloadType(bb.array());
 	}
 
 	@Test(expected=TLVException.class)

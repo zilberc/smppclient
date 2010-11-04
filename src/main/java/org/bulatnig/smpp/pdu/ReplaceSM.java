@@ -203,7 +203,7 @@ public class ReplaceSM extends PDU implements Responsable {
             throw new PDUException("smLength field is invalid", e);
         }
         bb.appendCString(shortMessage);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

@@ -24,7 +24,7 @@ public class UserResponseCodeTest {
 		bb.appendShort(0x0205);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		UserResponseCode urc = new UserResponseCode(bb.getBuffer());
+		UserResponseCode urc = new UserResponseCode(bb.array());
 		assertEquals(ParameterTag.USER_RESPONSE_CODE, urc.getTag());
 		assertEquals(5, urc.getBytes().length);
 		assertEquals((short)112, urc.getValue());
@@ -37,7 +37,7 @@ public class UserResponseCodeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new UserResponseCode(bb.getBuffer());
+		new UserResponseCode(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class UserResponseCodeTest {
 		bb.appendShort(0x0205);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new UserResponseCode(bb.getBuffer());
+		new UserResponseCode(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class UserResponseCodeTest {
 		bb.appendShort(0x0205);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new UserResponseCode(bb.getBuffer());
+		new UserResponseCode(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class UserResponseCodeTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new UserResponseCode(bb.getBuffer());
+		new UserResponseCode(bb.array());
 	}
 
 }

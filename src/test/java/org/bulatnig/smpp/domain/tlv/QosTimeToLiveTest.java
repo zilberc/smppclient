@@ -24,7 +24,7 @@ public class QosTimeToLiveTest {
 		bb.appendShort(0x0017);
 		bb.appendShort(0x0004);
 		bb.appendInt(0x1111);
-		QosTimeToLive qttl = new QosTimeToLive(bb.getBuffer());
+		QosTimeToLive qttl = new QosTimeToLive(bb.array());
 		assertEquals(ParameterTag.QOS_TIME_TO_LIVE, qttl.getTag());
 		assertEquals(8, qttl.getBytes().length);
 		assertEquals(4369L, qttl.getValue());
@@ -37,7 +37,7 @@ public class QosTimeToLiveTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0004);
 		bb.appendInt(0x00001111);
-		new QosTimeToLive(bb.getBuffer());
+		new QosTimeToLive(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class QosTimeToLiveTest {
 		bb.appendShort(0x0017);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new QosTimeToLive(bb.getBuffer());
+		new QosTimeToLive(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class QosTimeToLiveTest {
 		bb.appendShort(0x0008);
 		bb.appendShort(0x0004);
 		bb.appendByte((byte)0x11);
-		new QosTimeToLive(bb.getBuffer());
+		new QosTimeToLive(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class QosTimeToLiveTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0004);
 		bb.appendInt(0x00007fff);
-		new QosTimeToLive(bb.getBuffer());
+		new QosTimeToLive(bb.array());
 	}
 
     @Test(expected = TLVException.class)

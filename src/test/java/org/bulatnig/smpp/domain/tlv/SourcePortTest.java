@@ -24,7 +24,7 @@ public class SourcePortTest {
 		bb.appendShort(0x020a);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		SourcePort sp = new SourcePort(bb.getBuffer());
+		SourcePort sp = new SourcePort(bb.array());
 		assertEquals(ParameterTag.SOURCE_PORT, sp.getTag());
 		assertEquals(6, sp.getBytes().length);
 		assertEquals(4369, sp.getValue());
@@ -37,7 +37,7 @@ public class SourcePortTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new SourcePort(bb.getBuffer());
+		new SourcePort(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class SourcePortTest {
 		bb.appendShort(0x020a);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x1111);
-		new SourcePort(bb.getBuffer());
+		new SourcePort(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class SourcePortTest {
 		bb.appendShort(0x020a);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new SourcePort(bb.getBuffer());
+		new SourcePort(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class SourcePortTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x7fff);
-		new SourcePort(bb.getBuffer());
+		new SourcePort(bb.array());
 	}
 
 }

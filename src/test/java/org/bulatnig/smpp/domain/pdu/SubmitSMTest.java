@@ -46,7 +46,7 @@ public class SubmitSMTest {
         sbb.appendByte((short)20);
         sbb.appendByte((short)21);
         sbb.appendString("aaaaaaabbbbbbbsssssss");
-        SubmitSM submit = new SubmitSM(sbb.getBuffer());
+        SubmitSM submit = new SubmitSM(sbb.array());
         assertEquals(82L, submit.getCommandLength());
         assertEquals(4L, submit.getCommandId().getValue());
         assertEquals(CommandStatus.ESME_RINVSERTYP, submit.getCommandStatus());

@@ -134,7 +134,7 @@ public class AlertNotification extends PDU {
             throw new PDUException("PDU parsing error", e);
         }
         if (bb.length() > 0) {
-            List<TLV> list = getOptionalParams(bb.getBuffer());
+            List<TLV> list = getOptionalParams(bb.array());
             for (TLV tlv : list) {
                 if (tlv.getTag() == ParameterTag.MS_AVAILABILITY_STATUS) {
                     msAvailabilityStatus = (MsAvailabilityStatus) tlv;
@@ -179,13 +179,12 @@ public class AlertNotification extends PDU {
         bb.appendCString(esmeAddr);
         if (msAvailabilityStatus != null) {
             try {
-                bb.appendBytes(msAvailabilityStatus.getBytes(),
-                        msAvailabilityStatus.getBytes().length);
+                bb.appendBytes(msAvailabilityStatus.getBytes());
             } catch (TLVException e) {
                 throw new PDUException("TLVs parsing failed", e);
             }
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

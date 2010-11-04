@@ -25,7 +25,7 @@ public class MessagePayloadTest {
 		bb.appendShort(0x0424);
 		bb.appendShort(0x000A);
 		bb.appendString("Булат", DataCodingHelper.INSTANCE.getCharsetName((short) 8));
-		MessagePayload mp = new MessagePayload(bb.getBuffer(), new SmscEsmClass(), (short) 8);
+		MessagePayload mp = new MessagePayload(bb.array(), new SmscEsmClass(), (short) 8);
 		assertEquals(ParameterTag.MESSAGE_PAYLOAD, mp.getTag());
 		assertEquals(14, mp.getBytes(new SmscEsmClass(), (short) 8).length);
 		assertEquals("Булат", mp.getValue());
@@ -38,7 +38,7 @@ public class MessagePayloadTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new MessagePayload(bb.getBuffer(), new SmscEsmClass(), (short) 0);
+		new MessagePayload(bb.array(), new SmscEsmClass(), (short) 0);
 	}
 	
 	@Test(expected= TLVException.class)
@@ -47,7 +47,7 @@ public class MessagePayloadTest {
 		bb.appendShort(0x0424);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
-		new MessagePayload(bb.getBuffer(), new SmscEsmClass(), (short) 0);
+		new MessagePayload(bb.array(), new SmscEsmClass(), (short) 0);
 	}
 	
 	@Test
@@ -65,7 +65,7 @@ public class MessagePayloadTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new MessagePayload(bb.getBuffer(), new SmscEsmClass(), (short) 0);
+		new MessagePayload(bb.array(), new SmscEsmClass(), (short) 0);
 	}
 
 }

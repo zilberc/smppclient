@@ -36,7 +36,7 @@ public class BindTransmitterTest {
         sbb.appendByte((short) 11);
         sbb.appendByte((short) 8);
         sbb.appendCString("range of address");
-        BindTransmitter bt = new BindTransmitter(sbb.getBuffer());
+        BindTransmitter bt = new BindTransmitter(sbb.array());
         assertEquals(68L, bt.getCommandLength());
         assertEquals(CommandId.BIND_TRANSMITTER, bt.getCommandId());
         assertEquals(2L, bt.getCommandId().getValue());

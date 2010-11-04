@@ -66,7 +66,7 @@ public class DisplayTime extends TLV {
         } catch (WrongParameterException e) {
             throw new TLVException("Buffer error during parsing value", e);
         }
-        return sbb.getBuffer();
+        return sbb.array();
     }
 
     /**

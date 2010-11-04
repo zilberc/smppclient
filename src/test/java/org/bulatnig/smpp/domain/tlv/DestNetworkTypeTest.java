@@ -21,7 +21,7 @@ public class DestNetworkTypeTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x04);
-		DestNetworkType dnt = new DestNetworkType(bb.getBuffer());
+		DestNetworkType dnt = new DestNetworkType(bb.array());
 		assertEquals(ParameterTag.DEST_NETWORK_TYPE, dnt.getTag());
 		assertEquals(5, dnt.getBytes().length);
 		assertEquals(NetworkType.PDC, dnt.getValue());
@@ -34,7 +34,7 @@ public class DestNetworkTypeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new DestNetworkType(bb.getBuffer());
+		new DestNetworkType(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class DestNetworkTypeTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new DestNetworkType(bb.getBuffer());
+		new DestNetworkType(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class DestNetworkTypeTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0014);
-		new DestNetworkType(bb.getBuffer());
+		new DestNetworkType(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class DestNetworkTypeTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new DestNetworkType(bb.getBuffer());
+		new DestNetworkType(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class DestNetworkTypeTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x14);
-		DestNetworkType dnt = new DestNetworkType(bb.getBuffer());
+		DestNetworkType dnt = new DestNetworkType(bb.array());
 		assertEquals(ParameterTag.DEST_NETWORK_TYPE, dnt.getTag());
 		assertEquals(5, dnt.getBytes().length);
 		assertEquals(NetworkType.RESERVED, dnt.getValue());

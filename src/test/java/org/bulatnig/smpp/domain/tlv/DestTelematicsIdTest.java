@@ -24,7 +24,7 @@ public class DestTelematicsIdTest {
         bb.appendShort(0x0008);
         bb.appendShort(0x0002);
         bb.appendShort(0x1111);
-        DestTelematicsId dti = new DestTelematicsId(bb.getBuffer());
+        DestTelematicsId dti = new DestTelematicsId(bb.array());
         assertEquals(ParameterTag.DEST_TELEMATICS_ID, dti.getTag());
         assertEquals(6, dti.getBytes().length);
         assertEquals(4369, dti.getValue());
@@ -37,7 +37,7 @@ public class DestTelematicsIdTest {
         bb.appendShort(0x0000);
         bb.appendShort(0x0002);
         bb.appendByte((byte) 0x1111);
-        new DestTelematicsId(bb.getBuffer());
+        new DestTelematicsId(bb.array());
     }
 
     @Test(expected = TLVException.class)
@@ -46,7 +46,7 @@ public class DestTelematicsIdTest {
         bb.appendShort(0x0008);
         bb.appendShort(0x0001);
         bb.appendShort(0x1111);
-        new DestTelematicsId(bb.getBuffer());
+        new DestTelematicsId(bb.array());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DestTelematicsIdTest {
         bb.appendShort(0x0008);
         bb.appendShort(0x0001);
         bb.appendByte((byte) 0x11);
-        new DestTelematicsId(bb.getBuffer());
+        new DestTelematicsId(bb.array());
     }
 
     @Test(expected = ClassCastException.class)
@@ -73,7 +73,7 @@ public class DestTelematicsIdTest {
         bb.appendShort(0x0005);
         bb.appendShort(0x0002);
         bb.appendShort(0x7fff);
-        new DestTelematicsId(bb.getBuffer());
+        new DestTelematicsId(bb.array());
     }
 
     @Test(expected = TLVException.class)

@@ -41,7 +41,7 @@ public class TLVFactoryImplTest {
         bb.appendShort(0x0004);
         bb.appendInt(999999999);
         bb.appendByte((byte) 99);
-        factory.parseTLV(bb.getBuffer(), new SmscEsmClass(), (short) 0);
+        factory.parseTLV(bb.array(), new SmscEsmClass(), (short) 0);
     }
 
     @Test(expected = TLVException.class)
@@ -57,10 +57,10 @@ public class TLVFactoryImplTest {
         PayloadType pt = new PayloadType((short) 150);
         MessagePayload mp = new MessagePayload("СерПантиН");
         SmppByteBuffer sbb = new SmppByteBuffer();
-        sbb.appendBytes(smrn.getBytes(), smrn.getBytes().length);
-        sbb.appendBytes(pt.getBytes(), pt.getBytes().length);
-        sbb.appendBytes(mp.getBytes(new EsmeEsmClass(), (short) 8), mp.getBytes(new EsmeEsmClass(), (short) 8).length);
-        List<TLV> tlvs = factory.parseTLVs(sbb.getBuffer(), new SmscEsmClass(), (short) 8);
+        sbb.appendBytes(smrn.getBytes());
+        sbb.appendBytes(pt.getBytes());
+        sbb.appendBytes(mp.getBytes(new EsmeEsmClass(), (short) 8));
+        List<TLV> tlvs = factory.parseTLVs(sbb.array(), new SmscEsmClass(), (short) 8);
         for (TLV tlv : tlvs) {
             switch (tlv.getTag()) {
                 case SAR_MSG_REF_NUM:
@@ -88,11 +88,11 @@ public class TLVFactoryImplTest {
         PayloadType pt = new PayloadType((short) 150);
         MessagePayload mp = new MessagePayload("СерПантиН");
         SmppByteBuffer sbb = new SmppByteBuffer();
-        sbb.appendBytes(smrn.getBytes(), smrn.getBytes().length);
-        sbb.appendBytes(pt.getBytes(), pt.getBytes().length);
-        sbb.appendBytes(mp.getBytes(new EsmeEsmClass(), (short) 8), mp.getBytes(new EsmeEsmClass(), (short) 8).length);
+        sbb.appendBytes(smrn.getBytes());
+        sbb.appendBytes(pt.getBytes());
+        sbb.appendBytes(mp.getBytes(new EsmeEsmClass(), (short) 8));
         sbb.appendShort(192);
-        List<TLV> tlvs = factory.parseTLVs(sbb.getBuffer(), new EsmeEsmClass(), (short) 8);
+        List<TLV> tlvs = factory.parseTLVs(sbb.array(), new EsmeEsmClass(), (short) 8);
         for (TLV tlv : tlvs) {
             switch (tlv.getTag()) {
                 case SAR_MSG_REF_NUM:

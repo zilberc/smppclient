@@ -69,24 +69,21 @@ public class DataSMResp extends PDU {
         bb.appendCString(messageId);
         try {
             if (deliveryFailureReason != null) {
-                bb.appendBytes(deliveryFailureReason.getBytes(),
-                        deliveryFailureReason.getBytes().length);
+                bb.appendBytes(deliveryFailureReason.getBytes());
             }
             if (networkErrorCode != null) {
-                bb.appendBytes(networkErrorCode.getBytes(), networkErrorCode
-                        .getBytes().length);
+                bb.appendBytes(networkErrorCode.getBytes());
             }
             if (additionalStatusInfoText != null) {
-                bb.appendBytes(additionalStatusInfoText.getBytes(),
-                        additionalStatusInfoText.getBytes().length);
+                bb.appendBytes(additionalStatusInfoText.getBytes());
             }
             if (dpfResult != null) {
-                bb.appendBytes(dpfResult.getBytes(), dpfResult.getBytes().length);
+                bb.appendBytes(dpfResult.getBytes());
             }
         } catch (TLVException e) {
             throw new PDUException("TLVs parsing failed", e);
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**
@@ -108,7 +105,7 @@ public class DataSMResp extends PDU {
             throw new PDUException("messageId field is too long");
         }
         if (bb.length() > 0) {
-            List<TLV> list = getOptionalParams(bb.getBuffer());
+            List<TLV> list = getOptionalParams(bb.array());
             for (TLV tlv : list) {
                 switch (tlv.getTag()) {
                     case DELIVERY_FAILURE_REASON:

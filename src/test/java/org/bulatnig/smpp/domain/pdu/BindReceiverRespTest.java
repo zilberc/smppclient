@@ -37,7 +37,7 @@ public class BindReceiverRespTest {
         sbb.appendShort(0x0210);
         sbb.appendShort(1);
         sbb.appendByte((short)50);
-        BindReceiverResp brr = new BindReceiverResp(sbb.getBuffer());
+        BindReceiverResp brr = new BindReceiverResp(sbb.array());
         assertEquals(33L, brr.getCommandLength());
         assertEquals(CommandId.BIND_RECEIVER_RESP, brr.getCommandId());
         assertEquals(0x80000001L, brr.getCommandId().getValue());

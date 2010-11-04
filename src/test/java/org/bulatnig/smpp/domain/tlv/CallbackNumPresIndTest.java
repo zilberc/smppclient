@@ -24,7 +24,7 @@ public class CallbackNumPresIndTest {
 		bb.appendShort(0x0302);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x10);
-		CallbackNumPresInd cnpi = new CallbackNumPresInd(bb.getBuffer());
+		CallbackNumPresInd cnpi = new CallbackNumPresInd(bb.array());
 		assertEquals(ParameterTag.CALLBACK_NUM_PRES_IND, cnpi.getTag());
 		assertEquals(5, cnpi.getBytes().length);
 		assertEquals((short)0x10, cnpi.getValue());
@@ -37,7 +37,7 @@ public class CallbackNumPresIndTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new CallbackNumPresInd(bb.getBuffer());
+		new CallbackNumPresInd(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class CallbackNumPresIndTest {
 		bb.appendShort(0x0302);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new CallbackNumPresInd(bb.getBuffer());
+		new CallbackNumPresInd(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class CallbackNumPresIndTest {
 		bb.appendShort(0x0302);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new CallbackNumPresInd(bb.getBuffer());
+		new CallbackNumPresInd(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class CallbackNumPresIndTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new CallbackNumPresInd(bb.getBuffer());
+		new CallbackNumPresInd(bb.array());
 	}
 
 }

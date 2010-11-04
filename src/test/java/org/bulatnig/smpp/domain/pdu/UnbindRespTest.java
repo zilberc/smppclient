@@ -31,7 +31,7 @@ public class UnbindRespTest {
         sbb.appendInt(2147483654L);
         sbb.appendInt(0L);
         sbb.appendInt(1111111111L);
-        UnbindResp ur = new UnbindResp(sbb.getBuffer());
+        UnbindResp ur = new UnbindResp(sbb.array());
         assertEquals(16L, ur.getCommandLength());
         assertEquals(CommandId.UNBIND_RESP, ur.getCommandId());
         assertEquals(2147483654L, ur.getCommandId().getValue());

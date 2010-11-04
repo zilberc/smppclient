@@ -147,7 +147,12 @@ public final class TCPConnection implements Connection {
                 bytesRead = in.read(buffer);
                 if (bytesRead == 0)
                     break;
-                sbb.appendBytes(buffer, bytesRead);
+                // TODO refactor
+                if (bytesRead > 0) {
+                    byte[] bytesToAdd = new byte[bytesRead];
+                    System.arraycopy(buffer, 0, bytesToAdd, 0, bytesRead);
+                    sbb.appendBytes(bytesToAdd);
+                }
                 reads++;
             } while (reads < MAX_READS);
         } catch (InterruptedIOException e) {
@@ -166,7 +171,7 @@ public final class TCPConnection implements Connection {
                     break;
                 } else if (pduLength <= sbb.length()) {
                     try {
-                        buffer = sbb.removeBytes((int) pduLength).getBuffer();
+                        buffer = sbb.removeBytes((int) pduLength).array();
                     } catch (SmppException e) {
                         sbb = new SmppByteBuffer();
                         throw new IOException("FATAL ERROR while removing bytes from buffer", e);

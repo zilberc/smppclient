@@ -24,7 +24,7 @@ public class LanguageIndicatorTest {
 		bb.appendShort(0x020d);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		LanguageIndicator li = new LanguageIndicator(bb.getBuffer());
+		LanguageIndicator li = new LanguageIndicator(bb.array());
 		assertEquals(ParameterTag.LANGUAGE_INDICATOR, li.getTag());
 		assertEquals(5, li.getBytes().length);
 		assertEquals((short)112, li.getValue());
@@ -37,7 +37,7 @@ public class LanguageIndicatorTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new LanguageIndicator(bb.getBuffer());
+		new LanguageIndicator(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class LanguageIndicatorTest {
 		bb.appendShort(0x020d);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new LanguageIndicator(bb.getBuffer());
+		new LanguageIndicator(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class LanguageIndicatorTest {
 		bb.appendShort(0x020d);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new LanguageIndicator(bb.getBuffer());
+		new LanguageIndicator(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class LanguageIndicatorTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new LanguageIndicator(bb.getBuffer());
+		new LanguageIndicator(bb.array());
 	}
 
 }

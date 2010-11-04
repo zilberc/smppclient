@@ -44,7 +44,7 @@ public abstract class UDH {
             throw new UDHException("UDH has not enough length to read header", e);
         }
         if (bytes.length == length) {
-            parseBody(bb.getBuffer());
+            parseBody(bb.array());
         } else {
             throw new UDHException("UDH has wrong length " + bytes.length + " but should be " + length);
         }
@@ -66,10 +66,10 @@ public abstract class UDH {
         if (body.length > 0) {
             length = (short) (HEADER_LENGTH + body.length);
             SmppByteBuffer bb = getHeader();
-            bb.appendBytes(body, body.length);
-            return bb.getBuffer();
+            bb.appendBytes(body);
+            return bb.array();
         } else {
-            return getHeader().getBuffer();
+            return getHeader().array();
         }
     }
 

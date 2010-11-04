@@ -55,7 +55,7 @@ public class DLN {
             throw new PDUException("dlName field is invalid");
         }
         bb.appendCString(dlName);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

@@ -83,7 +83,7 @@ public abstract class PDU {
             throw new PDUException("PDU has not enough length to read header", e);
         }
         if (bytes.length == commandLength) {
-            parseBody(bb.getBuffer());
+            parseBody(bb.array());
         } else {
             throw new PDUException("PDU has wrong length " + bytes.length + " but should be " + commandLength);
         }
@@ -197,10 +197,10 @@ public abstract class PDU {
         commandLength = HEADER_LENGTH + body.length;
         if (body.length > 0) {
             SmppByteBuffer bb = getHeader();
-            bb.appendBytes(body, body.length);
-            return bb.getBuffer();
+            bb.appendBytes(body);
+            return bb.array();
         } else {
-            return getHeader().getBuffer();
+            return getHeader().array();
         }
     }
 
@@ -274,7 +274,7 @@ public abstract class PDU {
     protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws PDUException {
         try {
             short length = byteBuffer.readBytes(1).removeByte();
-            return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).getBuffer());
+            return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
         } catch (WrongLengthException e) {
             throw new PDUException("Buffer have not enough length to read UDH header", e);
         } catch (WrongParameterException e) {

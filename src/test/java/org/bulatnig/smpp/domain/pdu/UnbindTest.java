@@ -32,7 +32,7 @@ public class UnbindTest {
         sbb.appendInt(6L);
         sbb.appendInt(88);
         sbb.appendInt(987654321L);
-        Unbind u = new Unbind(sbb.getBuffer());
+        Unbind u = new Unbind(sbb.array());
         assertEquals(16L, u.getCommandLength());
         assertEquals(CommandId.UNBIND, u.getCommandId());
         assertEquals(6L, u.getCommandId().getValue());

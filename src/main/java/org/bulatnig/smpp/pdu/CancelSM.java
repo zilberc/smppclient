@@ -215,7 +215,7 @@ public class CancelSM extends PDU implements Responsable {
             throw new PDUException("destinationAddr field is too long");
         }
         bb.appendCString(destinationAddr);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

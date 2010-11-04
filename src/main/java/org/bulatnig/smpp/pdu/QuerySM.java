@@ -135,7 +135,7 @@ public class QuerySM extends PDU implements Responsable {
             throw new PDUException("sourceAddr field is too long");
         }
         bb.appendCString(sourceAddr);
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

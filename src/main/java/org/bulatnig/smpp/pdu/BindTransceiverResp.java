@@ -61,13 +61,12 @@ public class BindTransceiverResp extends PDU {
             bb.appendCString(systemId);
             if (scInterfaceVersion != null) {
                 try {
-                    bb.appendBytes(scInterfaceVersion.getBytes(), scInterfaceVersion
-                            .getBytes().length);
+                    bb.appendBytes(scInterfaceVersion.getBytes());
                 } catch (TLVException e) {
                     throw new PDUException("TLVs parsing failed", e);
                 }
             }
-            return bb.getBuffer();
+            return bb.array();
         } else {
             return new byte[0];
         }
@@ -93,7 +92,7 @@ public class BindTransceiverResp extends PDU {
                 throw new PDUException("systemId field is too long");
             }
             if (bb.length() > 0) {
-                    List<TLV> list = getOptionalParams(bb.getBuffer());
+                    List<TLV> list = getOptionalParams(bb.array());
                     for (TLV tlv : list) {
                         if (tlv.getTag() == ParameterTag.SC_INTERFACE_VERSION) {
                             scInterfaceVersion = (ScInterfaceVersion) tlv;

@@ -140,7 +140,7 @@ public class TCPConnectionTest {
         }
     }
 
-    @Test(timeout = 250)
+    @Test(timeout = 500)
     public void floodTest() throws Exception {
         Connection connection = null;
         try {
@@ -209,7 +209,7 @@ public class TCPConnectionTest {
                 while (run) {
                     client = serverSocket.accept();
                     out = client.getOutputStream();
-                    out.write(sbb.getBuffer());
+                    out.write(sbb.array());
                     out.close();
                     client.close();
                 }
@@ -310,10 +310,10 @@ public class TCPConnectionTest {
                 while (run) {
                     client = serverSocket.accept();
                     out = client.getOutputStream();
-                    out.write(sbb.getBuffer());
+                    out.write(sbb.array());
                     out.flush();
                     Thread.sleep(150);
-                    out.write(sbb2.getBuffer());
+                    out.write(sbb2.array());
                     out.close();
                     client.close();
                 }
@@ -358,7 +358,7 @@ public class TCPConnectionTest {
                 while (run) {
                     client = serverSocket.accept();
                     out = client.getOutputStream();
-                    out.write(sbb.getBuffer());
+                    out.write(sbb.array());
                     out.close();
                     client.close();
                 }

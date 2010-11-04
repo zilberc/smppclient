@@ -24,7 +24,7 @@ public class DisplayTimeTest {
 		bb.appendShort(0x1201);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		DisplayTime dt = new DisplayTime(bb.getBuffer());
+		DisplayTime dt = new DisplayTime(bb.array());
 		assertEquals(ParameterTag.DISPLAY_TIME, dt.getTag());
 		assertEquals(5, dt.getBytes().length);
 		assertEquals((short)112, dt.getValue());
@@ -37,7 +37,7 @@ public class DisplayTimeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new DisplayTime(bb.getBuffer());
+		new DisplayTime(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class DisplayTimeTest {
 		bb.appendShort(0x1201);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new DisplayTime(bb.getBuffer());
+		new DisplayTime(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class DisplayTimeTest {
 		bb.appendShort(0x1201);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new DisplayTime(bb.getBuffer());
+		new DisplayTime(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class DisplayTimeTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new DisplayTime(bb.getBuffer());
+		new DisplayTime(bb.array());
 	}
 
 }

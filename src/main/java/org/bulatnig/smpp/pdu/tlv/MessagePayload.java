@@ -64,7 +64,7 @@ public class MessagePayload extends TLV {
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendString(value, getCharsetName(dataCoding));
-        return sbb.getBuffer();
+        return sbb.array();
     }
 
     public UDH getUdh() {

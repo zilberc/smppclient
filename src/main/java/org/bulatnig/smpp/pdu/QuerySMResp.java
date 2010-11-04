@@ -115,7 +115,7 @@ public class QuerySMResp extends PDU {
                 WrongParameterException e) {
             throw new PDUException("errorCode field is invalid", e);
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**

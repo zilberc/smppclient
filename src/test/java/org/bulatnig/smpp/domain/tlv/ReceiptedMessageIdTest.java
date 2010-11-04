@@ -25,7 +25,7 @@ public class ReceiptedMessageIdTest {
 		bb.appendShort(0x001e);
 		bb.appendShort(0x0004);
 		bb.appendCString("smx");
-		ReceiptedMessageId rmi = new ReceiptedMessageId(bb.getBuffer());
+		ReceiptedMessageId rmi = new ReceiptedMessageId(bb.array());
 		assertEquals(ParameterTag.RECEIPTED_MESSAGE_ID, rmi.getTag());
 		assertEquals(8, rmi.getBytes().length);
 		assertEquals("smx", rmi.getValue());
@@ -38,7 +38,7 @@ public class ReceiptedMessageIdTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new ReceiptedMessageId(bb.getBuffer());
+		new ReceiptedMessageId(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -47,7 +47,7 @@ public class ReceiptedMessageIdTest {
 		bb.appendShort(0x001e);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
-		new ReceiptedMessageId(bb.getBuffer());
+		new ReceiptedMessageId(bb.array());
 	}
 	
 	@Test
@@ -65,7 +65,7 @@ public class ReceiptedMessageIdTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new ReceiptedMessageId(bb.getBuffer());
+		new ReceiptedMessageId(bb.array());
 	}
 
     @Test(expected = TLVException.class)

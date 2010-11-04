@@ -28,7 +28,7 @@ public class MessageHandlerTest {
     /**
      * A little wrong UDH test.
      *
-     * @throws Exception
+     * @throws Exception  test failure
      */
     @Test
     public void multipartMessageTest() throws Exception {
@@ -153,8 +153,8 @@ public class MessageHandlerTest {
         sbb2.appendInt(0x293a2d2aL);
         assertEquals("00000095000000050000000004b7d191000101373930393939383537373700030131393530233230393239303132004000000000000000005c050003efbfbd02026f6d616e7469346e6f213a2d294120706f6b61206e61646f207072696e696d61742720767365206b616b20657374272145746f207379642762612154616b2034746f2067796c7961656d213a2d503b2d293a2d2a", sbb2.getHexDump());
 
-        DeliverSM deliver1 = new DeliverSM(sbb1.getBuffer());
-        DeliverSM deliver2 = new DeliverSM(sbb2.getBuffer());
+        DeliverSM deliver1 = new DeliverSM(sbb1.array());
+        DeliverSM deliver2 = new DeliverSM(sbb2.array());
 
         MessageHandler handler = new MessageHandlerTestImpl();
         handler.start();

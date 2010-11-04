@@ -21,7 +21,7 @@ public class SourceAddrSubunitTest {
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x04);
-		SourceAddrSubunit sas = new SourceAddrSubunit(bb.getBuffer());
+		SourceAddrSubunit sas = new SourceAddrSubunit(bb.array());
 		assertEquals(ParameterTag.SOURCE_ADDR_SUBUNIT, sas.getTag());
 		assertEquals(5, sas.getBytes().length);
 		assertEquals(AddrSubunit.EXTERNAL_UNIT_1, sas.getValue());
@@ -34,7 +34,7 @@ public class SourceAddrSubunitTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new SourceAddrSubunit(bb.getBuffer());
+		new SourceAddrSubunit(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class SourceAddrSubunitTest {
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new SourceAddrSubunit(bb.getBuffer());
+		new SourceAddrSubunit(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class SourceAddrSubunitTest {
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x0012);
-		new SourceAddrSubunit(bb.getBuffer());
+		new SourceAddrSubunit(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class SourceAddrSubunitTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new SourceAddrSubunit(bb.getBuffer());
+		new SourceAddrSubunit(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class SourceAddrSubunitTest {
 		bb.appendShort(0x000D);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		SourceAddrSubunit sas = new SourceAddrSubunit(bb.getBuffer());
+		SourceAddrSubunit sas = new SourceAddrSubunit(bb.array());
 		assertEquals(ParameterTag.SOURCE_ADDR_SUBUNIT, sas.getTag());
 		assertEquals(5, sas.getBytes().length);
 		assertEquals(AddrSubunit.RESERVED, sas.getValue());

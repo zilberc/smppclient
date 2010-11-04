@@ -24,7 +24,7 @@ public class SarSegmentSeqnumTest {
 		bb.appendShort(0x020f);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		SarSegmentSeqnum sss = new SarSegmentSeqnum(bb.getBuffer());
+		SarSegmentSeqnum sss = new SarSegmentSeqnum(bb.array());
 		assertEquals(ParameterTag.SAR_SEGMENT_SEQNUM, sss.getTag());
 		assertEquals(5, sss.getBytes().length);
 		assertEquals((short)112, sss.getValue());
@@ -37,7 +37,7 @@ public class SarSegmentSeqnumTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new SarSegmentSeqnum(bb.getBuffer());
+		new SarSegmentSeqnum(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class SarSegmentSeqnumTest {
 		bb.appendShort(0x020f);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new SarSegmentSeqnum(bb.getBuffer());
+		new SarSegmentSeqnum(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class SarSegmentSeqnumTest {
 		bb.appendShort(0x020f);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new SarSegmentSeqnum(bb.getBuffer());
+		new SarSegmentSeqnum(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class SarSegmentSeqnumTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new SarSegmentSeqnum(bb.getBuffer());
+		new SarSegmentSeqnum(bb.array());
 	}
 
 }

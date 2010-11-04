@@ -21,7 +21,7 @@ public class MsValidityTest {
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x02);
-		MsValidity mv = new MsValidity(bb.getBuffer());
+		MsValidity mv = new MsValidity(bb.array());
 		assertEquals(ParameterTag.MS_VALIDITY, mv.getTag());
 		assertEquals(5, mv.getBytes().length);
 		assertEquals(Validity.SID_BASED, mv.getValue());
@@ -34,7 +34,7 @@ public class MsValidityTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x55);
-		new MsValidity(bb.getBuffer());
+		new MsValidity(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -43,7 +43,7 @@ public class MsValidityTest {
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0003);
-		new MsValidity(bb.getBuffer());
+		new MsValidity(bb.array());
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class MsValidityTest {
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0002);
-		new MsValidity(bb.getBuffer());
+		new MsValidity(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -70,7 +70,7 @@ public class MsValidityTest {
 		bb.appendShort(0x0006);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x00);
-		new MsValidity(bb.getBuffer());
+		new MsValidity(bb.array());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class MsValidityTest {
 		bb.appendShort(0x1204);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x12);
-		MsValidity mv = new MsValidity(bb.getBuffer());
+		MsValidity mv = new MsValidity(bb.array());
 		assertEquals(ParameterTag.MS_VALIDITY, mv.getTag());
 		assertEquals(5, mv.getBytes().length);
 		assertEquals(Validity.RESERVED, mv.getValue());

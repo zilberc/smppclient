@@ -48,7 +48,7 @@ public class DeliverSMTest {
         sbb.appendByte((short) 20);
         sbb.appendByte((short) 21);
         sbb.appendString("aaaaaaabbbbbbbsssssss");
-        DeliverSM deliver = new DeliverSM(sbb.getBuffer());
+        DeliverSM deliver = new DeliverSM(sbb.array());
         assertEquals(82L, deliver.getCommandLength());
         assertEquals(5L, deliver.getCommandId().getValue());
         assertEquals(CommandStatus.ESME_RINVSERTYP, deliver.getCommandStatus());
@@ -109,12 +109,12 @@ public class DeliverSMTest {
         sbb.appendByte((short) 0);
         sbb.appendByte((short) 0);
         sbb.appendByte((short) 15);
-        sbb.appendByte((short) 05);
+        sbb.appendByte((short) 5);
         sbb.appendByte((short) 10);
         sbb.appendInt(50333956L);
         sbb.appendString("7+7770247");
         assertEquals("000000480000000500000000047f3a78000101373930353738393639383000030135313531233139393430393439004000000000000000000f050a03000904372b37373730323437", sbb.getHexDump());
-        DeliverSM deliver = new DeliverSM(sbb.getBuffer());
+        DeliverSM deliver = new DeliverSM(sbb.array());
         assertEquals("7+7770247", deliver.getShortMessage());
     }
 
@@ -179,7 +179,7 @@ public class DeliverSMTest {
         sbb.appendByte((short) 0x74);
         sbb.appendByte((short) 0x2e);
         assertEquals("000000a300000005000000000001361000010137393236313733323030350000013139353000400000000000000000730500030b0202616b2076656465772c207469207365626961206e6520766964657720692064756d6165772034746f20767365206e6f726d616c6e6f2c20706f64756d61692034746f2074692064656c6165772c2074766f6920616c6b6f676f6c207673652074656265206973706f727469742e", sbb.getHexDump());
-        DeliverSM deliver = new DeliverSM(sbb.getBuffer());
+        DeliverSM deliver = new DeliverSM(sbb.array());
         assertEquals("ak vedew, ti sebia ne videw i dumaew 4to vse normalno, podumai 4to ti delaew, tvoi alkogol vse tebe isportit.", deliver.getShortMessage());
         IEI iei = (IEI) deliver.getUdh();
         assertEquals(11, iei.getMsgRefNum());
@@ -242,7 +242,7 @@ public class DeliverSMTest {
         sbb.appendInt(0x0430003aL);
         sbb.appendInt(0x002d0029L);
         assertEquals("00000094000000050000000000000ece000101373931383535303031323700000131393531000000000000000008000004240060041a043e0442043e0440044b04390020044104350433043e0434043d044f00200434043e043b04360435043d00200431044b0442044c00200438043b04380020043a043e0442043e0440044b0439002004320447043504400430003a002d0029", sbb.getHexDump());
-        DeliverSM deliver = new DeliverSM(sbb.getBuffer());
+        DeliverSM deliver = new DeliverSM(sbb.array());
     }
 
     @Test
@@ -280,7 +280,7 @@ public class DeliverSMTest {
         sbb.appendByte((short) 0x33);
         sbb.appendByte((short) 0x37);
         assertEquals("00000046000000050000000000000ecd000101373931373435343530383000040938313831004000000000000000000004240012050a03000c0839332b323032373431303337", sbb.getHexDump());
-        DeliverSM deliver = new DeliverSM(sbb.getBuffer());
+        DeliverSM deliver = new DeliverSM(sbb.array());
         assertEquals("93+202741037", deliver.getMessagePayload().getValue());
         assertEquals("00000040000000050000000000000ecd00010137393137343534353038300004093831383100400000000000000000000424000c39332b323032373431303337", new SmppByteBuffer(deliver.getBytes()).getHexDump());
     }

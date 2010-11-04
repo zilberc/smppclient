@@ -50,7 +50,7 @@ public class SubmitSMResp extends PDU {
                 throw new PDUException("messageId field is invalid");
             }
             bb.appendCString(messageId);
-            return bb.getBuffer();
+            return bb.array();
         } else {
             return new byte[0];
         }

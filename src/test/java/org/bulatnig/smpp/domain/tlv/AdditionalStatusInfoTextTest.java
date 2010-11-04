@@ -24,7 +24,7 @@ public class AdditionalStatusInfoTextTest {
         bb.appendShort(0x001d);
         bb.appendShort(0x0004);
         bb.appendCString("smx");
-        AdditionalStatusInfoText asit = new AdditionalStatusInfoText(bb.getBuffer());
+        AdditionalStatusInfoText asit = new AdditionalStatusInfoText(bb.array());
         assertEquals(ParameterTag.ADDITIONAL_STATUS_INFO_TEXT, asit.getTag());
         assertEquals(8, asit.getBytes().length);
         assertEquals("smx", asit.getValue());
@@ -37,7 +37,7 @@ public class AdditionalStatusInfoTextTest {
         bb.appendShort(0x0000);
         bb.appendShort(0x0001);
         bb.appendByte((byte) 0x11);
-        new AdditionalStatusInfoText(bb.getBuffer());
+        new AdditionalStatusInfoText(bb.array());
     }
 
     @Test(expected = TLVException.class)
@@ -46,7 +46,7 @@ public class AdditionalStatusInfoTextTest {
         bb.appendShort(0x001d);
         bb.appendShort(0x0002);
         bb.appendByte((byte) 0x11);
-        new AdditionalStatusInfoText(bb.getBuffer());
+        new AdditionalStatusInfoText(bb.array());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AdditionalStatusInfoTextTest {
         bb.appendShort(0x0005);
         bb.appendShort(0x0001);
         bb.appendByte((byte) 0x11);
-        new AdditionalStatusInfoText(bb.getBuffer());
+        new AdditionalStatusInfoText(bb.array());
     }
 
     @Test(expected = TLVException.class)

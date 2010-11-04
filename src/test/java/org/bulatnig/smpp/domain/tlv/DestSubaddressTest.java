@@ -24,7 +24,7 @@ public class DestSubaddressTest {
 		bb.appendShort(0x0203);
 		bb.appendShort(0x0003);
 		bb.appendString("smx");
-		DestSubaddress ss = new DestSubaddress(bb.getBuffer());
+		DestSubaddress ss = new DestSubaddress(bb.array());
 		assertEquals(ParameterTag.DEST_SUBADDRESS, ss.getTag());
 		assertEquals(7, ss.getBytes().length);
 		assertEquals("smx", ss.getValue());
@@ -37,7 +37,7 @@ public class DestSubaddressTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new DestSubaddress(bb.getBuffer());
+		new DestSubaddress(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class DestSubaddressTest {
 		bb.appendShort(0x0203);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
-		new DestSubaddress(bb.getBuffer());
+		new DestSubaddress(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class DestSubaddressTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new DestSubaddress(bb.getBuffer());
+		new DestSubaddress(bb.array());
 	}
 
 	@Test(expected=TLVException.class)
@@ -73,7 +73,7 @@ public class DestSubaddressTest {
 		bb.appendShort(0x0203);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new DestSubaddress(bb.getBuffer());
+		new DestSubaddress(bb.array());
 	}
 
 	@Test(expected=TLVException.class)

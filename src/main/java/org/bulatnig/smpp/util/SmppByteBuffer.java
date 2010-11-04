@@ -6,10 +6,12 @@ import java.io.UnsupportedEncodingException;
  * Converts java types to byte array according to SMPP protocol.
  * You should remember, that all SMPP simple numeric types are unsigned,
  * but Java types are always signed.
+ * <p/>
+ * Not thread safe.
  *
  * @author Bulat Nigmatullin
  */
-public final class SmppByteBuffer {
+public class SmppByteBuffer {
 
     /**
      * C-Octet String encoding and default Octet String encoding.
@@ -21,21 +23,22 @@ public final class SmppByteBuffer {
      */
     private static final byte SZ_BYTE = 1;
     /**
-     * PDU byte max size.
-     */
-    private static final int MAX_BYTE_VAL = 256;
-    /**
      * PDU short type.
      */
     private static final byte SZ_SHORT = 2;
     /**
-     * PDU short max size.
-     */
-    private static final int MAX_SHORT_VAL = 65536;
-    /**
      * PDU Integer type size.
      */
     private static final byte SZ_INT = 4;
+
+    /**
+     * PDU byte max size.
+     */
+    private static final int MAX_BYTE_VAL = 256;
+    /**
+     * PDU short max size.
+     */
+    private static final int MAX_SHORT_VAL = 65536;
     /**
      * PDU Integer max size.
      */
@@ -53,12 +56,7 @@ public final class SmppByteBuffer {
     /**
      * SMPP NULL character to append at the end of C-Octet String.
      */
-    private static final byte[] zero;
-
-    static {
-        zero = new byte[1];
-        zero[0] = 0;
-    }
+    private static final byte[] ZERO = new byte[]{0};
 
     /**
      * Byte buffer.
@@ -66,16 +64,16 @@ public final class SmppByteBuffer {
     private byte[] buffer;
 
     /**
-     * Конструктор без инциализириющего массива.
+     * Create empty buffer.
      */
     public SmppByteBuffer() {
         buffer = new byte[0];
     }
 
     /**
-     * Конструктор с инициализирующим массивом.
+     * Create buffer based on provided array.
      *
-     * @param b массив байтов
+     * @param b byte array
      */
     public SmppByteBuffer(final byte[] b) {
         buffer = b;
@@ -86,20 +84,8 @@ public final class SmppByteBuffer {
      *
      * @return массив байтов
      */
-    public byte[] getBuffer() {
+    public byte[] array() {
         return buffer;
-    }
-
-    /**
-     * Присваивает массив байтов.
-     *
-     * @param b byte array, null allowed
-     */
-    public void setBuffer(final byte[] b) {
-        if (b != null)
-            buffer = b;
-        else
-            buffer = new byte[0];
     }
 
     /**
@@ -109,6 +95,18 @@ public final class SmppByteBuffer {
      */
     public int length() {
         return buffer.length;
+    }
+
+    /**
+     * Добавляет байты в массив.
+     *
+     * @param bytes byte array
+     */
+    public void appendBytes(final byte[] bytes) {
+        byte[] newBuffer = new byte[buffer.length + bytes.length];
+        System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
+        System.arraycopy(bytes, 0, newBuffer, buffer.length, bytes.length);
+        buffer = newBuffer;
     }
 
     /**
@@ -127,7 +125,7 @@ public final class SmppByteBuffer {
         }
         byte[] byteBuf = new byte[SZ_BYTE];
         byteBuf[0] = (byte) data;
-        appendBytes(byteBuf, SZ_BYTE);
+        appendBytes(byteBuf);
     }
 
     /**
@@ -148,7 +146,7 @@ public final class SmppByteBuffer {
         byte[] shortBuf = new byte[SZ_SHORT];
         shortBuf[1] = (byte) (s & OCTET_MASK);
         shortBuf[0] = (byte) ((s >>> 8) & OCTET_MASK);
-        appendBytes(shortBuf, SZ_SHORT);
+        appendBytes(shortBuf);
     }
 
     /**
@@ -171,7 +169,7 @@ public final class SmppByteBuffer {
         intBuf[2] = (byte) ((i >>> 8) & OCTET_MASK);
         intBuf[1] = (byte) ((i >>> 16) & OCTET_MASK);
         intBuf[0] = (byte) ((i >>> 24) & OCTET_MASK);
-        appendBytes(intBuf, SZ_INT);
+        appendBytes(intBuf);
     }
 
     /**
@@ -184,12 +182,12 @@ public final class SmppByteBuffer {
         if (cstring != null && cstring.length() > 0) {
             try {
                 byte[] stringBuf = cstring.getBytes(ASCII);
-                appendBytes(stringBuf, stringBuf.length);
+                appendBytes(stringBuf);
             } catch (UnsupportedEncodingException e) {
                 // omit it
             }
         }
-        appendBytes(zero, 1); // always append terminating zero
+        appendBytes(ZERO); // always append terminating ZERO
     }
 
     /**
@@ -214,7 +212,7 @@ public final class SmppByteBuffer {
         if ((string != null) && (string.length() > 0)) {
             try {
                 byte[] stringBuf = string.getBytes(charsetName);
-                appendBytes(stringBuf, stringBuf.length);
+                appendBytes(stringBuf);
             } catch (UnsupportedEncodingException e) {
                 // omit it
             }
@@ -230,7 +228,7 @@ public final class SmppByteBuffer {
     public short removeByte() throws WrongLengthException {
         byte result = 0;
         try {
-            byte[] resBuff = removeBytes(SZ_BYTE).getBuffer();
+            byte[] resBuff = removeBytes(SZ_BYTE).array();
             result = resBuff[0];
         } catch (WrongParameterException wpe) {
             // omit it
@@ -251,7 +249,7 @@ public final class SmppByteBuffer {
     public int removeShort() throws WrongLengthException {
         int result = 0;
         try {
-            byte[] resBuff = removeBytes(SZ_SHORT).getBuffer();
+            byte[] resBuff = removeBytes(SZ_SHORT).array();
             result |= resBuff[0] & OCTET_MASK;
             result <<= 8;
             result |= resBuff[1] & OCTET_MASK;
@@ -319,7 +317,7 @@ public final class SmppByteBuffer {
         while ((zeroPos < len) && (buffer[zeroPos] != 0)) {
             zeroPos++;
         }
-        if (zeroPos < len) { // found terminating zero
+        if (zeroPos < len) { // found terminating ZERO
             String result = "";
             if (zeroPos > 0) {
                 try {
@@ -335,7 +333,7 @@ public final class SmppByteBuffer {
             }
             return result;
         } else {
-            throw new WrongLengthException("terminating zero not found");
+            throw new WrongLengthException("terminating ZERO not found");
         }
     }
 
@@ -397,9 +395,9 @@ public final class SmppByteBuffer {
         if (lefts > 0) {
             byte[] newBuf = new byte[lefts];
             System.arraycopy(buffer, count, newBuf, 0, lefts);
-            setBuffer(newBuf);
+            buffer = newBuf;
         } else {
-            setBuffer(null);
+            buffer = new byte[0];
         }
     }
 
@@ -425,31 +423,13 @@ public final class SmppByteBuffer {
     }
 
     /**
-     * Добавляет байты в массив.
-     *
-     * @param bytes массив байтов
-     * @param count длина добавляемого отрезка
-     */
-    public void appendBytes(final byte[] bytes, final int count) {
-        if (count > 0) {
-            int len = length();
-            byte[] newBuf = new byte[len + count];
-            if (len > 0) {
-                System.arraycopy(buffer, 0, newBuf, 0, len);
-            }
-            System.arraycopy(bytes, 0, newBuf, len, count);
-            setBuffer(newBuf);
-        }
-    }
-
-    /**
      * Возвращает строку отображающую содержимое массива.
      *
      * @return содержимое массива
      */
     public String getHexDump() {
         String dump = "";
-        byte[] b = getBuffer();
+        byte[] b = array();
         int dataLen = b.length;
         for (int i = 0; i < dataLen; i++) {
             dump += Character.forDigit((b[i] >> 4) & HALF_OCTET_MASK, 16);

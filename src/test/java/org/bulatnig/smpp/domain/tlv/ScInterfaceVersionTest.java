@@ -24,7 +24,7 @@ public class ScInterfaceVersionTest {
 		bb.appendShort(0x0210);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x70);
-		ScInterfaceVersion siv = new ScInterfaceVersion(bb.getBuffer());
+		ScInterfaceVersion siv = new ScInterfaceVersion(bb.array());
 		assertEquals(ParameterTag.SC_INTERFACE_VERSION, siv.getTag());
 		assertEquals(5, siv.getBytes().length);
 		assertEquals((short)112, siv.getValue());
@@ -37,7 +37,7 @@ public class ScInterfaceVersionTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x1111);
-		new ScInterfaceVersion(bb.getBuffer());
+		new ScInterfaceVersion(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class ScInterfaceVersionTest {
 		bb.appendShort(0x0210);
 		bb.appendShort(0x0002);
 		bb.appendShort(0x1111);
-		new ScInterfaceVersion(bb.getBuffer());
+		new ScInterfaceVersion(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class ScInterfaceVersionTest {
 		bb.appendShort(0x0210);
 		bb.appendShort(0x0001);
 		bb.appendShort(0x0001);
-		new ScInterfaceVersion(bb.getBuffer());
+		new ScInterfaceVersion(bb.array());
 	}
 	
 	@Test(expected=ClassCastException.class)
@@ -73,7 +73,7 @@ public class ScInterfaceVersionTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x0f);
-		new ScInterfaceVersion(bb.getBuffer());
+		new ScInterfaceVersion(bb.array());
 	}
 
 }

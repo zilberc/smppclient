@@ -24,7 +24,7 @@ public class MsMsgWaitFacilitiesTest {
         bb.appendShort(0x0030);
         bb.appendShort(0x0001);
         bb.appendByte((short) 0x01);
-        MsMsgWaitFacilities das = new MsMsgWaitFacilities(bb.getBuffer());
+        MsMsgWaitFacilities das = new MsMsgWaitFacilities(bb.array());
         assertEquals(ParameterTag.MS_MSG_WAIT_FACILITIES, das.getTag());
         assertEquals(5, das.getBytes().length);
         assertEquals((short) 1, das.getValue());
@@ -37,7 +37,7 @@ public class MsMsgWaitFacilitiesTest {
         bb.appendShort(0x0000);
         bb.appendShort(0x0001);
         bb.appendByte((byte) 0x55);
-        new MsMsgWaitFacilities(bb.getBuffer());
+        new MsMsgWaitFacilities(bb.array());
     }
 
     @Test(expected = TLVException.class)
@@ -46,7 +46,7 @@ public class MsMsgWaitFacilitiesTest {
         bb.appendShort(0x0005);
         bb.appendShort(0x0001);
         bb.appendShort(0x0003);
-        new MsMsgWaitFacilities(bb.getBuffer());
+        new MsMsgWaitFacilities(bb.array());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class MsMsgWaitFacilitiesTest {
         bb.appendShort(0x0030);
         bb.appendShort(0x0002);
         bb.appendShort(0x0012);
-        new MsMsgWaitFacilities(bb.getBuffer());
+        new MsMsgWaitFacilities(bb.array());
     }
 
     @Test(expected = ClassCastException.class)
@@ -73,7 +73,7 @@ public class MsMsgWaitFacilitiesTest {
         bb.appendShort(0x0006);
         bb.appendShort(0x0001);
         bb.appendByte((byte) 0x00);
-        new MsMsgWaitFacilities(bb.getBuffer());
+        new MsMsgWaitFacilities(bb.array());
     }
 
     @Test(expected = TLVException.class)

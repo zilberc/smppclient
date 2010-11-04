@@ -24,7 +24,7 @@ public class NetworkErrorCodeTest {
 		bb.appendShort(0x0423);
 		bb.appendShort(0x0003);
 		bb.appendString("123");
-		NetworkErrorCode nec = new NetworkErrorCode(bb.getBuffer());
+		NetworkErrorCode nec = new NetworkErrorCode(bb.array());
 		assertEquals(ParameterTag.NETWORK_ERROR_CODE, nec.getTag());
 		assertEquals(7, nec.getBytes().length);
 		assertEquals("123", nec.getValue());
@@ -37,7 +37,7 @@ public class NetworkErrorCodeTest {
 		bb.appendShort(0x0000);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new NetworkErrorCode(bb.getBuffer());
+		new NetworkErrorCode(bb.array());
 	}
 	
 	@Test(expected= TLVException.class)
@@ -46,7 +46,7 @@ public class NetworkErrorCodeTest {
 		bb.appendShort(0x0423);
 		bb.appendShort(0x0002);
 		bb.appendByte((byte)0x11);
-		new NetworkErrorCode(bb.getBuffer());
+		new NetworkErrorCode(bb.array());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class NetworkErrorCodeTest {
 		bb.appendShort(0x0005);
 		bb.appendShort(0x0001);
 		bb.appendByte((byte)0x11);
-		new NetworkErrorCode(bb.getBuffer());
+		new NetworkErrorCode(bb.array());
 	}
 
 }

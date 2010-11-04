@@ -71,10 +71,10 @@ public class SubmitMultiResp extends PDU {
         }
         if (unsuccessSmes != null) {
             for (UnsuccessSme us : unsuccessSmes) {
-                bb.appendBytes(us.getBytes(), us.getBytes().length);
+                bb.appendBytes(us.getBytes());
             }
         }
-        return bb.getBuffer();
+        return bb.array();
     }
 
     /**
@@ -94,7 +94,7 @@ public class SubmitMultiResp extends PDU {
             }
             noUnsuccess = bb.removeByte();
             for (int i = 0; i < noUnsuccess; i++) {
-                UnsuccessSme sme = new UnsuccessSme(bb.getBuffer());
+                UnsuccessSme sme = new UnsuccessSme(bb.array());
                 bb.removeBytes(sme.getBytes().length);
                 unsuccessSmes.add(sme);
             }

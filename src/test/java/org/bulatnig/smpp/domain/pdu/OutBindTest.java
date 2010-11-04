@@ -34,7 +34,7 @@ public class OutBindTest {
         sbb.appendInt(44444444L);
         sbb.appendCString("Lomotech");
         sbb.appendCString("secreT");
-        OutBind ob = new OutBind(sbb.getBuffer());
+        OutBind ob = new OutBind(sbb.array());
         assertEquals(32L, ob.getCommandLength());
         assertEquals(CommandId.OUTBIND, ob.getCommandId());
         assertEquals(11L, ob.getCommandId().getValue());

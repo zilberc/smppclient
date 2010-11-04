@@ -74,7 +74,7 @@ public abstract class TLV {
             throw new TLVException("TLV has not enough length to read Length field", e);
         }
         if (bb.length() == length) {
-            parseValue(bb.getBuffer(), esmClass, dataCoding);
+            parseValue(bb.array(), esmClass, dataCoding);
         } else {
             throw new TLVException("TLV has wrong length. Found: " + bb.length() + " expected " + length);
         }
@@ -124,8 +124,8 @@ public abstract class TLV {
             bb.appendShort(tag.getValue());
             byte[] value = getValueBytes(esmClass, dataCoding);
             bb.appendShort(value.length);
-            bb.appendBytes(value, value.length);
-            return bb.getBuffer();
+            bb.appendBytes(value);
+            return bb.array();
         } catch (WrongParameterException e) {
             throw new TLVException("Buffer error during TLV construction", e);
         }
@@ -173,7 +173,7 @@ public abstract class TLV {
     protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws TLVException {
         try {
             short length = byteBuffer.readBytes(1).removeByte();
-            return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).getBuffer());
+            return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
         } catch (WrongLengthException e) {
             throw new TLVException("Buffer have not enough length to read UDH header", e);
         } catch (WrongParameterException e) {
