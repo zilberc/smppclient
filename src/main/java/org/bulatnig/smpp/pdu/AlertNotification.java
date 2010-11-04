@@ -6,7 +6,6 @@ import org.bulatnig.smpp.pdu.tlv.TLV;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 import java.util.List;
 
@@ -149,30 +148,14 @@ public class AlertNotification extends PDU {
     @Override
     protected final byte[] getBodyBytes() throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer();
-        try {
-            bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrNpi field is invalid", e);
-        }
+        bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (sourceAddr != null && sourceAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("sourceAddr field is too long");
         }
         bb.appendCString(sourceAddr);
-        try {
-            bb.appendByte(esmeAddrTon != null ? esmeAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("esmeAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(esmeAddrNpi != null ? esmeAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("esmeAddrNpi field is invalid", e);
-        }
+        bb.appendByte(esmeAddrTon != null ? esmeAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(esmeAddrNpi != null ? esmeAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (esmeAddr != null && esmeAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("esmeAddr field is too long");
         }

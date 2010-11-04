@@ -1,9 +1,8 @@
 package org.bulatnig.smpp.pdu.tlv;
 
+import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
-import org.bulatnig.smpp.pdu.EsmClass;
 
 /**
  * The dpf_result parameter is used in the data_sm_resp PDU to indicate if
@@ -66,13 +65,7 @@ public class DpfResult extends TLV {
 
     @Override
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SmppByteBuffer sbb = new SmppByteBuffer();
-        try {
-            sbb.appendByte(value);
-        } catch (WrongParameterException e) {
-            throw new TLVException("Buffer error during parsing value", e);
-        }
-        return sbb.array();
+        return new SmppByteBuffer().appendByte(value).array();
     }
 
     /**

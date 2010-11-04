@@ -76,7 +76,7 @@ public class PayloadTypeTest {
 		new PayloadType(bb.array());
 	}
 
-	@Test(expected=TLVException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void testPTTConstructor7() throws TLVException {
 		new PayloadType((short)32000).getBytes();
 	}

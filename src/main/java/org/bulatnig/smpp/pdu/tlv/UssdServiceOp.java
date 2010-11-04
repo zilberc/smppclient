@@ -1,9 +1,8 @@
 package org.bulatnig.smpp.pdu.tlv;
 
+import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
-import org.bulatnig.smpp.pdu.EsmClass;
 
 /**
  * The ussd_service_op parameter is required to define the USSD service
@@ -72,13 +71,7 @@ public class UssdServiceOp extends TLV {
 
     @Override
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SmppByteBuffer sbb = new SmppByteBuffer();
-        try {
-            sbb.appendByte(intValue);
-        } catch (WrongParameterException e) {
-            throw new TLVException("Buffer error during parsing value", e);
-        }
-        return sbb.array();
+        return new SmppByteBuffer().appendByte(intValue).array();
     }
 
     private void defineValue(final short intValue) {

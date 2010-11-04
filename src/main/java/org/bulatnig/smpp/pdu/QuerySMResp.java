@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * QuerySM Response PDU.
@@ -104,17 +103,8 @@ public class QuerySMResp extends PDU {
             throw new PDUException("finalDate field is invalid");
         }
         bb.appendCString(finalDate);
-        try {
-            bb.appendByte(messageState.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("messageState field is invalid", e);
-        }
-        try {
-            bb.appendByte(errorCode);
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("errorCode field is invalid", e);
-        }
+        bb.appendByte(messageState.getValue());
+        bb.appendByte(errorCode);
         return bb.array();
     }
 

@@ -76,7 +76,7 @@ public class MsMsgWaitFacilitiesTest {
         new MsMsgWaitFacilities(bb.array());
     }
 
-    @Test(expected = TLVException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMMWFConstructor7() throws TLVException {
         new MsMsgWaitFacilities((short) 32000).getBytes();
     }

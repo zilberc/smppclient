@@ -64,11 +64,7 @@ public class SubmitMultiResp extends PDU {
             throw new PDUException("messageId field is invalid");
         }
         bb.appendCString(messageId);
-        try {
-            bb.appendByte(noUnsuccess);
-        } catch (WrongParameterException e) {
-            throw new PDUException("noUnsuccess field is invalid", e);
-        }
+        bb.appendByte(noUnsuccess);
         if (unsuccessSmes != null) {
             for (UnsuccessSme us : unsuccessSmes) {
                 bb.appendBytes(us.getBytes());

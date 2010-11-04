@@ -89,16 +89,16 @@ public class SmppByteBufferTest {
         assertEquals(7, sbb.length());
     }
 
-    @Test(expected = WrongParameterException.class)
-    public void appendByteWrongParameterException1() throws WrongParameterException {
+    @Test(expected = IllegalArgumentException.class)
+    public void appendByteWrongParameterException1() {
         SmppByteBuffer sbb = new SmppByteBuffer();
-        sbb.appendByte((short) 256);
+        sbb.appendByte(256);
     }
 
-    @Test(expected = WrongParameterException.class)
-    public void appendByteWrongParameterException2() throws WrongParameterException {
+    @Test(expected = IllegalArgumentException.class)
+    public void appendByteWrongParameterException2() {
         SmppByteBuffer sbb = new SmppByteBuffer();
-        sbb.appendByte((short) -1);
+        sbb.appendByte(-1);
     }
 
     @Test(expected = WrongParameterException.class)
@@ -129,7 +129,7 @@ public class SmppByteBufferTest {
     public void removers() throws WrongParameterException, WrongLengthException {
         SmppByteBuffer sbb = new SmppByteBuffer();
         assertEquals(0, sbb.length());
-        sbb.appendByte((short) 150);
+        sbb.appendByte(150);
         sbb.appendByte((short) 70);
         assertEquals("9646", sbb.getHexDump());
         assertEquals(2, sbb.length());

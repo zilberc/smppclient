@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * This command is issued by the ESME to replace a previously submitted short
@@ -164,17 +163,8 @@ public class ReplaceSM extends PDU implements Responsable {
             throw new PDUException("serviceType field is too long");
         }
         bb.appendCString(messageId);
-        try {
-            bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrNpi field is invalid", e);
-        }
+        bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (sourceAddr != null && sourceAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("sourceAddr field is too long");
         }
@@ -187,21 +177,9 @@ public class ReplaceSM extends PDU implements Responsable {
             throw new PDUException("validityPeriod field is invalid");
         }
         bb.appendCString(validityPeriod);
-        try {
-            bb.appendByte(registeredDelivery);
-        } catch (WrongParameterException e) {
-            throw new PDUException("registeredDelivery field is invalid", e);
-        }
-        try {
-            bb.appendByte(smDefaultMsgId);
-        } catch (WrongParameterException e) {
-            throw new PDUException("smDefaultMsgId field is invalid", e);
-        }
-        try {
-            bb.appendByte(smLength);
-        } catch (WrongParameterException e) {
-            throw new PDUException("smLength field is invalid", e);
-        }
+        bb.appendByte(registeredDelivery);
+        bb.appendByte(smDefaultMsgId);
+        bb.appendByte(smLength);
         bb.appendCString(shortMessage);
         return bb.array();
     }

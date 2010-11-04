@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu.udh;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * Comment here.
@@ -55,26 +54,10 @@ public class IEI extends UDH {
     @Override
     protected byte[] getBodyBytes() throws UDHException {
         SmppByteBuffer bb = new SmppByteBuffer();
-        try {
-            bb.appendByte(IEIL);
-        } catch (WrongParameterException e) {
-            // omit it
-        }
-        try {
-            bb.appendByte(msgRefNum);
-        } catch (WrongParameterException e) {
-            throw new UDHException("msgRefNum field is invalid", e);
-        }
-        try {
-            bb.appendByte(totalSegments);
-        } catch (WrongParameterException e) {
-            throw new UDHException("msgRefNum field is invalid", e);
-        }
-        try {
-            bb.appendByte(segmentSeqnum);
-        } catch (WrongParameterException e) {
-            throw new UDHException("msgRefNum field is invalid", e);
-        }
+        bb.appendByte(IEIL);
+        bb.appendByte(msgRefNum);
+        bb.appendByte(totalSegments);
+        bb.appendByte(segmentSeqnum);
         return bb.array();
     }
 
@@ -110,5 +93,5 @@ public class IEI extends UDH {
                 ", segmentSeqnum=" + segmentSeqnum +
                 '}';
     }
-    
+
 }

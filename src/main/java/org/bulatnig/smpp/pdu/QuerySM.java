@@ -120,17 +120,8 @@ public class QuerySM extends PDU implements Responsable {
             throw new PDUException("messageId field is too long");
         }
         bb.appendCString(messageId);
-        try {
-            bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrNpi field is invalid", e);
-        }
+        bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (sourceAddr != null && sourceAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("sourceAddr field is too long");
         }

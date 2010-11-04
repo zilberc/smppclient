@@ -1,9 +1,8 @@
 package org.bulatnig.smpp.pdu.tlv;
 
+import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
-import org.bulatnig.smpp.pdu.EsmClass;
 
 /**
  * The number_of_messages parameter is used to indicate the number of messages
@@ -61,13 +60,7 @@ public class NumberOfMessages extends TLV {
 
     @Override
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SmppByteBuffer sbb = new SmppByteBuffer();
-        try {
-            sbb.appendByte(value);
-        } catch (WrongParameterException e) {
-            throw new TLVException("Buffer error during parsing value", e);
-        }
-        return sbb.array();
+        return new SmppByteBuffer().appendByte(value).array();
     }
 
     /**

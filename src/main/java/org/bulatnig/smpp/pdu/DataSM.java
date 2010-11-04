@@ -3,7 +3,6 @@ package org.bulatnig.smpp.pdu;
 import org.bulatnig.smpp.pdu.tlv.*;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 import java.util.List;
 
@@ -293,51 +292,21 @@ public class DataSM extends PDU implements Responsable {
             throw new PDUException("serviceType field is too long");
         }
         bb.appendCString(serviceType);
-        try {
-            bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
+        bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (sourceAddr != null && sourceAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("sourceAddr field is too long");
         }
         bb.appendCString(sourceAddr);
-        try {
-            bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
+        bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (destinationAddr != null && destinationAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("destinationAddr field is too long");
         }
         bb.appendCString(destinationAddr);
-        try {
-            bb.appendByte(esmClass != null ? esmClass.getValue() : 0);
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(registeredDelivery);
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(dataCoding);
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
+        bb.appendByte(esmClass != null ? esmClass.getValue() : 0);
+        bb.appendByte(registeredDelivery);
+        bb.appendByte(dataCoding);
         try {
             if (sourcePort != null) {
                 bb.appendBytes(sourcePort.getBytes());
@@ -652,7 +621,7 @@ public class DataSM extends PDU implements Responsable {
      * {@inheritDoc}
      */
     public final DataSMResp getResponse
-            () {
+    () {
         DataSMResp resp = new DataSMResp();
         resp.setSequenceNumber(getSequenceNumber());
         return resp;
@@ -662,7 +631,7 @@ public class DataSM extends PDU implements Responsable {
      * @return indicator the SMS Application service
      */
     public final String getServiceType
-            () {
+    () {
         return serviceType;
     }
 
@@ -670,8 +639,8 @@ public class DataSM extends PDU implements Responsable {
      * @param serviceType indicator the SMS Application service
      */
     public final void setServiceType
-            (
-                    final String serviceType) {
+    (
+            final String serviceType) {
         this.serviceType = serviceType;
     }
 
@@ -679,7 +648,7 @@ public class DataSM extends PDU implements Responsable {
      * @return Type of Number for source address
      */
     public final TON getSourceAddrTon
-            () {
+    () {
         return sourceAddrTon;
     }
 
@@ -687,8 +656,8 @@ public class DataSM extends PDU implements Responsable {
      * @param sourceAddrTon Type of Number for source address
      */
     public final void setSourceAddrTon
-            (
-                    final TON sourceAddrTon) {
+    (
+            final TON sourceAddrTon) {
         this.sourceAddrTon = sourceAddrTon;
     }
 
@@ -696,7 +665,7 @@ public class DataSM extends PDU implements Responsable {
      * @return Numbering Plan Indicator for source address
      */
     public final NPI getSourceAddrNpi
-            () {
+    () {
         return sourceAddrNpi;
     }
 
@@ -704,8 +673,8 @@ public class DataSM extends PDU implements Responsable {
      * @param sourceAddrNpi Numbering Plan Indicator for source address
      */
     public final void setSourceAddrNpi
-            (
-                    final NPI sourceAddrNpi) {
+    (
+            final NPI sourceAddrNpi) {
         this.sourceAddrNpi = sourceAddrNpi;
     }
 
@@ -713,7 +682,7 @@ public class DataSM extends PDU implements Responsable {
      * @return address of SME which originated this message
      */
     public final String getSourceAddr
-            () {
+    () {
         return sourceAddr;
     }
 
@@ -721,8 +690,8 @@ public class DataSM extends PDU implements Responsable {
      * @param sourceAddr address of SME which originated this message
      */
     public final void setSourceAddr
-            (
-                    final String sourceAddr) {
+    (
+            final String sourceAddr) {
         this.sourceAddr = sourceAddr;
     }
 
@@ -730,7 +699,7 @@ public class DataSM extends PDU implements Responsable {
      * @return Type of Number for destination
      */
     public final TON getDestAddrTon
-            () {
+    () {
         return destAddrTon;
     }
 
@@ -745,7 +714,7 @@ public class DataSM extends PDU implements Responsable {
      * @return Numbering Plan Indicator for destination
      */
     public final NPI getDestAddrNpi
-            () {
+    () {
         return destAddrNpi;
     }
 
@@ -753,8 +722,8 @@ public class DataSM extends PDU implements Responsable {
      * @param destAddrNpi Numbering Plan Indicator for destination
      */
     public final void setDestAddrNpi
-            (
-                    final NPI destAddrNpi) {
+    (
+            final NPI destAddrNpi) {
         this.destAddrNpi = destAddrNpi;
     }
 
@@ -762,7 +731,7 @@ public class DataSM extends PDU implements Responsable {
      * @return destination address of this short message
      */
     public final String getDestinationAddr
-            () {
+    () {
         return destinationAddr;
     }
 
@@ -770,8 +739,8 @@ public class DataSM extends PDU implements Responsable {
      * @param destinationAddr destination address of this short message
      */
     public final void setDestinationAddr
-            (
-                    final String destinationAddr) {
+    (
+            final String destinationAddr) {
         this.destinationAddr = destinationAddr;
     }
 
@@ -794,7 +763,7 @@ public class DataSM extends PDU implements Responsable {
      *         acknowledgement
      */
     public final short getRegisteredDelivery
-            () {
+    () {
         return registeredDelivery;
     }
 
@@ -803,8 +772,8 @@ public class DataSM extends PDU implements Responsable {
      *                           acknowledgement
      */
     public final void setRegisteredDelivery
-            (
-                    final short registeredDelivery) {
+    (
+            final short registeredDelivery) {
         this.registeredDelivery = registeredDelivery;
     }
 
@@ -812,7 +781,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the encodingscheme of the payload data indicator
      */
     public final short getDataCoding
-            () {
+    () {
         return dataCoding;
     }
 
@@ -820,8 +789,8 @@ public class DataSM extends PDU implements Responsable {
      * @param dataCoding the encodingscheme of the payload data indicator
      */
     public final void setDataCoding
-            (
-                    final short dataCoding) {
+    (
+            final short dataCoding) {
         this.dataCoding = dataCoding;
     }
 
@@ -829,7 +798,7 @@ public class DataSM extends PDU implements Responsable {
      * @return application port number associated with the source address
      */
     public final SourcePort getSourcePort
-            () {
+    () {
         return sourcePort;
     }
 
@@ -837,8 +806,8 @@ public class DataSM extends PDU implements Responsable {
      * @param sourcePort application port number associated with the source address
      */
     public final void setSourcePort
-            (
-                    final SourcePort sourcePort) {
+    (
+            final SourcePort sourcePort) {
         this.sourcePort = sourcePort;
     }
 
@@ -847,7 +816,7 @@ public class DataSM extends PDU implements Responsable {
      *         data
      */
     public final SourceAddrSubunit getSourceAddrSubunit
-            () {
+    () {
         return sourceAddrSubunit;
     }
 
@@ -856,8 +825,8 @@ public class DataSM extends PDU implements Responsable {
      *                          data
      */
     public final void setSourceAddrSubunit
-            (
-                    final SourceAddrSubunit sourceAddrSubunit) {
+    (
+            final SourceAddrSubunit sourceAddrSubunit) {
         this.sourceAddrSubunit = sourceAddrSubunit;
     }
 
@@ -865,7 +834,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the correct network associated with the originating device
      */
     public final SourceNetworkType getSourceNetworkType
-            () {
+    () {
         return sourceNetworkType;
     }
 
@@ -873,8 +842,8 @@ public class DataSM extends PDU implements Responsable {
      * @param sourceNetworkType the correct network associated with the originating device
      */
     public final void setSourceNetworkType
-            (
-                    final SourceNetworkType sourceNetworkType) {
+    (
+            final SourceNetworkType sourceNetworkType) {
         this.sourceNetworkType = sourceNetworkType;
     }
 
@@ -883,7 +852,7 @@ public class DataSM extends PDU implements Responsable {
      *         destination
      */
     public final SourceBearerType getSourceBearerType
-            () {
+    () {
         return sourceBearerType;
     }
 
@@ -892,8 +861,8 @@ public class DataSM extends PDU implements Responsable {
      *                         the destination
      */
     public final void setSourceBearerType
-            (
-                    final SourceBearerType sourceBearerType) {
+    (
+            final SourceBearerType sourceBearerType) {
         this.sourceBearerType = sourceBearerType;
     }
 
@@ -901,7 +870,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the telematics identifier associated with the source
      */
     public final SourceTelematicsId getSourceTelematicsId
-            () {
+    () {
         return sourceTelematicsId;
     }
 
@@ -909,8 +878,8 @@ public class DataSM extends PDU implements Responsable {
      * @param sourceTelematicsId the telematics identifier associated with the source
      */
     public final void setSourceTelematicsId
-            (
-                    final SourceTelematicsId sourceTelematicsId) {
+    (
+            final SourceTelematicsId sourceTelematicsId) {
         this.sourceTelematicsId = sourceTelematicsId;
     }
 
@@ -918,7 +887,7 @@ public class DataSM extends PDU implements Responsable {
      * @return application port number associated with the destination address
      */
     public final DestinationPort getDestinationPort
-            () {
+    () {
         return destinationPort;
     }
 
@@ -927,8 +896,8 @@ public class DataSM extends PDU implements Responsable {
      *                        address
      */
     public final void setDestinationPort
-            (
-                    final DestinationPort destinationPort) {
+    (
+            final DestinationPort destinationPort) {
         this.destinationPort = destinationPort;
     }
 
@@ -937,7 +906,7 @@ public class DataSM extends PDU implements Responsable {
      *         intended
      */
     public final DestAddrSubunit getDestAddrSubunit
-            () {
+    () {
         return destAddrSubunit;
     }
 
@@ -946,8 +915,8 @@ public class DataSM extends PDU implements Responsable {
      *                        is intended
      */
     public final void setDestAddrSubunit
-            (
-                    final DestAddrSubunit destAddrSubunit) {
+    (
+            final DestAddrSubunit destAddrSubunit) {
         this.destAddrSubunit = destAddrSubunit;
     }
 
@@ -955,7 +924,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the correct network for the destination device
      */
     public final DestNetworkType getDestNetworkType
-            () {
+    () {
         return destNetworkType;
     }
 
@@ -963,8 +932,8 @@ public class DataSM extends PDU implements Responsable {
      * @param destNetworkType the correct network for the destination device
      */
     public final void setDestNetworkType
-            (
-                    final DestNetworkType destNetworkType) {
+    (
+            final DestNetworkType destNetworkType) {
         this.destNetworkType = destNetworkType;
     }
 
@@ -973,7 +942,7 @@ public class DataSM extends PDU implements Responsable {
      *         destination
      */
     public final DestBearerType getDestBearerType
-            () {
+    () {
         return destBearerType;
     }
 
@@ -982,8 +951,8 @@ public class DataSM extends PDU implements Responsable {
      *                       the destination
      */
     public final void setDestBearerType
-            (
-                    final DestBearerType destBearerType) {
+    (
+            final DestBearerType destBearerType) {
         this.destBearerType = destBearerType;
     }
 
@@ -991,7 +960,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the telematics identifier associated with the destination
      */
     public final DestTelematicsId getDestTelematicsId
-            () {
+    () {
         return destTelematicsId;
     }
 
@@ -999,8 +968,8 @@ public class DataSM extends PDU implements Responsable {
      * @param destTelematicsId the telematics identifier associated with the destination
      */
     public final void setDestTelematicsId
-            (
-                    final DestTelematicsId destTelematicsId) {
+    (
+            final DestTelematicsId destTelematicsId) {
         this.destTelematicsId = destTelematicsId;
     }
 
@@ -1008,7 +977,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the reference number for a particular concatenated short message
      */
     public final SarMsgRefNum getSarMsgRefNum
-            () {
+    () {
         return sarMsgRefNum;
     }
 
@@ -1017,8 +986,8 @@ public class DataSM extends PDU implements Responsable {
      *                     message
      */
     public final void setSarMsgRefNum
-            (
-                    final SarMsgRefNum sarMsgRefNum) {
+    (
+            final SarMsgRefNum sarMsgRefNum) {
         this.sarMsgRefNum = sarMsgRefNum;
     }
 
@@ -1027,7 +996,7 @@ public class DataSM extends PDU implements Responsable {
      *         message
      */
     public final SarTotalSegments getSarTotalSegments
-            () {
+    () {
         return sarTotalSegments;
     }
 
@@ -1036,8 +1005,8 @@ public class DataSM extends PDU implements Responsable {
      *                         short message
      */
     public final void setSarTotalSegments
-            (
-                    final SarTotalSegments sarTotalSegments) {
+    (
+            final SarTotalSegments sarTotalSegments) {
         this.sarTotalSegments = sarTotalSegments;
     }
 
@@ -1046,7 +1015,7 @@ public class DataSM extends PDU implements Responsable {
      *         the concatenated short message
      */
     public final SarSegmentSeqnum getSarSegmentSeqnum
-            () {
+    () {
         return sarSegmentSeqnum;
     }
 
@@ -1055,8 +1024,8 @@ public class DataSM extends PDU implements Responsable {
      *                         within the concatenated short message
      */
     public final void setSarSegmentSeqnum
-            (
-                    final SarSegmentSeqnum sarSegmentSeqnum) {
+    (
+            final SarSegmentSeqnum sarSegmentSeqnum) {
         this.sarSegmentSeqnum = sarSegmentSeqnum;
     }
 
@@ -1065,7 +1034,7 @@ public class DataSM extends PDU implements Responsable {
      *         destination SME
      */
     public final MoreMessagesToSend getMoreMessagesToSend
-            () {
+    () {
         return moreMessagesToSend;
     }
 
@@ -1074,8 +1043,8 @@ public class DataSM extends PDU implements Responsable {
      *                           destination SME
      */
     public final void setMoreMessagesToSend
-            (
-                    final MoreMessagesToSend moreMessagesToSend) {
+    (
+            final MoreMessagesToSend moreMessagesToSend) {
         this.moreMessagesToSend = moreMessagesToSend;
     }
 
@@ -1083,7 +1052,7 @@ public class DataSM extends PDU implements Responsable {
      * @return time to live as a relative time in seconds from submission
      */
     public final QosTimeToLive getQosTimeToLive
-            () {
+    () {
         return qosTimeToLive;
     }
 
@@ -1091,8 +1060,8 @@ public class DataSM extends PDU implements Responsable {
      * @param qosTimeToLive time to live as a relative time in seconds from submission
      */
     public final void setQosTimeToLive
-            (
-                    final QosTimeToLive qosTimeToLive) {
+    (
+            final QosTimeToLive qosTimeToLive) {
         this.qosTimeToLive = qosTimeToLive;
     }
 
@@ -1100,7 +1069,7 @@ public class DataSM extends PDU implements Responsable {
      * @return defines the type of payload
      */
     public final PayloadType getPayloadType
-            () {
+    () {
         return payloadType;
     }
 
@@ -1108,8 +1077,8 @@ public class DataSM extends PDU implements Responsable {
      * @param payloadType defines the type of payload
      */
     public final void setPayloadType
-            (
-                    final PayloadType payloadType) {
+    (
+            final PayloadType payloadType) {
         this.payloadType = payloadType;
     }
 
@@ -1117,7 +1086,7 @@ public class DataSM extends PDU implements Responsable {
      * @return contains the message user data
      */
     public final MessagePayload getMessagePayload
-            () {
+    () {
         return messagePayload;
     }
 
@@ -1125,8 +1094,8 @@ public class DataSM extends PDU implements Responsable {
      * @param messagePayload contains the message user data
      */
     public final void setMessagePayload
-            (
-                    final MessagePayload messagePayload) {
+    (
+            final MessagePayload messagePayload) {
         this.messagePayload = messagePayload;
     }
 
@@ -1134,7 +1103,7 @@ public class DataSM extends PDU implements Responsable {
      * @return indicator for setting Delivery Pending Flag on delivery failure
      */
     public final SetDpf getSetDpf
-            () {
+    () {
         return setDpf;
     }
 
@@ -1143,8 +1112,8 @@ public class DataSM extends PDU implements Responsable {
      *               failure
      */
     public final void setSetDpf
-            (
-                    final SetDpf setDpf) {
+    (
+            final SetDpf setDpf) {
         this.setDpf = setDpf;
     }
 
@@ -1152,7 +1121,7 @@ public class DataSM extends PDU implements Responsable {
      * @return SMSC message ID of message being receipted
      */
     public final ReceiptedMessageId getReceiptedMessageId
-            () {
+    () {
         return receiptedMessageId;
     }
 
@@ -1160,8 +1129,8 @@ public class DataSM extends PDU implements Responsable {
      * @param receiptedMessageId SMSC message ID of message being receipted
      */
     public final void setReceiptedMessageId
-            (
-                    final ReceiptedMessageId receiptedMessageId) {
+    (
+            final ReceiptedMessageId receiptedMessageId) {
         this.receiptedMessageId = receiptedMessageId;
     }
 
@@ -1169,7 +1138,7 @@ public class DataSM extends PDU implements Responsable {
      * @return message state
      */
     public final MessageStateTlv getMessageStateTlv
-            () {
+    () {
         return messageStateTlv;
     }
 
@@ -1177,8 +1146,8 @@ public class DataSM extends PDU implements Responsable {
      * @param messageStateTlv message state
      */
     public final void setMessageStateTlv
-            (
-                    final MessageStateTlv messageStateTlv) {
+    (
+            final MessageStateTlv messageStateTlv) {
         this.messageStateTlv = messageStateTlv;
     }
 
@@ -1186,7 +1155,7 @@ public class DataSM extends PDU implements Responsable {
      * @return network error code
      */
     public final NetworkErrorCode getNetworkErrorCode
-            () {
+    () {
         return networkErrorCode;
     }
 
@@ -1194,8 +1163,8 @@ public class DataSM extends PDU implements Responsable {
      * @param networkErrorCode network error code
      */
     public final void setNetworkErrorCode
-            (
-                    final NetworkErrorCode networkErrorCode) {
+    (
+            final NetworkErrorCode networkErrorCode) {
         this.networkErrorCode = networkErrorCode;
     }
 
@@ -1203,7 +1172,7 @@ public class DataSM extends PDU implements Responsable {
      * @return ESME assigned message reference number
      */
     public final UserMessageReference getUserMessageReference
-            () {
+    () {
         return userMessageReference;
     }
 
@@ -1211,8 +1180,8 @@ public class DataSM extends PDU implements Responsable {
      * @param userMessageReference ESME assigned message reference number
      */
     public final void setUserMessageReference
-            (
-                    final UserMessageReference userMessageReference) {
+    (
+            final UserMessageReference userMessageReference) {
         this.userMessageReference = userMessageReference;
     }
 
@@ -1220,7 +1189,7 @@ public class DataSM extends PDU implements Responsable {
      * @return indicates a level of privacy associated with the message
      */
     public final PrivacyIndicator getPrivacyIndicator
-            () {
+    () {
         return privacyIndicator;
     }
 
@@ -1228,8 +1197,8 @@ public class DataSM extends PDU implements Responsable {
      * @param privacyIndicator indicates a level of privacy associated with the message
      */
     public final void setPrivacyIndicator
-            (
-                    final PrivacyIndicator privacyIndicator) {
+    (
+            final PrivacyIndicator privacyIndicator) {
         this.privacyIndicator = privacyIndicator;
     }
 
@@ -1237,7 +1206,7 @@ public class DataSM extends PDU implements Responsable {
      * @return a callback number associated with the short message
      */
     public final CallbackNum getCallbackNum
-            () {
+    () {
         return callbackNum;
     }
 
@@ -1245,8 +1214,8 @@ public class DataSM extends PDU implements Responsable {
      * @param callbackNum a callback number associated with the short message
      */
     public final void setCallbackNum
-            (
-                    final CallbackNum callbackNum) {
+    (
+            final CallbackNum callbackNum) {
         this.callbackNum = callbackNum;
     }
 
@@ -1255,7 +1224,7 @@ public class DataSM extends PDU implements Responsable {
      *         callback number
      */
     public final CallbackNumPresInd getCallbackNumPresInd
-            () {
+    () {
         return callbackNumPresInd;
     }
 
@@ -1264,8 +1233,8 @@ public class DataSM extends PDU implements Responsable {
      *                           callback number
      */
     public final void setCallbackNumPresInd
-            (
-                    final CallbackNumPresInd callbackNumPresInd) {
+    (
+            final CallbackNumPresInd callbackNumPresInd) {
         this.callbackNumPresInd = callbackNumPresInd;
     }
 
@@ -1274,7 +1243,7 @@ public class DataSM extends PDU implements Responsable {
      *         callback number
      */
     public final CallbackNumAtag getCallbackNumAtag
-            () {
+    () {
         return callbackNumAtag;
     }
 
@@ -1283,8 +1252,8 @@ public class DataSM extends PDU implements Responsable {
      *                        the callback number
      */
     public final void setCallbackNumAtag
-            (
-                    final CallbackNumAtag callbackNumAtag) {
+    (
+            final CallbackNumAtag callbackNumAtag) {
         this.callbackNumAtag = callbackNumAtag;
     }
 
@@ -1292,7 +1261,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the subaddress of the message originator
      */
     public final SourceSubaddress getSourceSubaddress
-            () {
+    () {
         return sourceSubaddress;
     }
 
@@ -1300,8 +1269,8 @@ public class DataSM extends PDU implements Responsable {
      * @param sourceSubaddress the subaddress of the message originator
      */
     public final void setSourceSubaddress
-            (
-                    final SourceSubaddress sourceSubaddress) {
+    (
+            final SourceSubaddress sourceSubaddress) {
         this.sourceSubaddress = sourceSubaddress;
     }
 
@@ -1309,7 +1278,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the subaddress of the message destination
      */
     public final DestSubaddress getDestSubaddress
-            () {
+    () {
         return destSubaddress;
     }
 
@@ -1317,8 +1286,8 @@ public class DataSM extends PDU implements Responsable {
      * @param destSubaddress the subaddress of the message destination
      */
     public final void setDestSubaddress
-            (
-                    final DestSubaddress destSubaddress) {
+    (
+            final DestSubaddress destSubaddress) {
         this.destSubaddress = destSubaddress;
     }
 
@@ -1326,7 +1295,7 @@ public class DataSM extends PDU implements Responsable {
      * @return user response code
      */
     public final UserResponseCode getUserResponseCode
-            () {
+    () {
         return userResponseCode;
     }
 
@@ -1334,8 +1303,8 @@ public class DataSM extends PDU implements Responsable {
      * @param userResponseCode user response code
      */
     public final void setUserResponseCode
-            (
-                    final UserResponseCode userResponseCode) {
+    (
+            final UserResponseCode userResponseCode) {
         this.userResponseCode = userResponseCode;
     }
 
@@ -1344,7 +1313,7 @@ public class DataSM extends PDU implements Responsable {
      *         message
      */
     public final DisplayTime getDisplayTime
-            () {
+    () {
         return displayTime;
     }
 
@@ -1353,8 +1322,8 @@ public class DataSM extends PDU implements Responsable {
      *                    message
      */
     public final void setDisplayTime
-            (
-                    final DisplayTime displayTime) {
+    (
+            final DisplayTime displayTime) {
         this.displayTime = displayTime;
     }
 
@@ -1362,7 +1331,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the alerting mechanism when the message is received by an MS
      */
     public final SmsSignal getSmsSignal
-            () {
+    () {
         return smsSignal;
     }
 
@@ -1370,8 +1339,8 @@ public class DataSM extends PDU implements Responsable {
      * @param smsSignal the alerting mechanism when the message is received by an MS
      */
     public final void setSmsSignal
-            (
-                    final SmsSignal smsSignal) {
+    (
+            final SmsSignal smsSignal) {
         this.smsSignal = smsSignal;
     }
 
@@ -1379,7 +1348,7 @@ public class DataSM extends PDU implements Responsable {
      * @return validity information for this message to the recipient MS
      */
     public final MsValidity getMsValidity
-            () {
+    () {
         return msValidity;
     }
 
@@ -1387,8 +1356,8 @@ public class DataSM extends PDU implements Responsable {
      * @param msValidity validity information for this message to the recipient MS
      */
     public final void setMsValidity
-            (
-                    final MsValidity msValidity) {
+    (
+            final MsValidity msValidity) {
         this.msValidity = msValidity;
     }
 
@@ -1397,7 +1366,7 @@ public class DataSM extends PDU implements Responsable {
      *         message associated with the MWI) at the mobile station
      */
     public final MsMsgWaitFacilities getMsMsgWaitFacilities
-            () {
+    () {
         return msMsgWaitFacilities;
     }
 
@@ -1406,8 +1375,8 @@ public class DataSM extends PDU implements Responsable {
      *                            the message associated with the MWI) at the mobile station
      */
     public final void setMsMsgWaitFacilities
-            (
-                    final MsMsgWaitFacilities msMsgWaitFacilities) {
+    (
+            final MsMsgWaitFacilities msMsgWaitFacilities) {
         this.msMsgWaitFacilities = msMsgWaitFacilities;
     }
 
@@ -1415,7 +1384,7 @@ public class DataSM extends PDU implements Responsable {
      * @return number of messages stored in a mail box
      */
     public final NumberOfMessages getNumberOfMessages
-            () {
+    () {
         return numberOfMessages;
     }
 
@@ -1423,8 +1392,8 @@ public class DataSM extends PDU implements Responsable {
      * @param numberOfMessages number of messages stored in a mail box
      */
     public final void setNumberOfMessages
-            (
-                    final NumberOfMessages numberOfMessages) {
+    (
+            final NumberOfMessages numberOfMessages) {
         this.numberOfMessages = numberOfMessages;
     }
 
@@ -1432,7 +1401,7 @@ public class DataSM extends PDU implements Responsable {
      * @return requests an MS alert signal be invoked on message delivery
      */
     public final AlertOnMessageDelivery getAlertOnMessageDelivery
-            () {
+    () {
         return alertOnMessageDelivery;
     }
 
@@ -1440,8 +1409,8 @@ public class DataSM extends PDU implements Responsable {
      * @param alertOnMessageDelivery requests an MS alert signal be invoked on message delivery
      */
     public final void setAlertOnMessageDelivery
-            (
-                    final AlertOnMessageDelivery alertOnMessageDelivery) {
+    (
+            final AlertOnMessageDelivery alertOnMessageDelivery) {
         this.alertOnMessageDelivery = alertOnMessageDelivery;
     }
 
@@ -1449,7 +1418,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the language of an alphanumeric text message indicator
      */
     public final LanguageIndicator getLanguageIndicator
-            () {
+    () {
         return languageIndicator;
     }
 
@@ -1457,8 +1426,8 @@ public class DataSM extends PDU implements Responsable {
      * @param languageIndicator the language of an alphanumeric text message indicator
      */
     public final void setLanguageIndicator
-            (
-                    final LanguageIndicator languageIndicator) {
+    (
+            final LanguageIndicator languageIndicator) {
         this.languageIndicator = languageIndicator;
     }
 
@@ -1466,7 +1435,7 @@ public class DataSM extends PDU implements Responsable {
      * @return the MS user’s reply method
      */
     public final ItsReplyType getItsReplyType
-            () {
+    () {
         return itsReplyType;
     }
 
@@ -1474,8 +1443,8 @@ public class DataSM extends PDU implements Responsable {
      * @param itsReplyType the MS user’s reply method
      */
     public final void setItsReplyType
-            (
-                    final ItsReplyType itsReplyType) {
+    (
+            final ItsReplyType itsReplyType) {
         this.itsReplyType = itsReplyType;
     }
 
@@ -1483,7 +1452,7 @@ public class DataSM extends PDU implements Responsable {
      * @return session control information for Interactive Teleservice
      */
     public final ItsSessionInfo getItsSessionInfo
-            () {
+    () {
         return itsSessionInfo;
     }
 
@@ -1491,8 +1460,8 @@ public class DataSM extends PDU implements Responsable {
      * @param itsSessionInfo session control information for Interactive Teleservice
      */
     public final void setItsSessionInfo
-            (
-                    final ItsSessionInfo itsSessionInfo) {
+    (
+            final ItsSessionInfo itsSessionInfo) {
         this.itsSessionInfo = itsSessionInfo;
     }
 
@@ -1501,7 +1470,7 @@ public class DataSM extends PDU implements Responsable {
      */
     @Override
     public final String toString
-            () {
+    () {
         return getClass().getName() + " Object {" + "\nserviceType : "
                 + serviceType + "\nsourceAddrTon : " + sourceAddrTon
                 + "\nsourceAddrNpi : " + sourceAddrNpi + "\nsourceAddr : "

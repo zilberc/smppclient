@@ -84,16 +84,8 @@ public class UnsuccessSme {
      */
     protected final byte[] getBytes() throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer();
-        try {
-            bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("destAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("destAddrNpi field is invalid", e);
-        }
+        bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (destinationAddr != null && destinationAddr.length() > MAX_DESTADDR_LENGTH) {
             throw new PDUException("destinationAddr field is invalid");
         }

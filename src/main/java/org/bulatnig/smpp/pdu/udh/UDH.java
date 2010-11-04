@@ -75,16 +75,8 @@ public abstract class UDH {
 
     private SmppByteBuffer getHeader() throws UDHException {
         SmppByteBuffer bb = new SmppByteBuffer();
-        try {
-            bb.appendByte(length);
-        } catch (WrongParameterException e) {
-            throw new UDHException("length field is invalid", e);
-        }
-        try {
-            bb.appendByte(type.getValue());
-        } catch (WrongParameterException e) {
-            throw new UDHException("type field is invalid", e);
-        }
+        bb.appendByte(length);
+        bb.appendByte(type.getValue());
         return bb;
     }
 

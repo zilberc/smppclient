@@ -1,10 +1,9 @@
 package org.bulatnig.smpp.pdu.tlv;
 
+import org.bulatnig.smpp.pdu.EsmClass;
+import org.bulatnig.smpp.pdu.MessageState;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
-import org.bulatnig.smpp.pdu.MessageState;
-import org.bulatnig.smpp.pdu.EsmClass;
 
 /**
  * The message_state optional parameter is used by the SMSC in the deliver_sm
@@ -70,13 +69,7 @@ public class MessageStateTlv extends TLV {
 
     @Override
     protected byte[] getValueBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
-        SmppByteBuffer sbb = new SmppByteBuffer();
-        try {
-            sbb.appendByte(value.getValue());
-        } catch (WrongParameterException e) {
-            throw new TLVException("Buffer error during parsing value", e);
-        }
-        return sbb.array();
+        return new SmppByteBuffer().appendByte(value.getValue()).array();
     }
 
     /**

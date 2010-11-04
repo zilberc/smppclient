@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * An ESME bound as a Transceiver is allowed to send messages to the SMSC and
@@ -151,22 +150,9 @@ public class BindTransceiver extends PDU implements Responsable {
             throw new PDUException("systemType field is too long");
         }
         bb.appendCString(systemType);
-        try {
-            bb.appendByte(interfaceVersion);
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("interfaceVersion field is invalid", e);
-        }
-        try {
-            bb.appendByte(addrTon != null ? addrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("addrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(addrNpi != null ? addrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("addrNpi field is invalid", e);
-        }
+        bb.appendByte(interfaceVersion);
+        bb.appendByte(addrTon != null ? addrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(addrNpi != null ? addrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (addressRange != null && addressRange.length() > MAX_ADDRESSRANGE_LENGTH) {
             throw new PDUException("addressRange field is too long");
         }

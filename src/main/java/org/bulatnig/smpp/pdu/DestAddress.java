@@ -62,11 +62,7 @@ public class DestAddress {
      */
     protected final byte[] getBytes() throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer();
-        try {
-            bb.appendByte(destFlag);
-        } catch (WrongParameterException e) {
-            throw new PDUException("destFlag field is invalid", e);
-        }
+        bb.appendByte(destFlag);
         if (destFlag == 1) {
             bb.appendBytes(smeAddress.getBytes());
         } else {

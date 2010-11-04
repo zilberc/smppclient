@@ -4,7 +4,6 @@ import org.bulatnig.smpp.pdu.tlv.*;
 import org.bulatnig.smpp.pdu.udh.UDH;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 import java.util.List;
 
@@ -250,77 +249,28 @@ public class DeliverSM extends PDU implements Responsable {
             throw new PDUException("serviceType field is too long");
         }
         bb.appendCString(serviceType);
-        try {
-            bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrNpi field is invalid", e);
-        }
+        bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (sourceAddr != null && sourceAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("sourceAddr field is too long");
         }
         bb.appendCString(sourceAddr);
-        try {
-            bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("destAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("destAddrNpi field is invalid", e);
-        }
+        bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (destinationAddr != null && destinationAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("destinationAddr field is too long");
         }
         bb.appendCString(destinationAddr);
-        try {
-            bb.appendByte(esmClass != null ? esmClass.getValue() : 0);
-        } catch (WrongParameterException e) {
-            throw new PDUException("esmClass field is invalid", e);
-        }
-        try {
-            bb.appendByte(protocolId);
-        } catch (WrongParameterException e) {
-            throw new PDUException("protocolId field is invalid", e);
-        }
-        try {
-            bb.appendByte(priorityFlag);
-        } catch (WrongParameterException e) {
-            throw new PDUException("priorityFlag field is invalid", e);
-        }
+        bb.appendByte(esmClass != null ? esmClass.getValue() : 0);
+        bb.appendByte(protocolId);
+        bb.appendByte(priorityFlag);
         bb.appendCString(scheduleDeliveryTime);
         bb.appendCString(validityPeriod);
-        try {
-            bb.appendByte(registeredDelivery);
-        } catch (WrongParameterException e) {
-            throw new PDUException("registeredDelivery field is invalid", e);
-        }
-        try {
-            bb.appendByte(replaceIfPresentFlag);
-        } catch (WrongParameterException e) {
-            throw new PDUException("replaceIfPresentFlag field is invalid", e);
-        }
-        try {
-            bb.appendByte(dataCoding);
-        } catch (WrongParameterException e) {
-            throw new PDUException("dataCoding field is invalid", e);
-        }
-        try {
-            bb.appendByte(smDefaultMsgId);
-        } catch (WrongParameterException e) {
-            throw new PDUException("smDefaultMsgId field is invalid", e);
-        }
-        try {
-            bb.appendByte(smLength);
-        } catch (WrongParameterException e) {
-            throw new PDUException("smLength field is invalid", e);
-        }
+        bb.appendByte(registeredDelivery);
+        bb.appendByte(replaceIfPresentFlag);
+        bb.appendByte(dataCoding);
+        bb.appendByte(smDefaultMsgId);
+        bb.appendByte(smLength);
         bb.appendString(shortMessage, getCharsetName(dataCoding));
         try {
             if (userMessageReference != null) {

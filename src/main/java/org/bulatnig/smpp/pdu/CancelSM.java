@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * This command is issued by the ESME to cancel one or more previously submitted
@@ -168,7 +167,7 @@ public class CancelSM extends PDU implements Responsable {
                 throw new PDUException("destinationAddr field is too long");
             }
         } catch (WrongLengthException e) {
-                throw new PDUException("PDU parsing error", e);
+            throw new PDUException("PDU parsing error", e);
         }
     }
 
@@ -186,31 +185,14 @@ public class CancelSM extends PDU implements Responsable {
             throw new PDUException("messageId field is too long");
         }
         bb.appendCString(messageId);
-        try {
-            bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("sourceAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("sourceAddrNpi field is invalid", e);
-        }
+        bb.appendByte(sourceAddrTon != null ? sourceAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(sourceAddrNpi != null ? sourceAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (sourceAddr != null && sourceAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("sourceAddr field is too long");
         }
         bb.appendCString(sourceAddr);
-        try {
-            bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("destAddrTon field is invalid", e);
-        }
-        try {
-            bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("destAddrNpi field is invalid", e);
-        }
+        bb.appendByte(destAddrTon != null ? destAddrTon.getValue() : TON.UNKNOWN.getValue());
+        bb.appendByte(destAddrNpi != null ? destAddrNpi.getValue() : NPI.UNKNOWN.getValue());
         if (destinationAddr != null && destinationAddr.length() > MAX_ADDRESS_LENGTH) {
             throw new PDUException("destinationAddr field is too long");
         }
@@ -354,7 +336,7 @@ public class CancelSM extends PDU implements Responsable {
                 + sourceAddrNpi + "\nsourceAddr : " + sourceAddr
                 + "\ndestAddrTon : " + destAddrTon + "\ndestAddrNpi : "
                 + destAddrNpi + "\ndestinationAddr : " + destinationAddr
-				+ "\n}";
-	}
+                + "\n}";
+    }
 
 }

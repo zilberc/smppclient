@@ -76,7 +76,7 @@ public class SourceTelematicsIdTest {
 		new SourceTelematicsId(bb.array());
 	}
 
-    @Test(expected = TLVException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSTIConstructor7() throws TLVException {
         new SourceTelematicsId((short)32000).getBytes();
     }
