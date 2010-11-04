@@ -285,11 +285,7 @@ public class SubmitMulti extends PDU implements Responsable {
                 bb.appendBytes(da.getBytes());
             }
         } else {
-            try {
-                bb.appendShort(0x0000);
-            } catch (WrongParameterException e) {
-                // omit it
-            }
+            bb.appendShort(0x0000);
         }
         bb.appendByte(esmClass != null ? esmClass.getValue() : 0);
         bb.appendByte(protocolId);

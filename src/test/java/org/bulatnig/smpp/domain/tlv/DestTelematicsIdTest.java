@@ -76,7 +76,7 @@ public class DestTelematicsIdTest {
         new DestTelematicsId(bb.array());
     }
 
-    @Test(expected = TLVException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDTIConstructor7() throws TLVException {
         new DestTelematicsId(1000000000).getBytes();
     }

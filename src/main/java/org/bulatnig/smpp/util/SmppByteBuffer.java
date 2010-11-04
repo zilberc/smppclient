@@ -120,13 +120,13 @@ public class SmppByteBuffer {
      * Значение переменной должно быть в диапазоне от 0 до 255 включительно.
      *
      * @param value byte value to be appended
-     * @return  this buffer
+     * @return this buffer
      * @throws IllegalArgumentException задан неверный параметр
      */
     public SmppByteBuffer appendByte(final int value) throws IllegalArgumentException {
-        if (value >= 0 && value < BYTE_MAX_VAL) {
-            appendBytes(new byte[] {(byte) value});
-        } else
+        if (value >= 0 && value < BYTE_MAX_VAL)
+            appendBytes(new byte[]{(byte) value});
+        else
             throw new IllegalArgumentException("Byte value should be between 0 and 255.");
         return this;
     }
@@ -135,21 +135,16 @@ public class SmppByteBuffer {
      * Добавляет переменную типа short в массив.
      * Значение переменной должно быть в диапазоне от 0 до 65535 включительно.
      *
-     * @param data short-переменная
-     * @throws WrongParameterException задан неверный параметр
+     * @param value short value to be appended
+     * @return this buffer
+     * @throws IllegalArgumentException задан неверный параметр
      */
-    public void appendShort(final int data) throws WrongParameterException {
-        if (data >= SHORT_MAX_VAL) {
-            throw new WrongParameterException("value too big for SMPP short field");
-        }
-        if (data < 0) {
-            throw new WrongParameterException("value too small for SMPP short field");
-        }
-        short s = (short) data;
-        byte[] shortBuf = new byte[SHORT_SZ];
-        shortBuf[1] = (byte) (s & OCTET_MASK);
-        shortBuf[0] = (byte) ((s >>> 8) & OCTET_MASK);
-        appendBytes(shortBuf);
+    public SmppByteBuffer appendShort(final int value) throws IllegalArgumentException {
+        if (value >= 0 && value < SHORT_MAX_VAL)
+            appendBytes(new byte[]{(byte) (value >>> 8), (byte) value});
+        else
+            throw new IllegalArgumentException("Short value should be between 0 and 65535.");
+        return this;
     }
 
     /**

@@ -120,15 +120,11 @@ public abstract class TLV {
      */
     public final byte[] getBytes(final EsmClass esmClass, final short dataCoding) throws TLVException {
         SmppByteBuffer bb = new SmppByteBuffer();
-        try {
-            bb.appendShort(tag.getValue());
-            byte[] value = getValueBytes(esmClass, dataCoding);
-            bb.appendShort(value.length);
-            bb.appendBytes(value);
-            return bb.array();
-        } catch (WrongParameterException e) {
-            throw new TLVException("Buffer error during TLV construction", e);
-        }
+        bb.appendShort(tag.getValue());
+        byte[] value = getValueBytes(esmClass, dataCoding);
+        bb.appendShort(value.length);
+        bb.appendBytes(value);
+        return bb.array();
     }
 
     /**

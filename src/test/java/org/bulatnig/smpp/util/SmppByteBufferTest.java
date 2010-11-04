@@ -101,14 +101,14 @@ public class SmppByteBufferTest {
         sbb.appendByte(-1);
     }
 
-    @Test(expected = WrongParameterException.class)
-    public void appendShortWrongParameterException1() throws WrongParameterException {
+    @Test(expected = IllegalArgumentException.class)
+    public void appendShortWrongParameterException1() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendShort(66666);
     }
 
-    @Test(expected = WrongParameterException.class)
-    public void appendShortWrongParameterException2() throws WrongParameterException {
+    @Test(expected = IllegalArgumentException.class)
+    public void appendShortWrongParameterException2() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendShort(-3000);
     }
