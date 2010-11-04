@@ -38,13 +38,13 @@ public class MessagePayload extends TLV {
      * @param dataCoding PDU data_coding
      * @throws TLVException ошибка разбора TLV
      */
-    public MessagePayload(final byte[] bytes, final EsmClass esmClass, short dataCoding)
+    public MessagePayload(final byte[] bytes, final EsmClass esmClass, int dataCoding)
             throws TLVException {
         super(bytes, esmClass, dataCoding);
     }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         if (getTag() != ParameterTag.MESSAGE_PAYLOAD) {
             throw new ClassCastException();
         }

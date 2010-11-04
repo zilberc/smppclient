@@ -44,7 +44,7 @@ public class SMEAddress {
     public SMEAddress(final byte[] bytes) throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
         try {
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     destAddrTon = ton;

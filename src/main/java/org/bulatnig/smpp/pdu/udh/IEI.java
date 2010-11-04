@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu.udh;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * Comment here.
@@ -16,11 +15,11 @@ public class IEI extends UDH {
 
     private static final short IEIL = 3;
 
-    private short msgRefNum;
+    private int msgRefNum;
 
-    private short totalSegments;
+    private int totalSegments;
 
-    private short segmentSeqnum;
+    private int segmentSeqnum;
 
     public IEI() {
         super(UDHType.IEI);
@@ -37,16 +36,12 @@ public class IEI extends UDH {
         }
         if (TOTAL_LENGTH == bytes.length) {
             SmppByteBuffer bb = new SmppByteBuffer(bytes);
-            try {
-                if (IEIL == bb.removeByte()) {
-                    msgRefNum = bb.removeByte();
-                    totalSegments = bb.removeByte();
-                    segmentSeqnum = bb.removeByte();
-                } else
-                    throw new UDHException("IEIL field value should be " + IEIL);
-            } catch (WrongLengthException e) {
-                throw new UDHException("UDH parsing error", e);
-            }
+            if (IEIL == bb.removeByte()) {
+                msgRefNum = bb.removeByte();
+                totalSegments = bb.removeByte();
+                segmentSeqnum = bb.removeByte();
+            } else
+                throw new UDHException("IEIL field value should be " + IEIL);
         } else
             throw new UDHException("IEI length should be " + TOTAL_LENGTH);
     }
@@ -61,7 +56,7 @@ public class IEI extends UDH {
         return bb.array();
     }
 
-    public short getMsgRefNum() {
+    public int getMsgRefNum() {
         return msgRefNum;
     }
 
@@ -69,7 +64,7 @@ public class IEI extends UDH {
         this.msgRefNum = msgRefNum;
     }
 
-    public short getTotalSegments() {
+    public int getTotalSegments() {
         return totalSegments;
     }
 
@@ -77,7 +72,7 @@ public class IEI extends UDH {
         this.totalSegments = totalSegments;
     }
 
-    public short getSegmentSeqnum() {
+    public int getSegmentSeqnum() {
         return segmentSeqnum;
     }
 

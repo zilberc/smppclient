@@ -9,6 +9,6 @@ package org.bulatnig.smpp.pdu.udh;
  */
 public interface UDHHelper {
 
-    public UDHType getUDHType(short udhTypeValue) throws UDHTypeNotFoundException;
+    public UDHType getUDHType(int udhTypeValue) throws UDHTypeNotFoundException;
 
 }

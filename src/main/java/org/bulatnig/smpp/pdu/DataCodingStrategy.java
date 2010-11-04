@@ -9,6 +9,6 @@ package org.bulatnig.smpp.pdu;
  */
 public interface DataCodingStrategy {
 
-    public String getCharsetName(short dataCoding);
+    public String getCharsetName(int dataCoding);
 
 }

@@ -3,7 +3,6 @@ package org.bulatnig.smpp.pdu.tlv;
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.pdu.MessageState;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The message_state optional parameter is used by the SMSC in the deliver_sm
@@ -43,17 +42,12 @@ public class MessageStateTlv extends TLV {
     }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         if (getTag() != ParameterTag.MESSAGE_STATE) {
             throw new ClassCastException();
         }
         if (bytes.length == LENGTH) {
-            short b;
-            try {
-                b = new SmppByteBuffer(bytes).removeByte();
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            int b = new SmppByteBuffer(bytes).removeByte();
             for (MessageState state : MessageState.values()) {
                 if (state.getValue() == b) {
                     value = state;
@@ -85,7 +79,7 @@ public class MessageStateTlv extends TLV {
     @Override
     public final String toString() {
         return getClass().getName() + " Object {" + "\nvalue : " + value
-				+ "\n}";
-	}
+                + "\n}";
+    }
 
 }

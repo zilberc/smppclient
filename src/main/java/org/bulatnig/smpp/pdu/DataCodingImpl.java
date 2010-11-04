@@ -20,20 +20,20 @@ public class DataCodingImpl implements DataCodingStrategy {
     private static final String UCS2 = "UTF-16BE";
     private static final String ISO_2022_JP = "ISO-2022-JP";
 
-    private final Map<Short, String> charsetMap = new HashMap<Short, String>();
+    private final Map<Integer, String> charsetMap = new HashMap<Integer, String>();
 
     public DataCodingImpl() {
-        charsetMap.put((short) 0, ASCII);
-        charsetMap.put((short) 3, LATIN1);
-        charsetMap.put((short) 5, JIS);
-        charsetMap.put((short) 6, CYRYLIC);
-        charsetMap.put((short) 7, HEBREW);
-        charsetMap.put((short) 8, UCS2);
-        charsetMap.put((short) 10, ISO_2022_JP);
+        charsetMap.put(0, ASCII);
+        charsetMap.put(3, LATIN1);
+        charsetMap.put(5, JIS);
+        charsetMap.put(6, CYRYLIC);
+        charsetMap.put(7, HEBREW);
+        charsetMap.put(8, UCS2);
+        charsetMap.put(10, ISO_2022_JP);
     }
 
     @Override
-    public String getCharsetName(short dataCoding) {
+    public String getCharsetName(int dataCoding) {
         String result = charsetMap.get(dataCoding);
         return result != null ? result : ASCII;
     }

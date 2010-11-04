@@ -21,6 +21,13 @@ public class SmppByteBufferTest {
     }
 
     @Test
+    public void test() throws Exception {
+        final int value = 250;
+        byte[] array = new byte[]{(byte) value};
+        System.out.println(array[0] & 0xFF);
+    }
+
+    @Test
     public void emptyConstructor() throws WrongLengthException {
         SmppByteBuffer sbb = new SmppByteBuffer();
         assertEquals(0, sbb.length());

@@ -47,7 +47,7 @@ public class AdditionalStatusInfoText extends TLV {
     }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         if (getTag() != ParameterTag.ADDITIONAL_STATUS_INFO_TEXT) {
             throw new ClassCastException();
         }

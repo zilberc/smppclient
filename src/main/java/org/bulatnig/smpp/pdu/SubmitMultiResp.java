@@ -30,7 +30,7 @@ public class SubmitMultiResp extends PDU {
      * The number of messages to destination SME addresses that were
      * unsuccessfully submitted to the SMSC.
      */
-    private short noUnsuccess;
+    private int noUnsuccess;
     /**
      * Contains one or more (no_unsuccess) SME address(es) or/and Distribution
      * List names to which submission was unsuccessful.
@@ -119,7 +119,7 @@ public class SubmitMultiResp extends PDU {
      * @return the number of messages to destination SME addresses that were
      *         unsuccessfully submitted to the SMSC
      */
-    public final short getNoUnsuccess() {
+    public final int getNoUnsuccess() {
         return noUnsuccess;
     }
 

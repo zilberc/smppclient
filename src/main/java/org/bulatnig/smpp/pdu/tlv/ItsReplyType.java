@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The its_reply_type parameter is a required parameter for the CDMA Interactive
@@ -22,7 +21,7 @@ public class ItsReplyType extends TLV {
      */
     private ReplyType value;
 
-    private short intValue;
+    private int intValue;
 
     /**
      * Constructor.
@@ -44,6 +43,7 @@ public class ItsReplyType extends TLV {
         super(ParameterTag.ITS_REPLY_TYPE);
         defineValue(intValue);
     }
+
     /**
      * Constructor.
      *
@@ -55,18 +55,12 @@ public class ItsReplyType extends TLV {
     }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         if (getTag() != ParameterTag.ITS_REPLY_TYPE) {
             throw new ClassCastException();
         }
         if (bytes.length == LENGTH) {
-            short b;
-            try {
-                b = new SmppByteBuffer(bytes).removeByte();
-                defineValue(b);
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            defineValue(new SmppByteBuffer(bytes).removeByte());
         } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected " + LENGTH);
         }
@@ -77,7 +71,7 @@ public class ItsReplyType extends TLV {
         return new SmppByteBuffer().appendByte(intValue).array();
     }
 
-    private void defineValue(final short intValue) {
+    private void defineValue(final int intValue) {
         for (ReplyType reply : ReplyType.values()) {
             if (reply.getValue() == intValue) {
                 value = reply;
@@ -96,7 +90,7 @@ public class ItsReplyType extends TLV {
         return value;
     }
 
-    public final short getIntValue() {
+    public final int getIntValue() {
         return intValue;
     }
 

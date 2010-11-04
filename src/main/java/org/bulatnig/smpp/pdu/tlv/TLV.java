@@ -64,7 +64,7 @@ public abstract class TLV {
      * @param dataCoding PDU data_coding
      * @throws TLVException ошибка разбора TLV
      */
-    protected TLV(final byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected TLV(final byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
         parseHead(bb);
         int length;
@@ -140,7 +140,7 @@ public abstract class TLV {
      * @param dataCoding PDU data_coding parameter
      * @return charset name
      */
-    protected String getCharsetName(short dataCoding) {
+    protected String getCharsetName(int dataCoding) {
         return DataCodingHelper.INSTANCE.getCharsetName(dataCoding);
     }
 
@@ -152,7 +152,7 @@ public abstract class TLV {
      * @param dataCoding PDU data_coding
      * @throws TLVException ошибка разбора TLV
      */
-    protected abstract void parseValue(final byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException;
+    protected abstract void parseValue(final byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException;
 
     /**
      * Возвращает байты соответствующие значению TLV.
@@ -168,7 +168,7 @@ public abstract class TLV {
 
     protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws TLVException {
         try {
-            short length = byteBuffer.readBytes(1).removeByte();
+            int length = byteBuffer.readBytes(1).removeByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
         } catch (WrongLengthException e) {
             throw new TLVException("Buffer have not enough length to read UDH header", e);

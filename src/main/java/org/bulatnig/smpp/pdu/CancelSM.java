@@ -122,7 +122,7 @@ public class CancelSM extends PDU implements Responsable {
             if (messageId.length() > MAX_MESSAGEID_LENGTH) {
                 throw new PDUException("messageId field is too long");
             }
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     sourceAddrTon = ton;

@@ -76,11 +76,11 @@ public class DeliverSM extends PDU implements Responsable {
     /**
      * Protocol Identifier. Network Specific Field.
      */
-    private short protocolId;
+    private int protocolId;
     /**
      * Designates the priority level of the message.
      */
-    private short priorityFlag;
+    private int priorityFlag;
     /**
      * This field is unused for deliver_sm. It must be set to NULL.
      */
@@ -92,23 +92,23 @@ public class DeliverSM extends PDU implements Responsable {
     /**
      * Indicates if an ESME acknowledgement is required.
      */
-    private short registeredDelivery;
+    private int registeredDelivery;
     /**
      * Not used in deliver_sm. It must be set to NULL.
      */
-    private short replaceIfPresentFlag;
+    private int replaceIfPresentFlag;
     /**
      * Indicates the encoding scheme of the short message.
      */
-    private short dataCoding;
+    private int dataCoding;
     /**
      * Unused in deliver_sm. It must be set to NULL.
      */
-    private short smDefaultMsgId;
+    private int smDefaultMsgId;
     /**
      * Length of short message user data in octets.
      */
-    private short smLength;
+    private int smLength;
     /**
      * Up to 254 octets of short message user data.<br/>
      * <p/>
@@ -348,7 +348,7 @@ public class DeliverSM extends PDU implements Responsable {
             if (serviceType.length() > MAX_SERVICETYPE_LENGTH) {
                 throw new PDUException("serviceType field is too long");
             }
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     sourceAddrTon = ton;
@@ -600,7 +600,7 @@ public class DeliverSM extends PDU implements Responsable {
     /**
      * @return Protocol Identifier
      */
-    public final short getProtocolId() {
+    public final int getProtocolId() {
         return protocolId;
     }
 
@@ -614,7 +614,7 @@ public class DeliverSM extends PDU implements Responsable {
     /**
      * @return the priority level of the message
      */
-    public final short getPriorityFlag() {
+    public final int getPriorityFlag() {
         return priorityFlag;
     }
 
@@ -642,7 +642,7 @@ public class DeliverSM extends PDU implements Responsable {
     /**
      * @return indicator if an ESME acknowledgement is required
      */
-    public final short getRegisteredDelivery() {
+    public final int getRegisteredDelivery() {
         return registeredDelivery;
     }
 
@@ -656,14 +656,14 @@ public class DeliverSM extends PDU implements Responsable {
     /**
      * @return field is unused
      */
-    public final short getReplaceIfPresentFlag() {
+    public final int getReplaceIfPresentFlag() {
         return replaceIfPresentFlag;
     }
 
     /**
      * @return indicator the encoding scheme of the short message
      */
-    public final short getDataCoding() {
+    public final int getDataCoding() {
         return dataCoding;
     }
 
@@ -677,14 +677,14 @@ public class DeliverSM extends PDU implements Responsable {
     /**
      * @return field is unused
      */
-    public final short getSmDefaultMsgId() {
+    public final int getSmDefaultMsgId() {
         return smDefaultMsgId;
     }
 
     /**
      * @return length of short message user data in octets
      */
-    public final short getSmLength() {
+    public final int getSmLength() {
         return smLength;
     }
 

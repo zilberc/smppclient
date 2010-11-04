@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * This command is issued by the ESME to query the status of a previously
@@ -83,7 +82,7 @@ public class QuerySM extends PDU implements Responsable {
             if (messageId.length() > MAX_MESSAGEID_LENGTH) {
                 throw new PDUException("messageId field is too long");
             }
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     sourceAddrTon = ton;

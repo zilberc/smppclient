@@ -247,7 +247,7 @@ public abstract class PDU {
      * @return list of TLVs
      * @throws PDUException error during parsing TLVs
      */
-    protected final List<TLV> getOptionalParams(final byte[] bb, EsmClass esmClass, short dataCoding) throws PDUException {
+    protected final List<TLV> getOptionalParams(final byte[] bb, EsmClass esmClass, int dataCoding) throws PDUException {
         try {
             return tlvFactory.parseTLVs(bb, esmClass, dataCoding);
         } catch (TLVException e) {
@@ -257,7 +257,7 @@ public abstract class PDU {
 
     protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws PDUException {
         try {
-            short length = byteBuffer.readBytes(1).removeByte();
+            int length = byteBuffer.readBytes(1).removeByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
         } catch (WrongLengthException e) {
             throw new PDUException("Buffer have not enough length to read UDH header", e);
@@ -276,7 +276,7 @@ public abstract class PDU {
      * @param dataCoding PDU data_coding parameter
      * @return charset name
      */
-    protected String getCharsetName(short dataCoding) {
+    protected String getCharsetName(int dataCoding) {
         return DataCodingHelper.INSTANCE.getCharsetName(dataCoding);
     }
 

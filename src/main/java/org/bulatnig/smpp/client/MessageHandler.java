@@ -132,7 +132,7 @@ public abstract class MessageHandler implements PDUHandler {
         return response;
     }
 
-    private void process(String source, String dest, String text, int refNum, short segNum, short totalSegments) throws ProcessingFailedException {
+    private void process(String source, String dest, String text, int refNum, int segNum, int totalSegments) throws ProcessingFailedException {
         SortedSet<PartialMessage> pmsgs = segmentsMap.get(refNum);
         if (pmsgs == null) {
             if (segNum == 1) {

@@ -14,10 +14,6 @@ import java.io.UnsupportedEncodingException;
 public class SmppByteBuffer {
 
     /**
-     * PDU byte size.
-     */
-    public static final byte BYTE_SZ = 1;
-    /**
      * PDU short type.
      */
     public static final byte SHORT_SZ = 2;
@@ -165,29 +161,31 @@ public class SmppByteBuffer {
 
     /**
      * Добавляет строку C-String в массив.
-     * null string allowed.
      *
-     * @param cstring строка типа C-Octet (по протоколу SMPP)
+     * @param cstring строка типа C-Octet (по протоколу SMPP), may be null
+     * @return  this buffer
      */
-    public void appendCString(final String cstring) {
+    public SmppByteBuffer appendCString(final String cstring) {
         if (cstring != null && cstring.length() > 0) {
             try {
                 byte[] stringBuf = cstring.getBytes(ASCII);
                 appendBytes(stringBuf);
-            } catch (UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException neverHappen) {
                 // omit it
             }
         }
         appendBytes(ZERO); // always append terminating ZERO
+        return this;
     }
 
     /**
      * Append string using US-ASCII charset.
      *
      * @param string string value, may be null
+     * @return  this buffer
      */
-    public void appendString(final String string) {
-        appendString(string, ASCII);
+    public SmppByteBuffer appendString(final String string) {
+        return appendString(string, ASCII);
     }
 
     /**
@@ -198,37 +196,35 @@ public class SmppByteBuffer {
      *
      * @param string      encoded string, null allowed
      * @param charsetName encoding character set name
+     * @return  this buffer
      */
-    public void appendString(final String string, final String charsetName) {
-        if ((string != null) && (string.length() > 0)) {
+    public SmppByteBuffer appendString(final String string, final String charsetName) {
+        if (string != null && string.length() > 0) {
             try {
                 byte[] stringBuf = string.getBytes(charsetName);
                 appendBytes(stringBuf);
             } catch (UnsupportedEncodingException e) {
-                // omit it
+                throw new IllegalArgumentException("Wrong charset name provided.", e);
             }
         }
+        return this;
     }
 
     /**
      * Удаляет один byte из массива и возвращает его.
      *
      * @return удаленный byte
-     * @throws WrongLengthException буфер недостаточной длины для завершения операции
      */
-    public short removeByte() throws WrongLengthException {
-        byte result = 0;
+    public int removeByte() {
+        int result = buffer[0] & 0xFF;
         try {
-            byte[] resBuff = removeBytes(BYTE_SZ).array();
-            result = resBuff[0];
-        } catch (WrongParameterException wpe) {
-            // omit it
+            removeBytes0(1);
+        } catch (WrongParameterException e) {
+            // TODO remove try / catch block
+        } catch (WrongLengthException e) {
+            e.printStackTrace();
         }
-        if (result > -1) {
-            return result;
-        } else {
-            return (short) (BYTE_MAX_VAL + result);
-        }
+        return result;
     }
 
     /**

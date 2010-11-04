@@ -46,7 +46,7 @@ public class DestTelematicsId extends TLV {
     }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         if (getTag() != ParameterTag.DEST_TELEMATICS_ID) {
             throw new ClassCastException();
         }

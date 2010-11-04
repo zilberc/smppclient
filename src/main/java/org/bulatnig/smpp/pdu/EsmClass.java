@@ -17,7 +17,7 @@ public abstract class EsmClass {
     final MessageType type;
     final GSMFeatures features;
 
-    EsmClass(final short value) {
+    EsmClass(final int value) {
         mode = parseMessagingMode((byte) (value & MODE_MASK));
         type = parseMessageType((byte) ((value & TYPE_MASK) >> 2));
         features = parseGSMFeatures((byte) ((value & FEATURES_MASK) >> 6));

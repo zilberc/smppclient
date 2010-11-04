@@ -13,7 +13,7 @@ public class EsmeEsmClass extends EsmClass {
         super(EsmeMessagingMode.DEFAULT_SMSC, EsmeMessageType.DEFAULT, EsmeGSMFeatures.NO_FEATURES);
     }
 
-    public EsmeEsmClass(short value) {
+    public EsmeEsmClass(int value) {
         super(value);
     }
 

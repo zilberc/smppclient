@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The dest_addr_subunit parameter is used to route messages when received by a
@@ -21,7 +20,7 @@ public class DestAddrSubunit extends TLV {
      */
     private AddrSubunit value;
 
-    private short intValue;
+    private int intValue;
 
     /**
      * Constructor.
@@ -55,16 +54,12 @@ public class DestAddrSubunit extends TLV {
     }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         if (getTag() != ParameterTag.DEST_ADDR_SUBUNIT) {
             throw new ClassCastException();
         }
         if (bytes.length == LENGTH) {
-            try {
-                defineValue(new SmppByteBuffer(bytes).removeByte());
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            defineValue(new SmppByteBuffer(bytes).removeByte());
         } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected " + LENGTH);
         }
@@ -75,7 +70,7 @@ public class DestAddrSubunit extends TLV {
         return new SmppByteBuffer().appendByte(intValue).array();
     }
 
-    private void defineValue(final short intValue) {
+    private void defineValue(final int intValue) {
         for (AddrSubunit as : AddrSubunit.values()) {
             if (as.getValue() == intValue) {
                 value = as;
@@ -94,7 +89,7 @@ public class DestAddrSubunit extends TLV {
         return value;
     }
 
-    public final short getIntValue() {
+    public final int getIntValue() {
         return intValue;
     }
 

@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * callback_num_pres_ind.
@@ -17,7 +16,7 @@ public class CallbackNumPresInd extends TLV {
     /**
      * Значение параметра.
      */
-    private short value;
+    private int value;
 
     /**
      * Constructor.
@@ -40,16 +39,12 @@ public class CallbackNumPresInd extends TLV {
     }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
         if (getTag() != ParameterTag.CALLBACK_NUM_PRES_IND) {
             throw new ClassCastException();
         }
         if (bytes.length == LENGTH) {
-            try {
-                value = new SmppByteBuffer(bytes).removeByte();
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            value = new SmppByteBuffer(bytes).removeByte();
         } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected " + LENGTH);
         }
@@ -63,7 +58,7 @@ public class CallbackNumPresInd extends TLV {
     /**
      * @return значение параметра
      */
-    public final short getValue() {
+    public final int getValue() {
         return value;
     }
 

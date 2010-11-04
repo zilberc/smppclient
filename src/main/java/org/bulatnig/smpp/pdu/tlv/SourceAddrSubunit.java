@@ -2,38 +2,37 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The source_addr_subunit parameter is used to indicate where a message
  * originated in the mobile station, for example a smart card in the mobile
  * station or an external device connected to the mobile station.
- * 
+ *
  * @author Bulat Nigmatullin
- * 
  */
 public class SourceAddrSubunit extends TLV {
-	/**
-	 * Длина значения параметра.
-	 */
-	private static final int LENGTH = 1;
-	/**
-	 * Значение параметра.
-	 */
-	private AddrSubunit value;
+    /**
+     * Длина значения параметра.
+     */
+    private static final int LENGTH = 1;
+    /**
+     * Значение параметра.
+     */
+    private AddrSubunit value;
 
-    private short intValue;
+    private int intValue;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param sas	значение параметраа
-	 */
-	public SourceAddrSubunit(final AddrSubunit sas) {
-		super(ParameterTag.SOURCE_ADDR_SUBUNIT);
-		value = sas;
+    /**
+     * Constructor.
+     *
+     * @param sas значение параметраа
+     */
+    public SourceAddrSubunit(final AddrSubunit sas) {
+        super(ParameterTag.SOURCE_ADDR_SUBUNIT);
+        value = sas;
         intValue = sas.getValue();
     }
+
     /**
      * Constructor.
      *
@@ -44,31 +43,26 @@ public class SourceAddrSubunit extends TLV {
         defineValue(intValue);
     }
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param bytes
-	 *            bytecode of TLV
+    /**
+     * Constructor.
+     *
+     * @param bytes bytecode of TLV
      * @throws TLVException ошибка разбора TLV
-	 */
-	public SourceAddrSubunit(final byte[] bytes) throws TLVException {
-		super(bytes);
-	}
+     */
+    public SourceAddrSubunit(final byte[] bytes) throws TLVException {
+        super(bytes);
+    }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
-		if (getTag() != ParameterTag.SOURCE_ADDR_SUBUNIT) {
-			throw new ClassCastException();
-		}
-		if (bytes.length == LENGTH) {
-            try {
-                defineValue(new SmppByteBuffer(bytes).removeByte());
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
-		} else {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
+        if (getTag() != ParameterTag.SOURCE_ADDR_SUBUNIT) {
+            throw new ClassCastException();
+        }
+        if (bytes.length == LENGTH) {
+            defineValue(new SmppByteBuffer(bytes).removeByte());
+        } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected " + LENGTH);
-		}
+        }
     }
 
     @Override
@@ -76,7 +70,7 @@ public class SourceAddrSubunit extends TLV {
         return new SmppByteBuffer().appendByte(intValue).array();
     }
 
-    private void defineValue(final short intValue) {
+    private void defineValue(final int intValue) {
         for (AddrSubunit as : AddrSubunit.values()) {
             if (as.getValue() == intValue) {
                 value = as;
@@ -89,23 +83,23 @@ public class SourceAddrSubunit extends TLV {
     }
 
     /**
-	 * @return значение параметра
-	 */
-	public final AddrSubunit getValue() {
-		return value;
-	}
+     * @return значение параметра
+     */
+    public final AddrSubunit getValue() {
+        return value;
+    }
 
-    public final short getIntValue() {
+    public final int getIntValue() {
         return intValue;
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final String toString() {
-		return getClass().getName() + " Object {" + "\nvalue : " + value
-				+ "\n}";
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String toString() {
+        return getClass().getName() + " Object {" + "\nvalue : " + value
+                + "\n}";
+    }
 
 }

@@ -51,12 +51,8 @@ public abstract class UDH {
     }
 
     private void parseHeader(final SmppByteBuffer bb) throws UDHException {
-        try {
-            length = (short) (bb.removeByte() + 1);
-            type = helper.getUDHType(bb.removeByte());
-        } catch (WrongLengthException e) {
-            throw new UDHException("UDH has wrong header parameters", e);
-        }
+        length = (short) (bb.removeByte() + 1);
+        type = helper.getUDHType(bb.removeByte());
     }
 
     protected abstract void parseBody(final byte[] bytes) throws UDHException;

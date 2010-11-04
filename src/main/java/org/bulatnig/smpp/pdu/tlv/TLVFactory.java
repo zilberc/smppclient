@@ -22,7 +22,7 @@ public interface TLVFactory {
      * @return TLV
      * @throws TLVException байтов  ошибка разбора TLV
      */
-    public TLV parseTLV(byte[] bytes, EsmClass esmClass, short dataCoding) throws TLVException;
+    public TLV parseTLV(byte[] bytes, EsmClass esmClass, int dataCoding) throws TLVException;
 
     /**
      * Парсит полученный массив байтов и возвращает список TLV ему соответствующий.
@@ -34,6 +34,6 @@ public interface TLVFactory {
      * @return TLV list
      * @throws TLVException error during parsing optional parameters
      */
-    public List<TLV> parseTLVs(byte[] bytes, EsmClass esmClass, short dataCoding) throws TLVException;
+    public List<TLV> parseTLVs(byte[] bytes, EsmClass esmClass, int dataCoding) throws TLVException;
 
 }

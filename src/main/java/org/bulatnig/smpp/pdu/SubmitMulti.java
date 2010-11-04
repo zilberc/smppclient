@@ -64,7 +64,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * Note: Set to 1 when submitting to one SME Address OR when submitting to
      * one Distribution List.
      */
-    private short numberOfDests;
+    private int numberOfDests;
     /**
      * Contains one or more (number_of_dests) SME addresses or/and Distribution
      * List names.
@@ -77,11 +77,11 @@ public class SubmitMulti extends PDU implements Responsable {
     /**
      * Protocol Identifier. Network specific field.
      */
-    private short protocolId;
+    private int protocolId;
     /**
      * Designates the priority level of the message.
      */
-    private short priorityFlag;
+    private int priorityFlag;
     /**
      * The short message is to be scheduled by the SMSC for delivery. Set to
      * NULL for immediate message delivery.
@@ -96,25 +96,25 @@ public class SubmitMulti extends PDU implements Responsable {
      * Indicator to signify if an SMSC delivery receipt or an SME
      * acknowledgement is required.
      */
-    private short registeredDelivery;
+    private int registeredDelivery;
     /**
      * Reserved. Must be set to NULL.
      */
-    private short replaceIfPresentFlag;
+    private int replaceIfPresentFlag;
     /**
      * Indicates the encoding scheme of the short message.
      */
-    private short dataCoding;
+    private int dataCoding;
     /**
      * Indicates the short message to send from a list of predefined (“canned”)
      * short messages stored on the SMSC. If not using an SMSC predefined
      * message, set to NULL.
      */
-    private short smDefaultMsgId;
+    private int smDefaultMsgId;
     /**
      * Length in octets of the short_message user data.
      */
-    private short smLength;
+    private int smLength;
     /**
      * Up to 254 octets of short message user data. The exact physical limit for
      * short_message size may vary according to the underlying network.<br/>
@@ -391,7 +391,7 @@ public class SubmitMulti extends PDU implements Responsable {
             if (serviceType.length() > MAX_SERVICETYPE_LENGTH) {
                 throw new PDUException("serviceType field is too long");
             }
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     sourceAddrTon = ton;
@@ -598,7 +598,7 @@ public class SubmitMulti extends PDU implements Responsable {
     /**
      * @return the number of dest_address structures
      */
-    public final short getNumberOfDests
+    public final int getNumberOfDests
     () {
         return numberOfDests;
     }
@@ -648,7 +648,7 @@ public class SubmitMulti extends PDU implements Responsable {
     /**
      * @return Protocol Identifier
      */
-    public final short getProtocolId
+    public final int getProtocolId
     () {
         return protocolId;
     }
@@ -665,7 +665,7 @@ public class SubmitMulti extends PDU implements Responsable {
     /**
      * @return the priority level of the message
      */
-    public final short getPriorityFlag
+    public final int getPriorityFlag
     () {
         return priorityFlag;
     }
@@ -717,7 +717,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return indicator to signify if an SMSC delivery receipt or an SME
      *         acknowledgement is required
      */
-    public final short getRegisteredDelivery
+    public final int getRegisteredDelivery
     () {
         return registeredDelivery;
     }
@@ -735,7 +735,7 @@ public class SubmitMulti extends PDU implements Responsable {
     /**
      * @return not used
      */
-    public final short getReplaceIfPresentFlag
+    public final int getReplaceIfPresentFlag
     () {
         return replaceIfPresentFlag;
     }
@@ -743,7 +743,7 @@ public class SubmitMulti extends PDU implements Responsable {
     /**
      * @return the indicator of the encoding scheme of the short message
      */
-    public final short getDataCoding
+    public final int getDataCoding
     () {
         return dataCoding;
     }
@@ -761,7 +761,7 @@ public class SubmitMulti extends PDU implements Responsable {
      * @return indicator of the short message to send from a list of predefined
      *         (“canned”) short messages stored on the SMSC
      */
-    public final short getSmDefaultMsgId
+    public final int getSmDefaultMsgId
     () {
         return smDefaultMsgId;
     }
@@ -779,7 +779,7 @@ public class SubmitMulti extends PDU implements Responsable {
     /**
      * @return length in octets of the short_message user data
      */
-    public final short getSmLength
+    public final int getSmLength
     () {
         return smLength;
     }

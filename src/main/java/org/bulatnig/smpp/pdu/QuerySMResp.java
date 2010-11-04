@@ -36,7 +36,7 @@ public class QuerySMResp extends PDU {
      * Where appropriate this holds a network error code defining the reason for
      * failure of message delivery.
      */
-    private short errorCode;
+    private int errorCode;
 
     /**
      * Constructor.
@@ -74,7 +74,7 @@ public class QuerySMResp extends PDU {
             if (finalDate.length() > 0 && finalDate.length() != FINALDATE_LENGTH) {
                 throw new PDUException("finalDate field is invalid");
             }
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (MessageState ms : MessageState.values()) {
                 if (ms.getValue() == b) {
                     messageState = ms;
@@ -153,7 +153,7 @@ public class QuerySMResp extends PDU {
     /**
      * @return error code defining the reason for failure of message delivery
      */
-    public final short getErrorCode() {
+    public final int getErrorCode() {
         return errorCode;
     }
 

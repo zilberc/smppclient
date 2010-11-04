@@ -68,15 +68,15 @@ public class ReplaceSM extends PDU implements Responsable {
     /**
      * New registered delivery parameter setting.
      */
-    private short registeredDelivery;
+    private int registeredDelivery;
     /**
      * New pre-defined (canned) message identifier.
      */
-    private short smDefaultMsgId;
+    private int smDefaultMsgId;
     /**
      * Length of new short message in octets.
      */
-    private short smLength;
+    private int smLength;
     /**
      * New short message to replace existing message.
      */
@@ -114,7 +114,7 @@ public class ReplaceSM extends PDU implements Responsable {
             if (messageId.length() > MAX_MESSAGEID_LENGTH) {
                 throw new PDUException("messageId field is too long");
             }
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     sourceAddrTon = ton;
@@ -280,7 +280,7 @@ public class ReplaceSM extends PDU implements Responsable {
     /**
      * @return new registered delivery parameter setting
      */
-    public final short getRegisteredDelivery() {
+    public final int getRegisteredDelivery() {
         return registeredDelivery;
     }
 
@@ -294,7 +294,7 @@ public class ReplaceSM extends PDU implements Responsable {
     /**
      * @return new pre-defined (canned) message identifier
      */
-    public final short getSmDefaultMsgId() {
+    public final int getSmDefaultMsgId() {
         return smDefaultMsgId;
     }
 
@@ -308,7 +308,7 @@ public class ReplaceSM extends PDU implements Responsable {
     /**
      * @return length of new short message in octets
      */
-    public final short getSmLength() {
+    public final int getSmLength() {
         return smLength;
     }
 

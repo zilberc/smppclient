@@ -16,7 +16,7 @@ public class DestAddress {
      * Flag which will identify whether destination address is a Distribution
      * List name or SME address.
      */
-    private short destFlag;
+    private int destFlag;
     /**
      * Depending on dest_flag this could be an SME Address or a Distribution
      * List Name.
@@ -75,7 +75,7 @@ public class DestAddress {
      * @return identifier whether destination address is a Distribution List
      *         name or SME address
      */
-    public final short getDestFlag() {
+    public final int getDestFlag() {
         return destFlag;
     }
 

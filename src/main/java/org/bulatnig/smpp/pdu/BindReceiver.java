@@ -46,7 +46,7 @@ public class BindReceiver extends PDU implements Responsable {
     /**
      * Identifies the version of the SMPP protocol supported by the ESME.
      */
-    private short interfaceVersion;
+    private int interfaceVersion;
     /**
      * Type of Number (TON) for ESME address(es) served via this SMPP receiver
      * session. Set to NULL if not known.
@@ -105,7 +105,7 @@ public class BindReceiver extends PDU implements Responsable {
                 throw new PDUException("systemType field is too long");
             }
             interfaceVersion = bb.removeByte();
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     addrTon = ton;
@@ -214,7 +214,7 @@ public class BindReceiver extends PDU implements Responsable {
     /**
      * @return ESME SMPP protocol version
      */
-    public final short getInterfaceVersion() {
+    public final int getInterfaceVersion() {
         return interfaceVersion;
     }
 

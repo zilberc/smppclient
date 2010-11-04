@@ -44,7 +44,7 @@ public class SourcePort extends TLV {
 	}
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
 		if (getTag() != ParameterTag.SOURCE_PORT) {
 			throw new ClassCastException();
 		}

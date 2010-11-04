@@ -21,7 +21,7 @@ public enum DataCodingHelper implements DataCodingStrategy {
     }
 
     @Override
-    public String getCharsetName(short dataCoding) {
+    public String getCharsetName(int dataCoding) {
         return dataCodingStrategy.getCharsetName(dataCoding);
     }
 

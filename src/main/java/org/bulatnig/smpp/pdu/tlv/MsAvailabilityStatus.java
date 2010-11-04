@@ -2,41 +2,38 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The ms_availability_status parameter is used in the alert_notification
  * operation to indicate the availability state of the MS to the ESME.<br/>
- * 
+ * <p/>
  * If the SMSC does not include the parameter in the alert_notification
  * operation, the ESME should assume that the MS is in an “available” state.
- * 
+ *
  * @author Bulat Nigmatullin
- * 
  */
 public class MsAvailabilityStatus extends TLV {
-	/**
-	 * Длина значения параметра.
-	 */
-	private static final int LENGTH = 1;
-	/**
-	 * Значение параметра.
-	 */
-	private AvailabilityStatus value;
+    /**
+     * Длина значения параметра.
+     */
+    private static final int LENGTH = 1;
+    /**
+     * Значение параметра.
+     */
+    private AvailabilityStatus value;
 
-    private short intValue;
+    private int intValue;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param status
-	 *            значение параметра
-	 */
-	public MsAvailabilityStatus(final AvailabilityStatus status) {
-		super(ParameterTag.MS_AVAILABILITY_STATUS);
-		value = status;
+    /**
+     * Constructor.
+     *
+     * @param status значение параметра
+     */
+    public MsAvailabilityStatus(final AvailabilityStatus status) {
+        super(ParameterTag.MS_AVAILABILITY_STATUS);
+        value = status;
         intValue = status.getValue();
-	}
+    }
 
     /**
      * Constructor.
@@ -48,31 +45,26 @@ public class MsAvailabilityStatus extends TLV {
         defineValue(intValue);
     }
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param bytes
-	 *            bytecode of TLV
+    /**
+     * Constructor.
+     *
+     * @param bytes bytecode of TLV
      * @throws TLVException ошибка разбора TLV
-	 */
-	public MsAvailabilityStatus(final byte[] bytes) throws TLVException {
-		super(bytes);
-	}
+     */
+    public MsAvailabilityStatus(final byte[] bytes) throws TLVException {
+        super(bytes);
+    }
 
     @Override
-    protected void parseValue(byte[] bytes, final EsmClass esmClass, final short dataCoding) throws TLVException {
-		if (getTag() != ParameterTag.MS_AVAILABILITY_STATUS) {
-			throw new ClassCastException();
-		}
-		if (bytes.length == LENGTH) {
-            try {
-                defineValue(new SmppByteBuffer(bytes).removeByte());
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
-		} else {
+    protected void parseValue(byte[] bytes, final EsmClass esmClass, final int dataCoding) throws TLVException {
+        if (getTag() != ParameterTag.MS_AVAILABILITY_STATUS) {
+            throw new ClassCastException();
+        }
+        if (bytes.length == LENGTH) {
+            defineValue(new SmppByteBuffer(bytes).removeByte());
+        } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected " + LENGTH);
-		}
+        }
     }
 
     @Override
@@ -80,7 +72,7 @@ public class MsAvailabilityStatus extends TLV {
         return new SmppByteBuffer().appendByte(intValue).array();
     }
 
-    private void defineValue(final short intValue) {
+    private void defineValue(final int intValue) {
         for (AvailabilityStatus as : AvailabilityStatus.values()) {
             if (as.getValue() == intValue) {
                 value = as;
@@ -93,23 +85,23 @@ public class MsAvailabilityStatus extends TLV {
     }
 
     /**
-	 * @return значение параметра
-	 */
-	public final AvailabilityStatus getValue() {
-		return value;
-	}
+     * @return значение параметра
+     */
+    public final AvailabilityStatus getValue() {
+        return value;
+    }
 
-    public final short getIntValue() {
+    public final int getIntValue() {
         return intValue;
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final String toString() {
-		return getClass().getName() + " Object {" + "\nvalue : " + value
-				+ "\n}";
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String toString() {
+        return getClass().getName() + " Object {" + "\nvalue : " + value
+                + "\n}";
+    }
 
 }

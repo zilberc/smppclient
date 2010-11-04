@@ -23,7 +23,7 @@ public enum TLVFactoryImpl implements TLVFactory {
     /**
      * {@inheritDoc}
      */
-    public TLV parseTLV(byte[] bytes, EsmClass esmClass, short dataCoding) throws TLVException {
+    public TLV parseTLV(byte[] bytes, EsmClass esmClass, int dataCoding) throws TLVException {
         TLV tlv;
         SmppByteBuffer param = new SmppByteBuffer(bytes);
         int paramTag;
@@ -177,7 +177,7 @@ public enum TLVFactoryImpl implements TLVFactory {
     /**
      * {@inheritDoc}
      */
-    public List<TLV> parseTLVs(byte[] bytes, EsmClass esmClass, short dataCoding) throws TLVException {
+    public List<TLV> parseTLVs(byte[] bytes, EsmClass esmClass, int dataCoding) throws TLVException {
         List<TLV> list = new ArrayList<TLV>();
         SmppByteBuffer params = new SmppByteBuffer(bytes);
         SmppByteBuffer buffer;

@@ -79,11 +79,11 @@ public class DataSM extends PDU implements Responsable {
      * Indicator for requesting a SMSC delivery receipt or an SME
      * acknowledgement.
      */
-    private short registeredDelivery;
+    private int registeredDelivery;
     /**
      * Indicates the encoding scheme of the payload data.
      */
-    private short dataCoding;
+    private int dataCoding;
 
     /**
      * Indicates the application port number associated with the source address
@@ -442,7 +442,7 @@ public class DataSM extends PDU implements Responsable {
             if (serviceType.length() > MAX_SERVICETYPE_LENGTH) {
                 throw new PDUException("serviceType field is too long");
             }
-            short b = bb.removeByte();
+            int b = bb.removeByte();
             for (TON ton : TON.values()) {
                 if (ton.getValue() == b) {
                     sourceAddrTon = ton;
@@ -762,7 +762,7 @@ public class DataSM extends PDU implements Responsable {
      * @return indicator for requesting a SMSC delivery receipt or an SME
      *         acknowledgement
      */
-    public final short getRegisteredDelivery
+    public final int getRegisteredDelivery
     () {
         return registeredDelivery;
     }
@@ -780,7 +780,7 @@ public class DataSM extends PDU implements Responsable {
     /**
      * @return the encodingscheme of the payload data indicator
      */
-    public final short getDataCoding
+    public final int getDataCoding
     () {
         return dataCoding;
     }

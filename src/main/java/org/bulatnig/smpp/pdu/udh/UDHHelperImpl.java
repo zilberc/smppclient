@@ -13,7 +13,7 @@ import java.util.Map;
 public enum UDHHelperImpl implements UDHHelper {
     INSTANCE;
 
-    private final Map<Short, UDHType> udhTypes = new HashMap<Short, UDHType>();
+    private final Map<Integer, UDHType> udhTypes = new HashMap<Integer, UDHType>();
 
     {
         for (UDHType udhType : UDHType.values()) {
@@ -25,7 +25,7 @@ public enum UDHHelperImpl implements UDHHelper {
      * {@inheritDoc}
      */
     @Override
-    public UDHType getUDHType(short udhTypeValue) throws UDHTypeNotFoundException {
+    public UDHType getUDHType(int udhTypeValue) throws UDHTypeNotFoundException {
         UDHType udhType = udhTypes.get(udhTypeValue);
         if (udhType != null)
             return udhType;

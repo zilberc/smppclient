@@ -13,7 +13,7 @@ public class SmscEsmClass extends EsmClass {
         super(SmscMessagingMode.DEFAULT, SmscMessageType.DEFAULT, SmscGSMFeatures.NO_FEATURES);
     }
 
-    public SmscEsmClass(short value) {
+    public SmscEsmClass(int value) {
         super(value);
     }
 
