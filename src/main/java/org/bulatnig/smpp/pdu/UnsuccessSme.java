@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * Unsuccessful delivery.
@@ -90,12 +89,7 @@ public class UnsuccessSme {
             throw new PDUException("destinationAddr field is invalid");
         }
         bb.appendCString(destinationAddr);
-        try {
-            bb.appendInt(errorStatusCode);
-        } catch (
-                WrongParameterException e) {
-            throw new PDUException("errorStatusCode field is invalid", e);
-        }
+        bb.appendInt(errorStatusCode);
         return bb.array();
     }
 

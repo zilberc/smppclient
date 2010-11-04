@@ -90,37 +90,37 @@ public class SmppByteBufferTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void appendByteWrongParameterException1() {
+    public void appendByteExceedMaxValue() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendByte(256);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void appendByteWrongParameterException2() {
+    public void appendByteNegativeValue() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendByte(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void appendShortWrongParameterException1() {
+    public void appendShortExceedMaxValue() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendShort(66666);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void appendShortWrongParameterException2() {
+    public void appendShortNegativeValue() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendShort(-3000);
     }
 
-    @Test(expected = WrongParameterException.class)
-    public void appendIntWrongParameterException1() throws WrongParameterException {
+    @Test(expected = IllegalArgumentException.class)
+    public void appendIntExceedMaxValue() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(4294967296L);
     }
 
-    @Test(expected = WrongParameterException.class)
-    public void appendIntWrongParameterException2() throws WrongParameterException {
+    @Test(expected = IllegalArgumentException.class)
+    public void appendIntNegativeValue() {
         SmppByteBuffer sbb = new SmppByteBuffer();
         sbb.appendInt(-429496729600L);
     }

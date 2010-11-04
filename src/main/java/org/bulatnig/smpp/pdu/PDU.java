@@ -212,26 +212,10 @@ public abstract class PDU {
      */
     private SmppByteBuffer getHeader() throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer();
-        try {
-            bb.appendInt(commandLength);
-        } catch (WrongParameterException e) {
-            throw new PDUException("commandLength field is invalid", e);
-        }
-        try {
-            bb.appendInt(commandId.getValue());
-        } catch (WrongParameterException e) {
-            throw new PDUException("commandId field is invalid", e);
-        }
-        try {
-            bb.appendInt(commandStatusValue);
-        } catch (WrongParameterException e) {
-            throw new PDUException("commandStatus field is invalid", e);
-        }
-        try {
-            bb.appendInt(sequenceNumber);
-        } catch (WrongParameterException e) {
-            throw new PDUException("sequenceNumber field is invalid", e);
-        }
+        bb.appendInt(commandLength);
+        bb.appendInt(commandId.getValue());
+        bb.appendInt(commandStatusValue);
+        bb.appendInt(sequenceNumber);
         return bb;
     }
 

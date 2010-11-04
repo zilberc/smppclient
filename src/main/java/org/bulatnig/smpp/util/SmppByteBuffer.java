@@ -151,23 +151,16 @@ public class SmppByteBuffer {
      * Добавляет переменную типа int в массив.
      * Значение переменной должно быть в диапазоне от 0 до 4294967295 включительно.
      *
-     * @param data short-переменная
-     * @throws WrongParameterException задан неверный параметр
+     * @param value short-переменная
+     * @return this buffer
+     * @throws IllegalArgumentException задан неверный параметр
      */
-    public void appendInt(final long data) throws WrongParameterException {
-        if (data >= INT_MAX_VAL) {
-            throw new WrongParameterException("value too big for SMPP int field");
-        }
-        if (data < 0) {
-            throw new WrongParameterException("value too small for SMPP int field");
-        }
-        int i = (int) data;
-        byte[] intBuf = new byte[INT_SZ];
-        intBuf[3] = (byte) (i & OCTET_MASK);
-        intBuf[2] = (byte) ((i >>> 8) & OCTET_MASK);
-        intBuf[1] = (byte) ((i >>> 16) & OCTET_MASK);
-        intBuf[0] = (byte) ((i >>> 24) & OCTET_MASK);
-        appendBytes(intBuf);
+    public SmppByteBuffer appendInt(final long value) throws IllegalArgumentException {
+        if (value >= 0 && value < INT_MAX_VAL)
+            appendBytes(new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value});
+        else
+        throw new IllegalArgumentException("Short value should be between 0 and 4294967295.");
+        return this;
     }
 
     /**

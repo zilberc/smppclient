@@ -76,7 +76,7 @@ public class QosTimeToLiveTest {
 		new QosTimeToLive(bb.array());
 	}
 
-    @Test(expected = TLVException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testQTTLConstructor7() throws TLVException {
         new QosTimeToLive(90000000000000L).getBytes();
     }
