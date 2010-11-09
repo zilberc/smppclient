@@ -162,33 +162,29 @@ public final class TCPConnection implements Connection {
         PDU pdu;
         // парсим их
         while (sbb.length() > 4) {
-            try {
-                pduLength = sbb.readInt();
-                if (pduLength < PDU.HEADER_LENGTH || pduLength > maxAcceptedPduLength) {
-                    logger.warn("Wrong length PDU received. Buffer hex dump: {}", sbb.getHexDump());
-                    // there is no certainty that all SmppByteBuffer contain correct values, so invalidate it
+            pduLength = sbb.readInt();
+            if (pduLength < PDU.HEADER_LENGTH || pduLength > maxAcceptedPduLength) {
+                logger.warn("Wrong length PDU received. Buffer hex dump: {}", sbb.getHexDump());
+                // there is no certainty that all SmppByteBuffer contain correct values, so invalidate it
+                sbb = new SmppByteBuffer();
+                break;
+            } else if (pduLength <= sbb.length()) {
+                try {
+                    buffer = sbb.removeBytes((int) pduLength).array();
+                } catch (SmppException e) {
                     sbb = new SmppByteBuffer();
-                    break;
-                } else if (pduLength <= sbb.length()) {
-                    try {
-                        buffer = sbb.removeBytes((int) pduLength).array();
-                    } catch (SmppException e) {
-                        sbb = new SmppByteBuffer();
-                        throw new IOException("FATAL ERROR while removing bytes from buffer", e);
-                    }
-                    try {
-                        pdu = factory.parsePDU(buffer);
-                        logger.info(">>> {}", new SmppByteBuffer(pdu.getBytes()).getHexDump());
-                        pdus.add(pdu);
-                    } catch (PDUException e) {
-                        logger.warn("PDU parsing failed. Hexdump: {}", new SmppByteBuffer(buffer).getHexDump());
-                    }
-                } else {
-                    // bytes not enough to assemble full PDU, retain them to the next read call
-                    break;
+                    throw new IOException("FATAL ERROR while removing bytes from buffer", e);
                 }
-            } catch (WrongLengthException e) {
-                throw new IOException("FATAL ERROR while reading pdu length", e);
+                try {
+                    pdu = factory.parsePDU(buffer);
+                    logger.info(">>> {}", new SmppByteBuffer(pdu.getBytes()).getHexDump());
+                    pdus.add(pdu);
+                } catch (PDUException e) {
+                    logger.warn("PDU parsing failed. Hexdump: {}", new SmppByteBuffer(buffer).getHexDump());
+                }
+            } else {
+                // bytes not enough to assemble full PDU, retain them to the next read call
+                break;
             }
         }
         return pdus;

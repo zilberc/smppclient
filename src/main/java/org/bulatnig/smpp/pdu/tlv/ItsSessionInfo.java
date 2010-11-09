@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The its_session_info parameter is a required parameter for the CDMA
@@ -48,11 +47,7 @@ public class ItsSessionInfo extends TLV {
             throw new ClassCastException();
         }
         if (bytes.length == LENGTH) {
-            try {
-                value = new SmppByteBuffer(bytes).removeShort();
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            value = new SmppByteBuffer(bytes).removeShort();
         } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected " + LENGTH);
         }
@@ -76,7 +71,7 @@ public class ItsSessionInfo extends TLV {
     @Override
     public final String toString() {
         return getClass().getName() + " Object {" + "\nvalue : " + value
-				+ "\n}";
-	}
+                + "\n}";
+    }
 
 }

@@ -96,19 +96,15 @@ public abstract class PDU {
      * @throws PDUException ошибка разбора PDU
      */
     private void parseHeader(final SmppByteBuffer bb) throws PDUException {
+        commandLength = bb.removeInt();
+        commandId = helper.getCommandId(bb.removeInt());
+        commandStatusValue = bb.removeInt();
         try {
-            commandLength = bb.removeInt();
-            commandId = helper.getCommandId(bb.removeInt());
-            commandStatusValue = bb.removeInt();
-            try {
-                commandStatus = helper.getCommandStatus(commandStatusValue);
-            } catch (CommandStatusNotFoundException e) {
-                commandStatus = CommandStatus.RESERVED;
-            }
-            sequenceNumber = bb.removeInt();
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU has wrong header parameters", e);
+            commandStatus = helper.getCommandStatus(commandStatusValue);
+        } catch (CommandStatusNotFoundException e) {
+            commandStatus = CommandStatus.RESERVED;
         }
+        sequenceNumber = bb.removeInt();
     }
 
     /**

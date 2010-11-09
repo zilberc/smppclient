@@ -68,11 +68,7 @@ public abstract class TLV {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
         parseHead(bb);
         int length;
-        try {
-            length = bb.removeShort();
-        } catch (WrongLengthException e) {
-            throw new TLVException("TLV has not enough length to read Length field", e);
-        }
+        length = bb.removeShort();
         if (bb.length() == length) {
             parseValue(bb.array(), esmClass, dataCoding);
         } else {
@@ -89,11 +85,7 @@ public abstract class TLV {
      */
     private SmppByteBuffer parseHead(final SmppByteBuffer bb) throws TLVException {
         int tagValue;
-        try {
-            tagValue = bb.removeShort();
-        } catch (WrongLengthException e) {
-            throw new TLVException("TLV header has not enough length", e);
-        }
+        tagValue = bb.removeShort();
         try {
             tag = helper.getParameterTag(tagValue);
         } catch (ParameterTagNotFoundException e) {

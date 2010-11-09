@@ -1,9 +1,8 @@
 package org.bulatnig.smpp.pdu.tlv;
 
+import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
 import org.bulatnig.smpp.util.SmppByteBufferException;
-import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.pdu.EsmClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +25,7 @@ public enum TLVFactoryImpl implements TLVFactory {
     public TLV parseTLV(byte[] bytes, EsmClass esmClass, int dataCoding) throws TLVException {
         TLV tlv;
         SmppByteBuffer param = new SmppByteBuffer(bytes);
-        int paramTag;
-        try {
-            paramTag = param.removeShort();
-        } catch (WrongLengthException e) {
-            throw new TLVException("TLV have not enougth length to read parameter tag", e);
-        }
+        int paramTag = param.removeShort();
         ParameterTag tag;
         try {
             tag = helper.getParameterTag(paramTag);

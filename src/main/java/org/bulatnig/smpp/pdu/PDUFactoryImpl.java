@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * Простая реализация PDUFactory интерфейса.
@@ -24,19 +23,9 @@ public enum PDUFactoryImpl implements PDUFactory {
             byte[] header = new byte[PDU.HEADER_LENGTH];
             System.arraycopy(bytes, 0, header, 0, header.length);
             SmppByteBuffer headerSbb = new SmppByteBuffer(header);
-            long length;
-            try {
-                length = headerSbb.removeInt();
-            } catch (WrongLengthException e) {
-                throw new PDUException("FATAL ERROR while reading PDU length field", e);
-            }
+            long length = headerSbb.removeInt();
             if (length == bytes.length) {
-                long cmdId;
-                try {
-                    cmdId = headerSbb.removeInt();
-                } catch (WrongLengthException e) {
-                    throw new PDUException("FATAL ERROR while reading PDU command id", e);
-                }
+                long cmdId = headerSbb.removeInt();
                 CommandId commandId = helper.getCommandId(cmdId);
                 switch (commandId) {
                     case ALERT_NOTIFICATION:

@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The destination_port parameter is used to indicate the application port
@@ -46,11 +45,7 @@ public class DestinationPort extends TLV {
             throw new ClassCastException();
         }
         if (bytes.length == LENGTH) {
-            try {
-                value = new SmppByteBuffer(bytes).removeShort();
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            value = new SmppByteBuffer(bytes).removeShort();
         } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected " + LENGTH);
         }
@@ -74,7 +69,7 @@ public class DestinationPort extends TLV {
     @Override
     public final String toString() {
         return getClass().getName() + " Object {" + "\nvalue : " + value
-				+ "\n}";
-	}
+                + "\n}";
+    }
 
 }

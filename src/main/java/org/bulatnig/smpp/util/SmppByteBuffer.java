@@ -14,15 +14,6 @@ import java.io.UnsupportedEncodingException;
 public class SmppByteBuffer {
 
     /**
-     * PDU short type.
-     */
-    public static final byte SHORT_SZ = 2;
-    /**
-     * PDU Integer type size.
-     */
-    public static final byte INT_SZ = 4;
-
-    /**
      * PDU byte max size.
      */
     public static final int BYTE_MAX_VAL = 256;
@@ -35,10 +26,6 @@ public class SmppByteBuffer {
      */
     public static final long INT_MAX_VAL = 4294967296L;
 
-    /**
-     * Octet mask.
-     */
-    public static final int OCTET_MASK = 0xff;
     /**
      * Half octet mask.
      */
@@ -155,7 +142,7 @@ public class SmppByteBuffer {
         if (value >= 0 && value < INT_MAX_VAL)
             appendBytes(new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value});
         else
-        throw new IllegalArgumentException("Short value should be between 0 and 4294967295.");
+            throw new IllegalArgumentException("Short value should be between 0 and 4294967295.");
         return this;
     }
 
@@ -163,7 +150,7 @@ public class SmppByteBuffer {
      * Добавляет строку C-String в массив.
      *
      * @param cstring строка типа C-Octet (по протоколу SMPP), may be null
-     * @return  this buffer
+     * @return this buffer
      */
     public SmppByteBuffer appendCString(final String cstring) {
         if (cstring != null && cstring.length() > 0) {
@@ -182,7 +169,7 @@ public class SmppByteBuffer {
      * Append string using US-ASCII charset.
      *
      * @param string string value, may be null
-     * @return  this buffer
+     * @return this buffer
      */
     public SmppByteBuffer appendString(final String string) {
         return appendString(string, ASCII);
@@ -196,7 +183,7 @@ public class SmppByteBuffer {
      *
      * @param string      encoded string, null allowed
      * @param charsetName encoding character set name
-     * @return  this buffer
+     * @return this buffer
      */
     public SmppByteBuffer appendString(final String string, final String charsetName) {
         if (string != null && string.length() > 0) {
@@ -211,12 +198,51 @@ public class SmppByteBuffer {
     }
 
     /**
+     * Read one byte from byte buffer
+     *
+     * @return byte was read
+     */
+    public int readByte() {
+        return buffer[0] & 0xFF;
+    }
+
+    /**
+     * Read short value from buffer
+     *
+     * @return short value
+     */
+    public int readShort() {
+        int result = 0;
+        result |= buffer[0] & 0xFF;
+        result <<= 8;
+        result |= buffer[1] & 0xFF;
+        return result;
+    }
+
+    /**
+     * Read int value from buffer
+     *
+     * @return int value
+     */
+    public long readInt() {
+        long result = 0;
+        result |= buffer[0] & 0xFF;
+        result <<= 8;
+        result |= buffer[1] & 0xFF;
+        result <<= 8;
+        result |= buffer[2] & 0xFF;
+        result <<= 8;
+        result |= buffer[3] & 0xFF;
+        return result;
+    }
+
+    /**
      * Удаляет один byte из массива и возвращает его.
      *
      * @return удаленный byte
      */
     public int removeByte() {
-        int result = buffer[0] & 0xFF;
+        int result = readByte();
         try {
             removeBytes0(1);
         } catch (WrongParameterException e) {
@@ -231,61 +257,34 @@ public class SmppByteBuffer {
      * Удаляет один short из массива и возвращает его.
      *
      * @return удаленный short
-     * @throws WrongLengthException буфер недостаточной длины для завершения операции
      */
-    public int removeShort() throws WrongLengthException {
-        int result = 0;
+    public int removeShort() {
+        int result = readShort();
         try {
-            byte[] resBuff = removeBytes(SHORT_SZ).array();
-            result |= resBuff[0] & OCTET_MASK;
-            result <<= 8;
-            result |= resBuff[1] & OCTET_MASK;
-        } catch (WrongParameterException wpe) {
-            // omit it
+            removeBytes0(2);
+        } catch (WrongParameterException e) {
+            // TODO remove try / catch block
+        } catch (WrongLengthException e) {
+            e.printStackTrace();
         }
-        if (result > -1) {
-            return result;
-        } else {
-            return SHORT_MAX_VAL + result;
-        }
+        return result;
     }
 
     /**
      * Удаляет один int из массива и возвращает его.
      *
      * @return удаленные int
-     * @throws WrongLengthException буфер недостаточной длины для завершения операции
      */
-    public long removeInt() throws WrongLengthException {
+    public long removeInt() {
         long result = readInt();
         try {
-            removeBytes0(INT_SZ);
-        } catch (WrongParameterException wpe) {
-            // omit it
+            removeBytes0(4);
+        } catch (WrongParameterException e) {
+            // TODO remove try / catch block
+        } catch (WrongLengthException e) {
+            e.printStackTrace();
         }
         return result;
-    }
-
-    /**
-     * Читает один int из массива и возвращает его.
-     *
-     * @return int
-     * @throws WrongLengthException ошибка длины
-     */
-    public long readInt() throws WrongLengthException {
-        if (length() >= INT_SZ) {
-            long result = 0;
-            result |= buffer[0] & OCTET_MASK;
-            result <<= 8;
-            result |= buffer[1] & OCTET_MASK;
-            result <<= 8;
-            result |= buffer[2] & OCTET_MASK;
-            result <<= 8;
-            result |= buffer[3] & OCTET_MASK;
-            return result;
-        } else {
-            throw new WrongLengthException("buffer have not enough length");
-        }
     }
 
     /**
