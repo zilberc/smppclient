@@ -92,25 +92,7 @@ public class TLVFactoryImplTest {
         sbb.appendBytes(pt.getBytes());
         sbb.appendBytes(mp.getBytes(new EsmeEsmClass(), (short) 8));
         sbb.appendShort(192);
-        List<TLV> tlvs = factory.parseTLVs(sbb.array(), new EsmeEsmClass(), (short) 8);
-        for (TLV tlv : tlvs) {
-            switch (tlv.getTag()) {
-                case SAR_MSG_REF_NUM:
-                    smrn = (SarMsgRefNum) tlv;
-                    assertEquals(10, smrn.getValue());
-                    break;
-                case PAYLOAD_TYPE:
-                    pt = (PayloadType) tlv;
-                    assertEquals((short) 150, pt.getValue());
-                    break;
-                case MESSAGE_PAYLOAD:
-                    mp = (MessagePayload) tlv;
-                    assertEquals("СерПантиН", mp.getValue());
-                    break;
-                default:
-                    throw new SmppException("We should not be here");
-            }
-        }
+        factory.parseTLVs(sbb.array(), new EsmeEsmClass(), (short) 8);
     }
 
     @Test

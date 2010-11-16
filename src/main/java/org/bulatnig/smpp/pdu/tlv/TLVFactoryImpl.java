@@ -23,6 +23,8 @@ public enum TLVFactoryImpl implements TLVFactory {
      * {@inheritDoc}
      */
     public TLV parseTLV(byte[] bytes, EsmClass esmClass, int dataCoding) throws TLVException {
+        if (bytes.length < 2)
+            throw new TLVException("TLV have not enougth length to read parameter tag.");
         TLV tlv;
         SmppByteBuffer param = new SmppByteBuffer(bytes);
         int paramTag = param.removeShort();
@@ -177,7 +179,7 @@ public enum TLVFactoryImpl implements TLVFactory {
         SmppByteBuffer buffer;
         int length;
         try {
-            while (params.length() > 0) {
+            while (params.length() >= 4) {
                 buffer = new SmppByteBuffer();
                 buffer.appendShort(params.removeShort());
                 length = params.removeShort();
@@ -194,6 +196,9 @@ public enum TLVFactoryImpl implements TLVFactory {
         } catch (SmppByteBufferException e) {
             throw new TLVException("SmppByteBuffer error during tlv parsing", e);
         }
+        // TODO refactor this method
+        if (params.length() > 0)
+            throw new TLVException("Wrong TLV length.");
         return list;
     }
 }

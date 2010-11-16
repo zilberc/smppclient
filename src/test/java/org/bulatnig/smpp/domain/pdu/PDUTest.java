@@ -55,15 +55,4 @@ public class PDUTest {
 		bb.appendInt(1);
         new BindTransceiver(bb.array());
     }
-
-    @Test(expected = PDUException.class)
-    public void constructor3() throws WrongParameterException, PDUException {
-        SmppByteBuffer bb = new SmppByteBuffer();
-		bb.appendInt(15);
-		bb.appendInt(9);
-		bb.appendInt(0);
-		bb.appendShort(1);
-        bb.appendByte((short)1);
-        new BindTransceiver(bb.array());
-    }
 }

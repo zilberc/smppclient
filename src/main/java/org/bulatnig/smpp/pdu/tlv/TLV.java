@@ -160,7 +160,7 @@ public abstract class TLV {
 
     protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws TLVException {
         try {
-            int length = byteBuffer.readBytes(1).removeByte();
+            int length = byteBuffer.readByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
         } catch (WrongLengthException e) {
             throw new TLVException("Buffer have not enough length to read UDH header", e);

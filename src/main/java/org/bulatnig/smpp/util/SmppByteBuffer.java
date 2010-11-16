@@ -26,11 +26,6 @@ public class SmppByteBuffer {
      */
     public static final long INT_MAX_VAL = 4294967296L;
 
-    /**
-     * Half octet mask.
-     */
-    public static final int HALF_OCTET_MASK = 0x0f;
-
 
     /**
      * C-Octet String encoding and default Octet String encoding.
@@ -243,13 +238,7 @@ public class SmppByteBuffer {
      */
     public int removeByte() {
         int result = readByte();
-        try {
-            removeBytes0(1);
-        } catch (WrongParameterException e) {
-            // TODO remove try / catch block
-        } catch (WrongLengthException e) {
-            e.printStackTrace();
-        }
+        removeBytes0(1);
         return result;
     }
 
@@ -260,13 +249,7 @@ public class SmppByteBuffer {
      */
     public int removeShort() {
         int result = readShort();
-        try {
-            removeBytes0(2);
-        } catch (WrongParameterException e) {
-            // TODO remove try / catch block
-        } catch (WrongLengthException e) {
-            e.printStackTrace();
-        }
+        removeBytes0(2);
         return result;
     }
 
@@ -277,13 +260,7 @@ public class SmppByteBuffer {
      */
     public long removeInt() {
         long result = readInt();
-        try {
-            removeBytes0(4);
-        } catch (WrongParameterException e) {
-            // TODO remove try / catch block
-        } catch (WrongLengthException e) {
-            e.printStackTrace();
-        }
+        removeBytes0(4);
         return result;
     }
 
@@ -312,11 +289,7 @@ public class SmppByteBuffer {
                     // omit it
                 }
             }
-            try {
-                removeBytes0(zeroPos + 1);
-            } catch (WrongParameterException wpe) {
-                // omit it
-            }
+            removeBytes0(zeroPos + 1);
             return result;
         } else {
             throw new WrongLengthException("terminating ZERO not found");
@@ -339,11 +312,7 @@ public class SmppByteBuffer {
             } catch (UnsupportedEncodingException e) {
                 // omit it
             }
-            try {
-                removeBytes0(size);
-            } catch (WrongParameterException wpe) {
-                // omit it
-            }
+            removeBytes0(size);
         }
         return result;
     }
@@ -364,20 +333,26 @@ public class SmppByteBuffer {
     }
 
     /**
+     * Возвращает строку отображающую содержимое массива.
+     *
+     * @return содержимое массива
+     */
+    public String getHexDump() {
+        StringBuilder builder = new StringBuilder();
+        for (byte b : buffer) {
+            builder.append(Character.forDigit((b >> 4) & 0x0f, 16));
+            builder.append(Character.forDigit(b & 0x0f, 16));
+        }
+        return builder.toString();
+    }
+
+    /**
      * Just removes bytes from the buffer and doesnt return anything.
      *
      * @param count removed bytes
-     * @throws WrongLengthException    wrong count of removed bytes
-     * @throws WrongParameterException неверный параметр
      */
-    private void removeBytes0(final int count) throws WrongParameterException,
-            WrongLengthException {
-        if (count < 0) {
-            throw new WrongParameterException("unable remove negative count of bytes");
-        } else if (count == 0) {
-            return;
-        }
-        int lefts = length() - count;
+    private void removeBytes0(final int count) {
+        int lefts = buffer.length - count;
         if (lefts > 0) {
             byte[] newBuf = new byte[lefts];
             System.arraycopy(buffer, count, newBuf, 0, lefts);
@@ -392,35 +367,10 @@ public class SmppByteBuffer {
      *
      * @param count count of bytes to read
      * @return readed bytes
-     * @throws WrongLengthException wrong count of bytes to read
      */
-    public SmppByteBuffer readBytes(final int count) throws WrongLengthException {
-        if (count > 0) {
-            if (length() >= count) {
-                byte[] resBuf = new byte[count];
-                System.arraycopy(buffer, 0, resBuf, 0, count);
-                return new SmppByteBuffer(resBuf);
-            } else {
-                throw new WrongLengthException("buffer have not enough length");
-            }
-        } else {
-            return new SmppByteBuffer();
-        }
-    }
-
-    /**
-     * Возвращает строку отображающую содержимое массива.
-     *
-     * @return содержимое массива
-     */
-    public String getHexDump() {
-        String dump = "";
-        byte[] b = array();
-        int dataLen = b.length;
-        for (int i = 0; i < dataLen; i++) {
-            dump += Character.forDigit((b[i] >> 4) & HALF_OCTET_MASK, 16);
-            dump += Character.forDigit(b[i] & HALF_OCTET_MASK, 16);
-        }
-        return dump;
+    private SmppByteBuffer readBytes(final int count) {
+        byte[] resBuf = new byte[count];
+        System.arraycopy(buffer, 0, resBuf, 0, count);
+        return new SmppByteBuffer(resBuf);
     }
 }

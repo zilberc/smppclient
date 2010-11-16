@@ -253,7 +253,7 @@ public abstract class PDU {
 
     protected final UDH parseUDH(SmppByteBuffer byteBuffer) throws PDUException {
         try {
-            int length = byteBuffer.readBytes(1).removeByte();
+            int length = byteBuffer.readByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
         } catch (WrongLengthException e) {
             throw new PDUException("Buffer have not enough length to read UDH header", e);
