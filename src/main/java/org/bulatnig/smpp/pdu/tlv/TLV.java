@@ -1,10 +1,14 @@
 package org.bulatnig.smpp.pdu.tlv;
 
-import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.pdu.udh.*;
+import org.bulatnig.smpp.pdu.DataCodingHelper;
+import org.bulatnig.smpp.pdu.EsmClass;
+import org.bulatnig.smpp.pdu.EsmeEsmClass;
+import org.bulatnig.smpp.pdu.SmscEsmClass;
+import org.bulatnig.smpp.pdu.udh.UDH;
+import org.bulatnig.smpp.pdu.udh.UDHException;
+import org.bulatnig.smpp.pdu.udh.UDHFactory;
+import org.bulatnig.smpp.pdu.udh.UDHFactoryImpl;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * Optional Parameters are fields, which may be present in a message. Optional
@@ -162,10 +166,6 @@ public abstract class TLV {
         try {
             int length = byteBuffer.readByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
-        } catch (WrongLengthException e) {
-            throw new TLVException("Buffer have not enough length to read UDH header", e);
-        } catch (WrongParameterException e) {
-            throw new TLVException("Buffer have not enough length to read UDH", e);
         } catch (UDHException e) {
             // omit it
             return null;

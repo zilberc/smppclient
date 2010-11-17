@@ -4,7 +4,6 @@ import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.pdu.SmscEsmClass;
 import org.bulatnig.smpp.pdu.udh.UDH;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * The message_payload parameter contains the user data.
@@ -33,7 +32,7 @@ public class MessagePayload extends TLV {
     /**
      * Constructor.
      *
-     * @param bytes bytecode of TLV
+     * @param bytes      bytecode of TLV
      * @param esmClass   PDU esm_class
      * @param dataCoding PDU data_coding
      * @throws TLVException ошибка разбора TLV
@@ -50,14 +49,10 @@ public class MessagePayload extends TLV {
         }
         SmppByteBuffer byteBuffer = new SmppByteBuffer(bytes);
         if (esmClass instanceof SmscEsmClass &&
-                SmscEsmClass.SmscGSMFeatures.UDHI_INDICATOR == ((SmscEsmClass)esmClass).getFeatures()) {
+                SmscEsmClass.SmscGSMFeatures.UDHI_INDICATOR == ((SmscEsmClass) esmClass).getFeatures()) {
             udh = parseUDH(byteBuffer);
         }
-        try {
-            value = byteBuffer.removeString(byteBuffer.length(), getCharsetName(dataCoding));
-        } catch (WrongLengthException e) {
-            throw new TLVException("Buffer error during parsing value", e);
-        }
+        value = byteBuffer.removeString(byteBuffer.length(), getCharsetName(dataCoding));
     }
 
     @Override
@@ -84,7 +79,7 @@ public class MessagePayload extends TLV {
     @Override
     public final String toString() {
         return getClass().getName() + " Object {" + "\nvalue : " + value
-				+ "\n}";
-	}
+                + "\n}";
+    }
 
 }

@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * DeliverSM Response PDU.
@@ -51,11 +50,7 @@ public class DeliverSMResp extends PDU {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            messageId = bb.removeCString();
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
-        }
+        messageId = bb.removeCString();
     }
 
     /**
@@ -72,6 +67,6 @@ public class DeliverSMResp extends PDU {
     public final String toString() {
         return getClass().getName() + " Object {" + "\nmessageId : "
                 + messageId + "\n}";
-	}
+    }
 
 }

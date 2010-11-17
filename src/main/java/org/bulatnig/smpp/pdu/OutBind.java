@@ -74,17 +74,13 @@ public class OutBind extends PDU {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            systemId = bb.removeCString();
-            if (systemId.length() > MAX_SYSTEMID_LENGTH) {
-                throw new PDUException("systemId field is too long");
-            }
-            password = bb.removeCString();
-            if (password.length() > MAX_PASSWORD_LENGTH) {
-                throw new PDUException("password field is too long");
-            }
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
+        systemId = bb.removeCString();
+        if (systemId.length() > MAX_SYSTEMID_LENGTH) {
+            throw new PDUException("systemId field is too long");
+        }
+        password = bb.removeCString();
+        if (password.length() > MAX_PASSWORD_LENGTH) {
+            throw new PDUException("password field is too long");
         }
     }
 
@@ -123,6 +119,6 @@ public class OutBind extends PDU {
     public final String toString() {
         return getClass().getName() + " Object {" + "\nsystemId : " + systemId
                 + "\npassword : " + password + "\n}";
-	}
+    }
 
 }

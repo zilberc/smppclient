@@ -43,31 +43,27 @@ public class SMEAddress {
      */
     public SMEAddress(final byte[] bytes) throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            int b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    destAddrTon = ton;
-                }
+        int b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                destAddrTon = ton;
             }
-            if (destAddrTon == null) {
-                destAddrTon = TON.RESERVED;
+        }
+        if (destAddrTon == null) {
+            destAddrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                destAddrNpi = npi;
             }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    destAddrNpi = npi;
-                }
-            }
-            if (destAddrNpi == null) {
-                destAddrNpi = NPI.RESERVED;
-            }
-            destinationAddr = bb.removeCString();
-            if (destinationAddr.length() > MAX_DESTADDR_LENGTH) {
-                throw new PDUException("destinationAddr field is too long");
-            }
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
+        }
+        if (destAddrNpi == null) {
+            destAddrNpi = NPI.RESERVED;
+        }
+        destinationAddr = bb.removeCString();
+        if (destinationAddr.length() > MAX_DESTADDR_LENGTH) {
+            throw new PDUException("destinationAddr field is too long");
         }
     }
 

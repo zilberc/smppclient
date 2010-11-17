@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * An ESME bound as a Transmitter is authorised to send short messages to the
@@ -93,44 +92,40 @@ public class BindTransmitter extends PDU implements Responsable {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            systemId = bb.removeCString();
-            if (systemId.length() > MAX_SYSTEMID_LENGTH) {
-                throw new PDUException("systemId field is too long");
+        systemId = bb.removeCString();
+        if (systemId.length() > MAX_SYSTEMID_LENGTH) {
+            throw new PDUException("systemId field is too long");
+        }
+        password = bb.removeCString();
+        if (password.length() > MAX_PASSWORD_LENGTH) {
+            throw new PDUException("password field is too long");
+        }
+        systemType = bb.removeCString();
+        if (systemType.length() > MAX_SYSTEMTYPE_LENGTH) {
+            throw new PDUException("systemType field is too long");
+        }
+        interfaceVersion = bb.removeByte();
+        int b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                addrTon = ton;
             }
-            password = bb.removeCString();
-            if (password.length() > MAX_PASSWORD_LENGTH) {
-                throw new PDUException("password field is too long");
+        }
+        if (addrTon == null) {
+            addrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                addrNpi = npi;
             }
-            systemType = bb.removeCString();
-            if (systemType.length() > MAX_SYSTEMTYPE_LENGTH) {
-                throw new PDUException("systemType field is too long");
-            }
-            interfaceVersion = bb.removeByte();
-            int b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    addrTon = ton;
-                }
-            }
-            if (addrTon == null) {
-                addrTon = TON.RESERVED;
-            }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    addrNpi = npi;
-                }
-            }
-            if (addrNpi == null) {
-                addrNpi = NPI.RESERVED;
-            }
-            addressRange = bb.removeCString();
-            if (addressRange.length() > MAX_ADDRESSRANGE_LENGTH) {
-                throw new PDUException("addressRange field is too long");
-            }
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
+        }
+        if (addrNpi == null) {
+            addrNpi = NPI.RESERVED;
+        }
+        addressRange = bb.removeCString();
+        if (addressRange.length() > MAX_ADDRESSRANGE_LENGTH) {
+            throw new PDUException("addressRange field is too long");
         }
     }
 

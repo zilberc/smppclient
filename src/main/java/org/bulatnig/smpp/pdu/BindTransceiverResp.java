@@ -5,7 +5,6 @@ import org.bulatnig.smpp.pdu.tlv.ScInterfaceVersion;
 import org.bulatnig.smpp.pdu.tlv.TLV;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 import java.util.List;
 
@@ -83,21 +82,17 @@ public class BindTransceiverResp extends PDU {
         }
         if (getCommandStatus() == CommandStatus.ESME_ROK) {
             SmppByteBuffer bb = new SmppByteBuffer(bytes);
-            try {
-                systemId = bb.removeCString();
-            } catch (WrongLengthException e) {
-                throw new PDUException("PDU parsing error", e);
-            }
+            systemId = bb.removeCString();
             if (systemId.length() > MAX_SYSTEMID_LENGTH) {
                 throw new PDUException("systemId field is too long");
             }
             if (bb.length() > 0) {
-                    List<TLV> list = getOptionalParams(bb.array());
-                    for (TLV tlv : list) {
-                        if (tlv.getTag() == ParameterTag.SC_INTERFACE_VERSION) {
-                            scInterfaceVersion = (ScInterfaceVersion) tlv;
-                        }
+                List<TLV> list = getOptionalParams(bb.array());
+                for (TLV tlv : list) {
+                    if (tlv.getTag() == ParameterTag.SC_INTERFACE_VERSION) {
+                        scInterfaceVersion = (ScInterfaceVersion) tlv;
                     }
+                }
             }
         }
     }

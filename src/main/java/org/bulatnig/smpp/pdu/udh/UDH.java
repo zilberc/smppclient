@@ -1,8 +1,6 @@
 package org.bulatnig.smpp.pdu.udh;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * Comment here.
@@ -36,13 +34,7 @@ public abstract class UDH {
 
     protected UDH(byte[] bytes) throws UDHException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            parseHeader(bb.removeBytes(HEADER_LENGTH));
-        } catch (WrongParameterException e) {
-            throw new UDHException("FATAL ERROR wrong header length supplied", e);
-        } catch (WrongLengthException e) {
-            throw new UDHException("UDH has not enough length to read header", e);
-        }
+        parseHeader(bb.removeBytes(HEADER_LENGTH));
         if (bytes.length == length) {
             parseBody(bb.array());
         } else {

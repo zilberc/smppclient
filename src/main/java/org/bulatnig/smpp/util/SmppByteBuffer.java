@@ -142,7 +142,7 @@ public class SmppByteBuffer {
     }
 
     /**
-     * Добавляет строку C-String в массив.
+     * Добавляет строку C-Octet String в массив.
      *
      * @param cstring строка типа C-Octet (по протоколу SMPP), may be null
      * @return this buffer
@@ -265,55 +265,44 @@ public class SmppByteBuffer {
     }
 
     /**
-     * Удаляет строку CString из массива и возращает строку.
+     * Удаляет строку C-Octet String из массива и возращает строку.
      *
      * @return строка
-     * @throws WrongLengthException ошибка длины
+     * @throws TerminatingNullNotFoundException null character not found in the buffer
      */
-    public String removeCString()
-            throws WrongLengthException {
-        int len = length();
-        int zeroPos = 0;
-        if (len == 0) {
-            throw new WrongLengthException("buffer have not enough length");
+    public String removeCString() throws TerminatingNullNotFoundException {
+        int zeroPos = -1;
+        for (int i = 0; i < buffer.length; i++) {
+            if (buffer[i] == 0)
+                zeroPos = i;
+
         }
-        while ((zeroPos < len) && (buffer[zeroPos] != 0)) {
-            zeroPos++;
-        }
-        if (zeroPos < len) { // found terminating ZERO
-            String result = "";
-            if (zeroPos > 0) {
-                try {
-                    result = new String(buffer, 0, zeroPos, ASCII);
-                } catch (UnsupportedEncodingException e) {
-                    // omit it
-                }
+        if (zeroPos > -1) { // found terminating ZERO
+            String result;
+            try {
+                result = new String(buffer, 0, zeroPos, ASCII);
+            } catch (UnsupportedEncodingException e) {
+                throw new IllegalArgumentException("US-ASCII encoding not supported.");
             }
             removeBytes0(zeroPos + 1);
             return result;
         } else {
-            throw new WrongLengthException("terminating ZERO not found");
+            throw new IllegalArgumentException("C-String terminating zero not found.");
         }
     }
 
-    public String removeString(final int size) throws WrongLengthException {
+    public String removeString(final int size) {
         return removeString(size, ASCII);
     }
 
-    public String removeString(final int size, final String charsetName) throws WrongLengthException {
-        int len = length();
-        if (len < size) {
-            throw new WrongLengthException("buffer have not enough length");
+    public String removeString(final int size, final String charsetName) {
+        String result;
+        try {
+            result = new String(buffer, 0, size, charsetName);
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("US-ASCII encoding not supported.");
         }
-        String result = "";
-        if (len > 0) {
-            try {
-                result = new String(buffer, 0, size, charsetName);
-            } catch (UnsupportedEncodingException e) {
-                // omit it
-            }
-            removeBytes0(size);
-        }
+        removeBytes0(size);
         return result;
     }
 
@@ -322,11 +311,8 @@ public class SmppByteBuffer {
      *
      * @param count count of bytes to remove
      * @return removed bytes
-     * @throws WrongLengthException    wrong length of bytes to remove
-     * @throws WrongParameterException неверный параметр
      */
-    public SmppByteBuffer removeBytes(final int count)
-            throws WrongParameterException, WrongLengthException {
+    public SmppByteBuffer removeBytes(final int count) {
         SmppByteBuffer result = readBytes(count);
         removeBytes0(count);
         return result;

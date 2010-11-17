@@ -1,8 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 /**
  * Contains one or more (number_of_dests) SME addresses or/and Distribution List
@@ -42,17 +40,11 @@ public class DestAddress {
      */
     public DestAddress(final byte[] bytes) throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            destFlag = bb.removeByte();
-            if (destFlag == 1) {
-                smeAddress = new SMEAddress(bb.removeBytes(bb.length()).array());
-            } else {
-                dlnAddress = new DLN(bb.removeBytes(bb.length()).array());
-            }
-        } catch (WrongLengthException e) {
-            throw new PDUException("Wrong parameters supplied", e);
-        } catch (WrongParameterException e) {
-            throw new PDUException("FATAL ERROR wrong SmppByteBuffer work", e);
+        destFlag = bb.removeByte();
+        if (destFlag == 1) {
+            smeAddress = new SMEAddress(bb.removeBytes(bb.length()).array());
+        } else {
+            dlnAddress = new DLN(bb.removeBytes(bb.length()).array());
         }
     }
 

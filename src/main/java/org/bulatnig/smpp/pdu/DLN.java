@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * Distribution List Name.
@@ -35,11 +34,7 @@ public class DLN {
      */
     public DLN(final byte[] bytes) throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            dlName = bb.removeCString();
-        } catch (WrongLengthException e) {
-            throw new PDUException("DLN parsing error", e);
-        }
+        dlName = bb.removeCString();
         if (dlName.length() > MAX_DLNAME_LENGTH) {
             throw new PDUException("dlName field is too long");
         }
@@ -78,7 +73,7 @@ public class DLN {
     @Override
     public final String toString() {
         return getClass().getName() + " Object {" + "\ndlName : " + dlName
-				+ "\n}";
-	}
+                + "\n}";
+    }
 
 }

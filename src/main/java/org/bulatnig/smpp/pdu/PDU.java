@@ -4,13 +4,11 @@ import org.bulatnig.smpp.pdu.tlv.TLV;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.pdu.tlv.TLVFactory;
 import org.bulatnig.smpp.pdu.tlv.TLVFactoryImpl;
-import org.bulatnig.smpp.pdu.udh.UDHException;
 import org.bulatnig.smpp.pdu.udh.UDH;
+import org.bulatnig.smpp.pdu.udh.UDHException;
 import org.bulatnig.smpp.pdu.udh.UDHFactory;
 import org.bulatnig.smpp.pdu.udh.UDHFactoryImpl;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 import java.util.List;
 
@@ -75,13 +73,7 @@ public abstract class PDU {
      */
     protected PDU(final byte[] bytes) throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            parseHeader(bb.removeBytes(HEADER_LENGTH));
-        } catch (WrongParameterException e) {
-            throw new PDUException("FATAL ERROR wrong header length supplied", e);
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU has not enough length to read header", e);
-        }
+        parseHeader(bb.removeBytes(HEADER_LENGTH));
         if (bytes.length == commandLength) {
             parseBody(bb.array());
         } else {
@@ -255,10 +247,6 @@ public abstract class PDU {
         try {
             int length = byteBuffer.readByte();
             return udhFactory.parseUDH(byteBuffer.removeBytes(length + 1).array());
-        } catch (WrongLengthException e) {
-            throw new PDUException("Buffer have not enough length to read UDH header", e);
-        } catch (WrongParameterException e) {
-            throw new PDUException("Buffer have not enough length to read UDH", e);
         } catch (UDHException e) {
             e.printStackTrace();
             // omit it

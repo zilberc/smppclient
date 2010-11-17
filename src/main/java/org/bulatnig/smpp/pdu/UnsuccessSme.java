@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * Unsuccessful delivery.
@@ -48,33 +47,29 @@ public class UnsuccessSme {
      */
     public UnsuccessSme(final byte[] bytes) throws PDUException {
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            int b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    destAddrTon = ton;
-                }
+        int b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                destAddrTon = ton;
             }
-            if (destAddrTon == null) {
-                destAddrTon = TON.RESERVED;
-            }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    destAddrNpi = npi;
-                }
-            }
-            if (destAddrNpi == null) {
-                destAddrNpi = NPI.RESERVED;
-            }
-            destinationAddr = bb.removeCString();
-            if (destinationAddr.length() > MAX_DESTADDR_LENGTH) {
-                throw new PDUException("destinationAddr field is too long");
-            }
-            errorStatusCode = bb.removeInt();
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
         }
+        if (destAddrTon == null) {
+            destAddrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                destAddrNpi = npi;
+            }
+        }
+        if (destAddrNpi == null) {
+            destAddrNpi = NPI.RESERVED;
+        }
+        destinationAddr = bb.removeCString();
+        if (destinationAddr.length() > MAX_DESTADDR_LENGTH) {
+            throw new PDUException("destinationAddr field is too long");
+        }
+        errorStatusCode = bb.removeInt();
     }
 
     /**

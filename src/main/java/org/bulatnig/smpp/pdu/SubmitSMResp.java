@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * SubmitSM Response PDU.
@@ -68,11 +67,7 @@ public class SubmitSMResp extends PDU {
         if (getCommandStatus() == CommandStatus.ESME_ROK) {
             SmppByteBuffer bb = new SmppByteBuffer(bytes);
             if (bb.length() > 0) {
-                try {
-                    messageId = bb.removeCString();
-                } catch (WrongLengthException e) {
-                    throw new PDUException("PDU parsing error", e);
-                }
+                messageId = bb.removeCString();
                 if (messageId.length() > MAX_MESSAGEID_LENGTH) {
                     throw new PDUException("messageId field is too long");
                 }

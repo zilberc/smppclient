@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.pdu.tlv.*;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 import java.util.List;
 
@@ -426,75 +425,71 @@ public class SubmitSM extends PDU implements Responsable {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            serviceType = bb.removeCString();
-            if (serviceType.length() > MAX_SERVICETYPE_LENGTH) {
-                throw new PDUException("serviceType field is too long");
-            }
-            int b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    sourceAddrTon = ton;
-                }
-            }
-            if (sourceAddrTon == null) {
-                sourceAddrTon = TON.RESERVED;
-            }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    sourceAddrNpi = npi;
-                }
-            }
-            if (sourceAddrNpi == null) {
-                sourceAddrNpi = NPI.RESERVED;
-            }
-            sourceAddr = bb.removeCString();
-            if (sourceAddr.length() > MAX_ADDRESS_LENGTH) {
-                throw new PDUException("sourceAddr field is too long");
-            }
-            b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    destAddrTon = ton;
-                }
-            }
-            if (destAddrTon == null) {
-                destAddrTon = TON.RESERVED;
-            }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    destAddrNpi = npi;
-                }
-            }
-            if (destAddrNpi == null) {
-                destAddrNpi = NPI.RESERVED;
-            }
-            destinationAddr = bb.removeCString();
-            if (destinationAddr.length() > MAX_ADDRESS_LENGTH) {
-                throw new PDUException("destinationAddr field is too long");
-            }
-            esmClass = new EsmeEsmClass(bb.removeByte());
-            protocolId = bb.removeByte();
-            priorityFlag = bb.removeByte();
-            scheduleDeliveryTime = bb.removeCString();
-            if (scheduleDeliveryTime.length() > 0 && scheduleDeliveryTime.length() != SCHEDULEDELIVERYTIME_LENGTH) {
-                throw new PDUException("scheduleDeliveryTime field is invalid");
-            }
-            validityPeriod = bb.removeCString();
-            if (validityPeriod.length() > 0 && validityPeriod.length() != VALIDITYPERIOD_LENGTH) {
-                throw new PDUException("validityPeriod field is invalid");
-            }
-            registeredDelivery = bb.removeByte();
-            replaceIfPresentFlag = bb.removeByte();
-            dataCoding = bb.removeByte();
-            smDefaultMsgId = bb.removeByte();
-            smLength = bb.removeByte();
-            shortMessage = bb.removeString(smLength, getCharsetName(dataCoding));
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
+        serviceType = bb.removeCString();
+        if (serviceType.length() > MAX_SERVICETYPE_LENGTH) {
+            throw new PDUException("serviceType field is too long");
         }
+        int b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                sourceAddrTon = ton;
+            }
+        }
+        if (sourceAddrTon == null) {
+            sourceAddrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                sourceAddrNpi = npi;
+            }
+        }
+        if (sourceAddrNpi == null) {
+            sourceAddrNpi = NPI.RESERVED;
+        }
+        sourceAddr = bb.removeCString();
+        if (sourceAddr.length() > MAX_ADDRESS_LENGTH) {
+            throw new PDUException("sourceAddr field is too long");
+        }
+        b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                destAddrTon = ton;
+            }
+        }
+        if (destAddrTon == null) {
+            destAddrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                destAddrNpi = npi;
+            }
+        }
+        if (destAddrNpi == null) {
+            destAddrNpi = NPI.RESERVED;
+        }
+        destinationAddr = bb.removeCString();
+        if (destinationAddr.length() > MAX_ADDRESS_LENGTH) {
+            throw new PDUException("destinationAddr field is too long");
+        }
+        esmClass = new EsmeEsmClass(bb.removeByte());
+        protocolId = bb.removeByte();
+        priorityFlag = bb.removeByte();
+        scheduleDeliveryTime = bb.removeCString();
+        if (scheduleDeliveryTime.length() > 0 && scheduleDeliveryTime.length() != SCHEDULEDELIVERYTIME_LENGTH) {
+            throw new PDUException("scheduleDeliveryTime field is invalid");
+        }
+        validityPeriod = bb.removeCString();
+        if (validityPeriod.length() > 0 && validityPeriod.length() != VALIDITYPERIOD_LENGTH) {
+            throw new PDUException("validityPeriod field is invalid");
+        }
+        registeredDelivery = bb.removeByte();
+        replaceIfPresentFlag = bb.removeByte();
+        dataCoding = bb.removeByte();
+        smDefaultMsgId = bb.removeByte();
+        smLength = bb.removeByte();
+        shortMessage = bb.removeString(smLength, getCharsetName(dataCoding));
         if (bb.length() > 0) {
             List<TLV> list = getOptionalParams(bb.array(), esmClass, dataCoding);
             for (TLV tlv : list) {

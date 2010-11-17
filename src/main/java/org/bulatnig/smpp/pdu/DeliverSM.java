@@ -3,7 +3,6 @@ package org.bulatnig.smpp.pdu;
 import org.bulatnig.smpp.pdu.tlv.*;
 import org.bulatnig.smpp.pdu.udh.UDH;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 import java.util.List;
 
@@ -343,7 +342,6 @@ public class DeliverSM extends PDU implements Responsable {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
             serviceType = bb.removeCString();
             if (serviceType.length() > MAX_SERVICETYPE_LENGTH) {
                 throw new PDUException("serviceType field is too long");
@@ -407,9 +405,6 @@ public class DeliverSM extends PDU implements Responsable {
                 smLength = (short) (smLength - udh.length());
             }
             shortMessage = bb.removeString(smLength, getCharsetName(dataCoding));
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
-        }
         if (bb.length() > 0) {
             List<TLV> list = getOptionalParams(bb.array(), esmClass, dataCoding);
             for (TLV tlv : list) {

@@ -1,8 +1,7 @@
 package org.bulatnig.smpp.pdu.tlv;
 
-import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 import org.bulatnig.smpp.pdu.EsmClass;
+import org.bulatnig.smpp.util.SmppByteBuffer;
 
 /**
  * The receipted_message_id parameter indicates the ID of the message being
@@ -53,11 +52,7 @@ public class ReceiptedMessageId extends TLV {
             throw new ClassCastException();
         }
         if (bytes.length < MAX_LENGTH) {
-            try {
-                value = new SmppByteBuffer(bytes).removeCString();
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            value = new SmppByteBuffer(bytes).removeCString();
         } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected no more than " + MAX_LENGTH);
         }
@@ -83,7 +78,7 @@ public class ReceiptedMessageId extends TLV {
     @Override
     public final String toString() {
         return getClass().getName() + " Object {" + "\nvalue : " + value
-				+ "\n}";
-	}
+                + "\n}";
+    }
 
 }

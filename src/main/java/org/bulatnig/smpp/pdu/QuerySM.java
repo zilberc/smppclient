@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * This command is issued by the ESME to query the status of a previously
@@ -77,35 +76,31 @@ public class QuerySM extends PDU implements Responsable {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            messageId = bb.removeCString();
-            if (messageId.length() > MAX_MESSAGEID_LENGTH) {
-                throw new PDUException("messageId field is too long");
+        messageId = bb.removeCString();
+        if (messageId.length() > MAX_MESSAGEID_LENGTH) {
+            throw new PDUException("messageId field is too long");
+        }
+        int b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                sourceAddrTon = ton;
             }
-            int b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    sourceAddrTon = ton;
-                }
+        }
+        if (sourceAddrTon == null) {
+            sourceAddrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                sourceAddrNpi = npi;
             }
-            if (sourceAddrTon == null) {
-                sourceAddrTon = TON.RESERVED;
-            }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    sourceAddrNpi = npi;
-                }
-            }
-            if (sourceAddrNpi == null) {
-                sourceAddrNpi = NPI.RESERVED;
-            }
-            sourceAddr = bb.removeCString();
-            if (sourceAddr.length() > MAX_ADDRESS_LENGTH) {
-                throw new PDUException("sourceAddr field is too long");
-            }
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
+        }
+        if (sourceAddrNpi == null) {
+            sourceAddrNpi = NPI.RESERVED;
+        }
+        sourceAddr = bb.removeCString();
+        if (sourceAddr.length() > MAX_ADDRESS_LENGTH) {
+            throw new PDUException("sourceAddr field is too long");
         }
     }
 

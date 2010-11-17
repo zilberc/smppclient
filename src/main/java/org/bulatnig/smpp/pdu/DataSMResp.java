@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.pdu.tlv.*;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 import java.util.List;
 
@@ -96,11 +95,7 @@ public class DataSMResp extends PDU {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
             messageId = bb.removeCString();
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
-        }
         if (messageId.length() > MAX_MESSAGEID_LENGTH) {
             throw new PDUException("messageId field is too long");
         }

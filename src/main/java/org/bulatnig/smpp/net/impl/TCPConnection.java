@@ -1,13 +1,11 @@
 package org.bulatnig.smpp.net.impl;
 
-import org.bulatnig.smpp.SmppException;
 import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.pdu.PDU;
 import org.bulatnig.smpp.pdu.PDUException;
 import org.bulatnig.smpp.pdu.PDUFactory;
 import org.bulatnig.smpp.pdu.PDUFactoryImpl;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,12 +167,7 @@ public final class TCPConnection implements Connection {
                 sbb = new SmppByteBuffer();
                 break;
             } else if (pduLength <= sbb.length()) {
-                try {
-                    buffer = sbb.removeBytes((int) pduLength).array();
-                } catch (SmppException e) {
-                    sbb = new SmppByteBuffer();
-                    throw new IOException("FATAL ERROR while removing bytes from buffer", e);
-                }
+                buffer = sbb.removeBytes((int) pduLength).array();
                 try {
                     pdu = factory.parsePDU(buffer);
                     logger.info(">>> {}", new SmppByteBuffer(pdu.getBytes()).getHexDump());

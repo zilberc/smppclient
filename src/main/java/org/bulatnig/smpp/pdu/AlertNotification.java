@@ -5,7 +5,6 @@ import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.pdu.tlv.TLV;
 import org.bulatnig.smpp.pdu.tlv.TLVException;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 import java.util.List;
 
@@ -84,53 +83,49 @@ public class AlertNotification extends PDU {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            int b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    sourceAddrTon = ton;
-                }
+        int b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                sourceAddrTon = ton;
             }
-            if (sourceAddrTon == null) {
-                sourceAddrTon = TON.RESERVED;
+        }
+        if (sourceAddrTon == null) {
+            sourceAddrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                sourceAddrNpi = npi;
             }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    sourceAddrNpi = npi;
-                }
+        }
+        if (sourceAddrNpi == null) {
+            sourceAddrNpi = NPI.RESERVED;
+        }
+        sourceAddr = bb.removeCString();
+        if (sourceAddr.length() > MAX_ADDRESS_LENGTH) {
+            throw new PDUException("sourceAddr field is too long");
+        }
+        b = bb.removeByte();
+        for (TON ton : TON.values()) {
+            if (ton.getValue() == b) {
+                esmeAddrTon = ton;
             }
-            if (sourceAddrNpi == null) {
-                sourceAddrNpi = NPI.RESERVED;
+        }
+        if (esmeAddrTon == null) {
+            esmeAddrTon = TON.RESERVED;
+        }
+        b = bb.removeByte();
+        for (NPI npi : NPI.values()) {
+            if (npi.getValue() == b) {
+                esmeAddrNpi = npi;
             }
-            sourceAddr = bb.removeCString();
-            if (sourceAddr.length() > MAX_ADDRESS_LENGTH) {
-                throw new PDUException("sourceAddr field is too long");
-            }
-            b = bb.removeByte();
-            for (TON ton : TON.values()) {
-                if (ton.getValue() == b) {
-                    esmeAddrTon = ton;
-                }
-            }
-            if (esmeAddrTon == null) {
-                esmeAddrTon = TON.RESERVED;
-            }
-            b = bb.removeByte();
-            for (NPI npi : NPI.values()) {
-                if (npi.getValue() == b) {
-                    esmeAddrNpi = npi;
-                }
-            }
-            if (esmeAddrNpi == null) {
-                esmeAddrNpi = NPI.RESERVED;
-            }
-            esmeAddr = bb.removeCString();
-            if (esmeAddr.length() > MAX_ADDRESS_LENGTH) {
-                throw new PDUException("esmeAddr field is too long");
-            }
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
+        }
+        if (esmeAddrNpi == null) {
+            esmeAddrNpi = NPI.RESERVED;
+        }
+        esmeAddr = bb.removeCString();
+        if (esmeAddr.length() > MAX_ADDRESS_LENGTH) {
+            throw new PDUException("esmeAddr field is too long");
         }
         if (bb.length() > 0) {
             List<TLV> list = getOptionalParams(bb.array());

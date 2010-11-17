@@ -52,11 +52,7 @@ public class AdditionalStatusInfoText extends TLV {
             throw new ClassCastException();
         }
         if (bytes.length <= MAX_LENGTH) {
-            try {
-                value = new SmppByteBuffer(bytes).removeCString();
-            } catch (WrongLengthException e) {
-                throw new TLVException("Buffer error during parsing value", e);
-            }
+            value = new SmppByteBuffer(bytes).removeCString();
         } else {
             throw new TLVException("Value has wrong length: " + bytes.length + " but expected more than 0 and no more than " + MAX_LENGTH);
         }

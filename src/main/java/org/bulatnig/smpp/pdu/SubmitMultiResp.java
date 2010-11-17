@@ -1,8 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
-import org.bulatnig.smpp.util.WrongParameterException;
 
 import java.util.List;
 
@@ -83,21 +81,15 @@ public class SubmitMultiResp extends PDU {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            messageId = bb.removeCString();
-            if (messageId.length() > MAX_MESSAGEID_LENGTH) {
-                throw new PDUException("messageId field is too long");
-            }
-            noUnsuccess = bb.removeByte();
-            for (int i = 0; i < noUnsuccess; i++) {
-                UnsuccessSme sme = new UnsuccessSme(bb.array());
-                bb.removeBytes(sme.getBytes().length);
-                unsuccessSmes.add(sme);
-            }
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
-        } catch (WrongParameterException e) {
-            throw new PDUException("UsuccessSme parsing error", e);
+        messageId = bb.removeCString();
+        if (messageId.length() > MAX_MESSAGEID_LENGTH) {
+            throw new PDUException("messageId field is too long");
+        }
+        noUnsuccess = bb.removeByte();
+        for (int i = 0; i < noUnsuccess; i++) {
+            UnsuccessSme sme = new UnsuccessSme(bb.array());
+            bb.removeBytes(sme.getBytes().length);
+            unsuccessSmes.add(sme);
         }
     }
 

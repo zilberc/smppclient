@@ -1,7 +1,6 @@
 package org.bulatnig.smpp.pdu;
 
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.WrongLengthException;
 
 /**
  * QuerySM Response PDU.
@@ -65,28 +64,24 @@ public class QuerySMResp extends PDU {
             throw new ClassCastException();
         }
         SmppByteBuffer bb = new SmppByteBuffer(bytes);
-        try {
-            messageId = bb.removeCString();
-            if (messageId.length() > MAX_MESSAGEID_LENGTH) {
-                throw new PDUException("messageId field is too long");
-            }
-            finalDate = bb.removeCString();
-            if (finalDate.length() > 0 && finalDate.length() != FINALDATE_LENGTH) {
-                throw new PDUException("finalDate field is invalid");
-            }
-            int b = bb.removeByte();
-            for (MessageState ms : MessageState.values()) {
-                if (ms.getValue() == b) {
-                    messageState = ms;
-                }
-            }
-            if (messageState == null) {
-                throw new PDUException("Wrong message state value: " + b);
-            }
-            errorCode = bb.removeByte();
-        } catch (WrongLengthException e) {
-            throw new PDUException("PDU parsing error", e);
+        messageId = bb.removeCString();
+        if (messageId.length() > MAX_MESSAGEID_LENGTH) {
+            throw new PDUException("messageId field is too long");
         }
+        finalDate = bb.removeCString();
+        if (finalDate.length() > 0 && finalDate.length() != FINALDATE_LENGTH) {
+            throw new PDUException("finalDate field is invalid");
+        }
+        int b = bb.removeByte();
+        for (MessageState ms : MessageState.values()) {
+            if (ms.getValue() == b) {
+                messageState = ms;
+            }
+        }
+        if (messageState == null) {
+            throw new PDUException("Wrong message state value: " + b);
+        }
+        errorCode = bb.removeByte();
     }
 
     /**

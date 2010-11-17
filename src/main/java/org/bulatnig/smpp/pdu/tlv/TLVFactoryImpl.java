@@ -2,7 +2,6 @@ package org.bulatnig.smpp.pdu.tlv;
 
 import org.bulatnig.smpp.pdu.EsmClass;
 import org.bulatnig.smpp.util.SmppByteBuffer;
-import org.bulatnig.smpp.util.SmppByteBufferException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,23 +177,19 @@ public enum TLVFactoryImpl implements TLVFactory {
         SmppByteBuffer params = new SmppByteBuffer(bytes);
         SmppByteBuffer buffer;
         int length;
-        try {
-            while (params.length() >= 4) {
-                buffer = new SmppByteBuffer();
-                buffer.appendShort(params.removeShort());
-                length = params.removeShort();
-                buffer.appendShort(length);
-                if (length > 0) {
-                    buffer.appendBytes(params.removeBytes(length).array());
-                }
-                try {
-                    list.add(parseTLV(buffer.array(), esmClass, dataCoding));
-                } catch (TLVNotFoundException e) {
-                    // omit it
-                }
+        while (params.length() >= 4) {
+            buffer = new SmppByteBuffer();
+            buffer.appendShort(params.removeShort());
+            length = params.removeShort();
+            buffer.appendShort(length);
+            if (length > 0) {
+                buffer.appendBytes(params.removeBytes(length).array());
             }
-        } catch (SmppByteBufferException e) {
-            throw new TLVException("SmppByteBuffer error during tlv parsing", e);
+            try {
+                list.add(parseTLV(buffer.array(), esmClass, dataCoding));
+            } catch (TLVNotFoundException e) {
+                // omit it
+            }
         }
         // TODO refactor this method
         if (params.length() > 0)
