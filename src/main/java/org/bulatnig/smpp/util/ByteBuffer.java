@@ -258,9 +258,10 @@ public class ByteBuffer {
     public String removeCString() throws TerminatingNullNotFoundException {
         int zeroPos = -1;
         for (int i = 0; i < buffer.length; i++) {
-            if (buffer[i] == 0)
+            if (buffer[i] == 0) {
                 zeroPos = i;
-
+                break;
+            }
         }
         if (zeroPos > -1) { // found terminating ZERO
             String result = null;

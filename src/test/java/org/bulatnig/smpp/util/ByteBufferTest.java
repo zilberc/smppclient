@@ -261,6 +261,29 @@ public class ByteBufferTest {
     }
 
     @Test
+    public void cstringCheckTerminatingNullFind() throws TerminatingNullNotFoundException {
+        final String s = "smpp";
+        final int b = 0;
+        ByteBuffer bb = new ByteBuffer();
+
+        bb.appendCString(s);
+        bb.appendByte(b);
+
+        assertEquals(s.length() + 1 + 1, bb.length());
+        assertArrayEquals(new byte[]{(byte) 115, (byte) 109, (byte) 112, (byte) 112, 0, 0}, bb.array());
+        assertEquals("736d70700000", bb.hexDump());
+
+        String removed = bb.removeCString();
+        int removedB = bb.removeByte();
+
+        assertEquals(s, removed);
+        assertEquals(b, removedB);
+        assertEquals(0, bb.length());
+        assertArrayEquals(new byte[0], bb.array());
+        assertEquals("", bb.hexDump());
+    }
+
+    @Test
     public void smppString() {
         final String s = "smpp";
         ByteBuffer bb = new ByteBuffer();
