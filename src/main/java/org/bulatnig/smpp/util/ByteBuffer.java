@@ -11,26 +11,7 @@ import java.io.UnsupportedEncodingException;
  *
  * @author Bulat Nigmatullin
  */
-public class SmppByteBuffer {
-
-    /**
-     * PDU byte max size.
-     */
-    public static final int BYTE_MAX_VAL = 256;
-    /**
-     * PDU short max size.
-     */
-    public static final int SHORT_MAX_VAL = 65536;
-    /**
-     * PDU Integer max size.
-     */
-    public static final long INT_MAX_VAL = 4294967296L;
-
-
-    /**
-     * C-Octet String encoding and default Octet String encoding.
-     */
-    private static final String ASCII = "US-ASCII";
+public class ByteBuffer {
 
     /**
      * Empty byte array.
@@ -42,6 +23,7 @@ public class SmppByteBuffer {
      */
     private static final byte[] ZERO = new byte[]{0};
 
+
     /**
      * Byte buffer.
      */
@@ -50,7 +32,7 @@ public class SmppByteBuffer {
     /**
      * Create empty buffer.
      */
-    public SmppByteBuffer() {
+    public ByteBuffer() {
         buffer = EMPTY;
     }
 
@@ -59,7 +41,7 @@ public class SmppByteBuffer {
      *
      * @param b byte array
      */
-    public SmppByteBuffer(final byte[] b) {
+    public ByteBuffer(byte[] b) {
         buffer = b;
     }
 
@@ -85,12 +67,14 @@ public class SmppByteBuffer {
      * Добавляет байты в массив.
      *
      * @param bytes byte array
+     * @return this buffer
      */
-    public void appendBytes(final byte[] bytes) {
+    public ByteBuffer appendBytes(byte[] bytes) {
         byte[] newBuffer = new byte[buffer.length + bytes.length];
         System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
         System.arraycopy(bytes, 0, newBuffer, buffer.length, bytes.length);
         buffer = newBuffer;
+        return this;
     }
 
     /**
@@ -101,8 +85,8 @@ public class SmppByteBuffer {
      * @return this buffer
      * @throws IllegalArgumentException задан неверный параметр
      */
-    public SmppByteBuffer appendByte(final int value) throws IllegalArgumentException {
-        if (value >= 0 && value < BYTE_MAX_VAL)
+    public ByteBuffer appendByte(int value) throws IllegalArgumentException {
+        if (value >= 0 && value < 256)
             appendBytes(new byte[]{(byte) value});
         else
             throw new IllegalArgumentException("Byte value should be between 0 and 255.");
@@ -117,8 +101,8 @@ public class SmppByteBuffer {
      * @return this buffer
      * @throws IllegalArgumentException задан неверный параметр
      */
-    public SmppByteBuffer appendShort(final int value) throws IllegalArgumentException {
-        if (value >= 0 && value < SHORT_MAX_VAL)
+    public ByteBuffer appendShort(int value) throws IllegalArgumentException {
+        if (value >= 0 && value < 65536)
             appendBytes(new byte[]{(byte) (value >>> 8), (byte) value});
         else
             throw new IllegalArgumentException("Short value should be between 0 and 65535.");
@@ -133,8 +117,8 @@ public class SmppByteBuffer {
      * @return this buffer
      * @throws IllegalArgumentException задан неверный параметр
      */
-    public SmppByteBuffer appendInt(final long value) throws IllegalArgumentException {
-        if (value >= 0 && value < INT_MAX_VAL)
+    public ByteBuffer appendInt(long value) throws IllegalArgumentException {
+        if (value >= 0 && value < 4294967296L)
             appendBytes(new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value});
         else
             throw new IllegalArgumentException("Short value should be between 0 and 4294967295.");
@@ -147,10 +131,10 @@ public class SmppByteBuffer {
      * @param cstring строка типа C-Octet (по протоколу SMPP), may be null
      * @return this buffer
      */
-    public SmppByteBuffer appendCString(final String cstring) {
+    public ByteBuffer appendCString(String cstring) {
         if (cstring != null && cstring.length() > 0) {
             try {
-                byte[] stringBuf = cstring.getBytes(ASCII);
+                byte[] stringBuf = cstring.getBytes("ASCII");
                 appendBytes(stringBuf);
             } catch (UnsupportedEncodingException neverHappen) {
                 // omit it
@@ -161,13 +145,13 @@ public class SmppByteBuffer {
     }
 
     /**
-     * Append string using US-ASCII charset.
+     * Append string using ASCII charset.
      *
      * @param string string value, may be null
      * @return this buffer
      */
-    public SmppByteBuffer appendString(final String string) {
-        return appendString(string, ASCII);
+    public ByteBuffer appendString(String string) {
+        return appendString(string, "ASCII");
     }
 
     /**
@@ -180,7 +164,7 @@ public class SmppByteBuffer {
      * @param charsetName encoding character set name
      * @return this buffer
      */
-    public SmppByteBuffer appendString(final String string, final String charsetName) {
+    public ByteBuffer appendString(String string, String charsetName) {
         if (string != null && string.length() > 0) {
             try {
                 byte[] stringBuf = string.getBytes(charsetName);
@@ -267,8 +251,9 @@ public class SmppByteBuffer {
     /**
      * Удаляет строку C-Octet String из массива и возращает строку.
      *
-     * @return строка
-     * @throws TerminatingNullNotFoundException null character not found in the buffer
+     * @return C-Octet String, may be null
+     * @throws TerminatingNullNotFoundException
+     *          null character not found in the buffer
      */
     public String removeCString() throws TerminatingNullNotFoundException {
         int zeroPos = -1;
@@ -278,42 +263,61 @@ public class SmppByteBuffer {
 
         }
         if (zeroPos > -1) { // found terminating ZERO
-            String result;
-            try {
-                result = new String(buffer, 0, zeroPos, ASCII);
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("US-ASCII encoding not supported.");
+            String result = null;
+            if (zeroPos > 0) {
+                try {
+                    result = new String(buffer, 0, zeroPos, "ASCII");
+                } catch (UnsupportedEncodingException neverHappen) {
+                    // omit it
+                }
             }
             removeBytes0(zeroPos + 1);
             return result;
         } else {
-            throw new IllegalArgumentException("C-String terminating zero not found.");
+            throw new TerminatingNullNotFoundException();
         }
     }
 
-    public String removeString(final int size) {
-        return removeString(size, ASCII);
+    /**
+     * Remove Octet String from buffer and return it in ASCII encoding..
+     *
+     * @param length  string length
+     * @return  removed string
+     */
+    public String removeString(int length) {
+        return removeString(length, "ASCII");
     }
 
-    public String removeString(final int size, final String charsetName) {
+    /**
+     * Remove Octet string from buffer and return it in charsetName encoding.
+     *
+     * Note: Even if string length is 0, zero-length String object created and returned.
+     * This behavior is differ from C-Octet String cause user know Octet String length
+     * and may not call this method if String length is 0 and he need null.
+     *
+     * @param length    string length
+     * @param charsetName   string charset name
+     * @return  removed string
+     */
+    public String removeString(int length, String charsetName) {
         String result;
         try {
-            result = new String(buffer, 0, size, charsetName);
+            result = new String(buffer, 0, length, charsetName);
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("US-ASCII encoding not supported.");
+            throw new IllegalArgumentException("Unsupported charset name: " + charsetName, e);
         }
-        removeBytes0(size);
+        removeBytes0(length);
         return result;
     }
 
     /**
-     * Removes bytes from buffer and returns them.
+     * Remove bytes from buffer and return them.
      *
      * @param count count of bytes to remove
      * @return removed bytes
      */
-    public SmppByteBuffer removeBytes(final int count) {
-        SmppByteBuffer result = readBytes(count);
+    public byte[] removeBytes(int count) {
+        byte[] result = readBytes(count);
         removeBytes0(count);
         return result;
     }
@@ -323,7 +327,7 @@ public class SmppByteBuffer {
      *
      * @return содержимое массива
      */
-    public String getHexDump() {
+    public String hexDump() {
         StringBuilder builder = new StringBuilder();
         for (byte b : buffer) {
             builder.append(Character.forDigit((b >> 4) & 0x0f, 16));
@@ -337,7 +341,7 @@ public class SmppByteBuffer {
      *
      * @param count removed bytes
      */
-    private void removeBytes0(final int count) {
+    private void removeBytes0(int count) {
         int lefts = buffer.length - count;
         if (lefts > 0) {
             byte[] newBuf = new byte[lefts];
@@ -354,9 +358,9 @@ public class SmppByteBuffer {
      * @param count count of bytes to read
      * @return readed bytes
      */
-    private SmppByteBuffer readBytes(final int count) {
+    private byte[] readBytes(int count) {
         byte[] resBuf = new byte[count];
         System.arraycopy(buffer, 0, resBuf, 0, count);
-        return new SmppByteBuffer(resBuf);
+        return resBuf;
     }
 }
