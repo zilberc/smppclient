@@ -48,7 +48,7 @@ public class AlertNotification extends Pdu {
 //    private MsAvailabilityStatus msAvailabilityStatus;
 
     protected AlertNotification() {
-        super(0x00000102L);
+        super(CommandId.ALERT_NOTIFICATION);
     }
 
     protected AlertNotification(ByteBuffer bb) throws PduException {

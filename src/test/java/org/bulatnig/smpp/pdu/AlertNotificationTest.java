@@ -18,7 +18,7 @@ public class AlertNotificationTest {
         ByteBuffer sbb = new ByteBuffer();
 //        sbb.appendInt(49L);
         sbb.appendInt(44L);
-        sbb.appendInt(258L);
+        sbb.appendInt(CommandId.ALERT_NOTIFICATION);
         sbb.appendInt(0);
         sbb.appendInt(1000123456L);
         sbb.appendByte((short) 0);
@@ -31,7 +31,7 @@ public class AlertNotificationTest {
 //        sbb.appendShort(1);
 //        sbb.appendByte((short) 2);
         AlertNotification an = new AlertNotification(sbb);
-        assertEquals(258L, an.getCommandId());
+        assertEquals(CommandId.ALERT_NOTIFICATION, an.getCommandId());
         assertEquals(0, an.getCommandStatus());
         assertEquals(1000123456L, an.getSequenceNumber());
         assertEquals(0, an.getSourceAddrTon());

@@ -18,12 +18,23 @@ public abstract class Pdu {
     private long commandStatus;
     private long sequenceNumber;
 
+    /**
+     * Construct new PDU.
+     *
+     * @param commandId    PDU command identificator
+     */
     protected Pdu(long commandId) {
         this.commandId = commandId;
         this.commandStatus = 0;
         this.sequenceNumber = 0;
     }
 
+    /**
+     * Parse PDU from bytes.
+     *
+     * @param bb    pdu bytes
+     * @throws PduException parsing failed.
+     */
     protected Pdu(ByteBuffer bb) throws PduException {
         long length = bb.readInt();
         if (length != bb.length())
@@ -34,8 +45,20 @@ public abstract class Pdu {
         sequenceNumber = bb.removeInt();
     }
 
+    /**
+     * Calculate and return PDU body bytes.
+     *
+     * @return  body bytes
+     * @throws PduException wrong pdu body
+     */
     protected abstract ByteBuffer body() throws PduException;
 
+    /**
+     * Calculate and return PDU bytes.
+     *
+     * @return  pdu bytes
+     * @throws PduException pdu contains wrong values
+     */
     public ByteBuffer buffer() throws PduException {
         ByteBuffer body = body();
         long length = HEADER_LENGTH + body.length();
