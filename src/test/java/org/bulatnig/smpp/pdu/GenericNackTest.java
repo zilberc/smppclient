@@ -14,7 +14,7 @@ public class GenericNackTest {
 
 
     @Test
-    public void bytesToObject() throws PduException {
+    public void bytesToObject() throws PduParsingException {
         ByteBuffer sbb = new ByteBuffer();
         sbb.appendInt(16L);
         sbb.appendInt(2147483648L);
@@ -27,7 +27,7 @@ public class GenericNackTest {
     }
 
     @Test
-    public void objectToBytes() throws PduException {
+    public void objectToBytes() throws PduParsingException {
         GenericNack gn = new GenericNack();
         gn.setCommandStatus(CommandStatus.ESME_RSUBMITFAIL);
         gn.setSequenceNumber(0);

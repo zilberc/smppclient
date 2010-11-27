@@ -33,12 +33,12 @@ public abstract class Pdu {
      * Parse PDU from bytes.
      *
      * @param bb    pdu bytes
-     * @throws PduException parsing failed.
+     * @throws PduParsingException parsing failed.
      */
-    protected Pdu(ByteBuffer bb) throws PduException {
+    protected Pdu(ByteBuffer bb) throws PduParsingException {
         long length = bb.readInt();
         if (length != bb.length())
-            throw new PduException("PDU length expected " + length + " but has " + bb.length() + ".");
+            throw new PduParsingException("PDU length expected " + length + " but has " + bb.length() + ".");
         bb.removeInt();
         commandId = bb.removeInt();
         commandStatus = bb.removeInt();
@@ -49,17 +49,17 @@ public abstract class Pdu {
      * Calculate and return PDU body bytes.
      *
      * @return  body bytes
-     * @throws PduException wrong pdu body
+     * @throws PduParsingException wrong pdu body
      */
-    protected abstract ByteBuffer body() throws PduException;
+    protected abstract ByteBuffer body() throws PduParsingException;
 
     /**
      * Calculate and return PDU bytes.
      *
      * @return  pdu bytes
-     * @throws PduException pdu contains wrong values
+     * @throws PduParsingException pdu contains wrong values
      */
-    public ByteBuffer buffer() throws PduException {
+    public ByteBuffer buffer() throws PduParsingException {
         ByteBuffer body = body();
         long length = HEADER_LENGTH + body.length();
         ByteBuffer bb = new ByteBuffer();

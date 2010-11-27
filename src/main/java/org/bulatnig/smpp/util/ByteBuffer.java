@@ -70,9 +70,20 @@ public class ByteBuffer {
      * @return this buffer
      */
     public ByteBuffer appendBytes(byte[] bytes) {
-        byte[] newBuffer = new byte[buffer.length + bytes.length];
+        return appendBytes(bytes, bytes.length);
+    }
+
+    /**
+     * Добавляет байты в массив.
+     *
+     * @param bytes byte array
+     * @param length bytes length to add
+     * @return this buffer
+     */
+    public ByteBuffer appendBytes(byte[] bytes, int length) {
+        byte[] newBuffer = new byte[buffer.length + length];
         System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
-        System.arraycopy(bytes, 0, newBuffer, buffer.length, bytes.length);
+        System.arraycopy(bytes, 0, newBuffer, buffer.length, length);
         buffer = newBuffer;
         return this;
     }
@@ -204,14 +215,24 @@ public class ByteBuffer {
      * @return int value
      */
     public long readInt() {
+        return readInt(0);
+    }
+
+    /**
+     * Read int value from buffer
+     *
+     * @param offset start reading from offset byte
+     * @return int value
+     */
+    public long readInt(int offset) {
         long result = 0;
-        result |= buffer[0] & 0xFF;
+        result |= buffer[offset] & 0xFF;
         result <<= 8;
-        result |= buffer[1] & 0xFF;
+        result |= buffer[offset + 1] & 0xFF;
         result <<= 8;
-        result |= buffer[2] & 0xFF;
+        result |= buffer[offset + 2] & 0xFF;
         result <<= 8;
-        result |= buffer[3] & 0xFF;
+        result |= buffer[offset + 3] & 0xFF;
         return result;
     }
 

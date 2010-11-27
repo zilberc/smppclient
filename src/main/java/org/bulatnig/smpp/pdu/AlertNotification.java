@@ -47,30 +47,30 @@ public class AlertNotification extends Pdu {
      */
 //    private MsAvailabilityStatus msAvailabilityStatus;
 
-    protected AlertNotification() {
+    public AlertNotification() {
         super(CommandId.ALERT_NOTIFICATION);
     }
 
-    protected AlertNotification(ByteBuffer bb) throws PduException {
+    public AlertNotification(ByteBuffer bb) throws PduParsingException {
         super(bb);
         sourceAddrTon = bb.removeByte();
         sourceAddrNpi = bb.removeByte();
         try {
             sourceAddr = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduException("Source address parsing failed", e);
+            throw new PduParsingException("Source address parsing failed", e);
         }
         esmeAddrTon = bb.removeByte();
         esmeAddrNpi = bb.removeByte();
         try {
             esmeAddr = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduException("Esme address parsing failed", e);
+            throw new PduParsingException("Esme address parsing failed", e);
         }
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() throws PduParsingException {
         ByteBuffer bb = new ByteBuffer();
         bb.appendByte(sourceAddrTon);
         bb.appendByte(sourceAddrNpi);

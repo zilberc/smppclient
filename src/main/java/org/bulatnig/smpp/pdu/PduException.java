@@ -3,11 +3,15 @@ package org.bulatnig.smpp.pdu;
 import org.bulatnig.smpp.SmppException;
 
 /**
- * PDU parsing exception.
+ * PDU related SMPP exception.
  *
  * @author Bulat Nigmatullin
  */
 public class PduException extends SmppException {
+
+    public PduException() {
+        super();
+    }
 
     public PduException(String message) {
         super(message);
@@ -15,5 +19,9 @@ public class PduException extends SmppException {
 
     public PduException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public PduException(Throwable cause) {
+        super(cause);
     }
 }

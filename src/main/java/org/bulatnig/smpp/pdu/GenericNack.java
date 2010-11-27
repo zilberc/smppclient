@@ -16,16 +16,16 @@ import org.bulatnig.smpp.util.ByteBuffer;
  */
 public class GenericNack extends Pdu {
 
-    protected GenericNack() {
+    public GenericNack() {
         super(CommandId.GENERIC_NACK);
     }
 
-    protected GenericNack(ByteBuffer bb) throws PduException {
+    public GenericNack(ByteBuffer bb) throws PduParsingException {
         super(bb);
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() throws PduParsingException {
         return new ByteBuffer();
     }
 }

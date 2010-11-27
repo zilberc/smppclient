@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class AlertNotificationTest {
 
     @Test
-    public void bytesToObject() throws TerminatingNullNotFoundException, PduException {
+    public void bytesToObject() throws TerminatingNullNotFoundException, PduParsingException {
         ByteBuffer sbb = new ByteBuffer();
 //        sbb.appendInt(49L);
         sbb.appendInt(44L);
@@ -44,7 +44,7 @@ public class AlertNotificationTest {
     }
 
     @Test
-    public void objectToBytes() throws PduException {
+    public void objectToBytes() throws PduParsingException {
         AlertNotification an = new AlertNotification();
         an.setCommandStatus(0);
         an.setSequenceNumber(115);
