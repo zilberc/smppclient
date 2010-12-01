@@ -1,6 +1,11 @@
-package org.bulatnig.smpp.pdu;
+package org.bulatnig.smpp.pdu.impl;
 
+import org.bulatnig.smpp.pdu.CommandId;
+import org.bulatnig.smpp.pdu.CommandStatus;
+import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.impl.GenericNack;
 import org.bulatnig.smpp.util.ByteBuffer;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -21,8 +26,8 @@ public class GenericNackTest {
         sbb.appendInt(88);
         sbb.appendInt(987654321L);
         GenericNack gn = new GenericNack(sbb);
-        assertEquals(CommandId.GENERIC_NACK, gn.getCommandId());
-        assertEquals(CommandStatus.ESME_RTHROTTLED, gn.getCommandStatus());
+        Assert.assertEquals(CommandId.GENERIC_NACK, gn.getCommandId());
+        Assert.assertEquals(CommandStatus.ESME_RTHROTTLED, gn.getCommandStatus());
         assertEquals(987654321L, gn.getSequenceNumber());
     }
 

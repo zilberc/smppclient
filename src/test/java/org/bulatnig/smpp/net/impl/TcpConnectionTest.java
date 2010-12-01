@@ -3,8 +3,8 @@ package org.bulatnig.smpp.net.impl;
 import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
-import org.bulatnig.smpp.pdu.GenericNack;
 import org.bulatnig.smpp.pdu.Pdu;
+import org.bulatnig.smpp.pdu.impl.GenericNack;
 import org.bulatnig.smpp.testutil.SmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.bulatnig.smpp.util.ByteBuffer;
@@ -179,6 +179,43 @@ public class TcpConnectionTest {
         assertEquals(commandStatus, read.getCommandStatus());
         assertEquals(sequenceNumber, read.getSequenceNumber());
         assertArrayEquals(pdu.buffer().array(), read.buffer().array());
+    }
+
+    @Test(timeout = 10000)
+    public void readTwoMessages() throws Exception {
+        final int port = UniquePortGenerator.generate();
+        final Pdu pdu1 = new GenericNack();
+        pdu1.setCommandStatus(998);
+        pdu1.setSequenceNumber(1234567890);
+        final Pdu pdu2 = new GenericNack();
+        pdu2.setCommandStatus(999);
+        pdu2.setSequenceNumber(1234567891);
+        Pdu read1;
+        Pdu read2;
+        SmscStub smsc = new SmscStub(port);
+        smsc.start();
+        try {
+            Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
+            conn.open();
+            conn.write(new GenericNack());
+            smsc.write(pdu1.buffer().array());
+            smsc.write(pdu2.buffer().array());
+            read1 = conn.read();
+            read2 = conn.read();
+            conn.close();
+        } finally {
+            smsc.stop();
+        }
+
+        assertEquals(pdu1.getCommandId(), read1.getCommandId());
+        assertEquals(998, read1.getCommandStatus());
+        assertEquals(1234567890, read1.getSequenceNumber());
+        assertArrayEquals(pdu1.buffer().array(), read1.buffer().array());
+
+        assertEquals(pdu2.getCommandId(), read2.getCommandId());
+        assertEquals(999, read2.getCommandStatus());
+        assertEquals(1234567891, read2.getSequenceNumber());
+        assertArrayEquals(pdu2.buffer().array(), read2.buffer().array());
     }
 
 }

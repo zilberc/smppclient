@@ -1,5 +1,7 @@
-package org.bulatnig.smpp.pdu;
+package org.bulatnig.smpp.pdu.impl;
 
+import org.bulatnig.smpp.pdu.CommandId;
+import org.bulatnig.smpp.pdu.PduParsingException;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 
@@ -10,7 +12,7 @@ import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
  *
  * @author Bulat Nigmatullin
  */
-public class AlertNotification extends Pdu {
+public class AlertNotification extends AbstractPdu {
 
     /**
      * Type of number for the MS which has become available. If not known, set

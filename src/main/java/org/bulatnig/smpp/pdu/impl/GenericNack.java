@@ -1,5 +1,7 @@
-package org.bulatnig.smpp.pdu;
+package org.bulatnig.smpp.pdu.impl;
 
+import org.bulatnig.smpp.pdu.CommandId;
+import org.bulatnig.smpp.pdu.PduParsingException;
 import org.bulatnig.smpp.util.ByteBuffer;
 
 /**
@@ -14,7 +16,7 @@ import org.bulatnig.smpp.util.ByteBuffer;
  *
  * @author Bulat Nigmatullin
  */
-public class GenericNack extends Pdu {
+public class GenericNack extends AbstractPdu {
 
     public GenericNack() {
         super(CommandId.GENERIC_NACK);

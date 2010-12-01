@@ -2,6 +2,7 @@ package org.bulatnig.smpp.net.impl;
 
 import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.pdu.*;
+import org.bulatnig.smpp.pdu.impl.DefaultPduParser;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,8 @@ import java.net.SocketAddress;
 
 /**
  * TCP/IP connection.
+ *
+ * Not thread safe.
  *
  * @author Bulat Nigmatullin
  */
@@ -59,14 +62,12 @@ public class TcpConnection implements Connection {
 
     @Override
     public Pdu read() throws PduParsingException, PduNotFoundException, IOException {
-        Pdu pdu = null;
-        int read;
-        do {
-            read = in.read(bytes);
+        Pdu pdu = tryToReadBuffer();
+        while (pdu == null) {
+            int read = in.read(bytes);
             bb.appendBytes(bytes, read);
-            if (bb.length() >= Pdu.HEADER_LENGTH && bb.length() >= bb.readInt())
-                pdu = parser.parse(bb);
-        } while (pdu == null);
+            pdu = tryToReadBuffer();
+        }
         return pdu;
     }
 
@@ -89,4 +90,14 @@ public class TcpConnection implements Connection {
         bytes = null;
         bb = null;
     }
+
+    private Pdu tryToReadBuffer() throws PduParsingException, PduNotFoundException {
+        if (bb.length() >= Pdu.HEADER_LENGTH) {
+            long commandLength = bb.readInt();
+            if (bb.length() >= commandLength)
+                return parser.parse(new ByteBuffer(bb.removeBytes((int) commandLength)));
+        }
+        return null;
+    }
+
 }

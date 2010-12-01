@@ -1,5 +1,8 @@
-package org.bulatnig.smpp.pdu;
+package org.bulatnig.smpp.pdu.impl;
 
+import org.bulatnig.smpp.pdu.CommandId;
+import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.impl.AlertNotification;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 import org.junit.Test;

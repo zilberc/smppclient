@@ -1,5 +1,6 @@
-package org.bulatnig.smpp.pdu;
+package org.bulatnig.smpp.pdu.impl;
 
+import org.bulatnig.smpp.pdu.*;
 import org.bulatnig.smpp.util.ByteBuffer;
 
 /**
