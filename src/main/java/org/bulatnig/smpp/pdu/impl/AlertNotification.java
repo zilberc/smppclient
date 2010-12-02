@@ -44,11 +44,6 @@ public class AlertNotification extends AbstractPdu {
      */
     private String esmeAddr;
 
-    /**
-     * The status of the mobile station.
-     */
-//    private MsAvailabilityStatus msAvailabilityStatus;
-
     public AlertNotification() {
         super(CommandId.ALERT_NOTIFICATION);
     }

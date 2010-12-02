@@ -33,4 +33,18 @@ public interface Tlv {
      * @throws TlvParsingException TLV contains wrong values
      */
     public ByteBuffer buffer() throws TlvParsingException;
+
+    /**
+     * Return TLV Parameter Tag.
+     *
+     * @return
+     */
+    public int getTag();
+
+    /**
+     * Return TLV value length.
+     *
+     * @return  value length
+     */
+    public int getLength();
 }
