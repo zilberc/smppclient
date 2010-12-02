@@ -3,9 +3,7 @@ package org.bulatnig.smpp.pdu.impl;
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.PduParsingException;
-import org.bulatnig.smpp.pdu.impl.GenericNack;
 import org.bulatnig.smpp.util.ByteBuffer;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +15,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class GenericNackTest {
 
-
     @Test
     public void bytesToObject() throws PduParsingException {
         ByteBuffer sbb = new ByteBuffer();
@@ -26,8 +23,9 @@ public class GenericNackTest {
         sbb.appendInt(88);
         sbb.appendInt(987654321L);
         GenericNack gn = new GenericNack(sbb);
-        Assert.assertEquals(CommandId.GENERIC_NACK, gn.getCommandId());
-        Assert.assertEquals(CommandStatus.ESME_RTHROTTLED, gn.getCommandStatus());
+
+        assertEquals(CommandId.GENERIC_NACK, gn.getCommandId());
+        assertEquals(CommandStatus.ESME_RTHROTTLED, gn.getCommandStatus());
         assertEquals(987654321L, gn.getSequenceNumber());
     }
 
@@ -36,6 +34,7 @@ public class GenericNackTest {
         GenericNack gn = new GenericNack();
         gn.setCommandStatus(CommandStatus.ESME_RSUBMITFAIL);
         gn.setSequenceNumber(0);
+
         assertEquals("00000010800000000000004500000000", gn.buffer().hexDump());
     }
 
