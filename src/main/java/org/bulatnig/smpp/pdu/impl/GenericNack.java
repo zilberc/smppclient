@@ -28,6 +28,6 @@ public class GenericNack extends AbstractPdu {
 
     @Override
     protected ByteBuffer body() throws PduParsingException {
-        return new ByteBuffer();
+        return null;
     }
 }

@@ -9,10 +9,19 @@ import java.util.concurrent.Future;
 
 /**
  * Session with SMSC.
+ * Supports connection by sending EnquireLink requests, session reuse (reconnect operations),
+ * limiting number of messages per second.
  *
  * @author Bulat Nigmatullin
  */
 public interface Session {
+
+    /**
+     * Set incoming messages from SMSC listener.
+     *
+     * @param sessionListener   listener
+     */
+    void setSessionListener(SessionListener sessionListener);
 
     /**
      * Open session. Establish TCP connection and send provided bind PDU.

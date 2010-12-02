@@ -68,13 +68,14 @@ public class TcpConnection implements Connection {
             bb.appendBytes(bytes, read);
             pdu = tryToReadBuffer();
         }
+        logger.debug("<<< {}", pdu.buffer().hexDump());
         return pdu;
     }
 
     @Override
     public void write(Pdu pdu) throws PduParsingException, IOException {
         out.write(pdu.buffer().array());
-        logger.info("<<< {}", pdu.buffer().hexDump());
+        logger.debug(">>> {}", pdu.buffer().hexDump());
     }
 
     @Override

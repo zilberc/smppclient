@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * AlertNotification test.
+ * TODO fix
  *
  * @author Bulat Nigmatullin
  */
