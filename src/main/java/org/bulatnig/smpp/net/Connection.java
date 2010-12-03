@@ -1,9 +1,8 @@
 package org.bulatnig.smpp.net;
 
 import org.bulatnig.smpp.pdu.Pdu;
-import org.bulatnig.smpp.pdu.PduNotFoundException;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.pdu.PduParser;
-import org.bulatnig.smpp.pdu.PduParsingException;
 
 import java.io.IOException;
 
@@ -48,21 +47,20 @@ public interface Connection {
      * Read PDU from input. Blocks until PDU received or exception throwed.
      *
      * @return PDU
-     * @throws PduParsingException  parsing error
-     * @throws PduNotFoundException unknown pdu read
-     * @throws IOException          I/O error
+     * @throws PduException parsing error
+     * @throws IOException  I/O error
      */
-    Pdu read() throws PduParsingException, PduNotFoundException, IOException;
+    Pdu read() throws PduException, IOException;
 
     /**
      * Write PDU to output.
      *
      * @param pdu PDU for sending
-     * @throws org.bulatnig.smpp.pdu.PduParsingException
+     * @throws org.bulatnig.smpp.pdu.PduException
      *                     PDU to bytes converting error
      * @throws IOException I/O error
      */
-    void write(Pdu pdu) throws PduParsingException, IOException;
+    void write(Pdu pdu) throws PduException, IOException;
 
     /**
      * Close connection.

@@ -2,7 +2,7 @@ package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
-import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class GenericNackTest {
 
     @Test
-    public void bytesToObject() throws PduParsingException {
+    public void bytesToObject() throws PduException {
         ByteBuffer sbb = new ByteBuffer();
         sbb.appendInt(16L);
         sbb.appendInt(2147483648L);
@@ -30,7 +30,7 @@ public class GenericNackTest {
     }
 
     @Test
-    public void objectToBytes() throws PduParsingException {
+    public void objectToBytes() throws PduException {
         GenericNack gn = new GenericNack();
         gn.setCommandStatus(CommandStatus.ESME_RSUBMITFAIL);
         gn.setSequenceNumber(0);

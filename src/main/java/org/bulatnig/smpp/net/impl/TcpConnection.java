@@ -61,7 +61,7 @@ public class TcpConnection implements Connection {
     }
 
     @Override
-    public Pdu read() throws PduParsingException, PduNotFoundException, IOException {
+    public Pdu read() throws PduException, IOException {
         Pdu pdu = tryToReadBuffer();
         while (pdu == null) {
             int read = in.read(bytes);
@@ -73,7 +73,7 @@ public class TcpConnection implements Connection {
     }
 
     @Override
-    public void write(Pdu pdu) throws PduParsingException, IOException {
+    public void write(Pdu pdu) throws PduException, IOException {
         out.write(pdu.buffer().array());
         logger.debug(">>> {}", pdu.buffer().hexDump());
     }
@@ -92,7 +92,7 @@ public class TcpConnection implements Connection {
         bb = null;
     }
 
-    private Pdu tryToReadBuffer() throws PduParsingException, PduNotFoundException {
+    private Pdu tryToReadBuffer() throws PduException {
         if (bb.length() >= Pdu.HEADER_LENGTH) {
             long commandLength = bb.readInt();
             if (bb.length() >= commandLength)

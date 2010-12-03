@@ -1,8 +1,7 @@
 package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.CommandId;
-import org.bulatnig.smpp.pdu.PduParsingException;
-import org.bulatnig.smpp.pdu.impl.AlertNotification;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 import org.junit.Test;
@@ -18,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class AlertNotificationTest {
 
     @Test
-    public void bytesToObject() throws TerminatingNullNotFoundException, PduParsingException {
+    public void bytesToObject() throws TerminatingNullNotFoundException, PduException {
         ByteBuffer sbb = new ByteBuffer();
 //        sbb.appendInt(49L);
         sbb.appendInt(44L);
@@ -48,7 +47,7 @@ public class AlertNotificationTest {
     }
 
     @Test
-    public void objectToBytes() throws PduParsingException {
+    public void objectToBytes() throws PduException {
         AlertNotification an = new AlertNotification();
         an.setCommandStatus(0);
         an.setSequenceNumber(115);

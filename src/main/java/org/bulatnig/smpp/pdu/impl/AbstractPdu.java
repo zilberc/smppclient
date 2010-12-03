@@ -1,9 +1,9 @@
 package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.Pdu;
-import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.pdu.tlv.Tlv;
-import org.bulatnig.smpp.pdu.tlv.TlvParsingException;
+import org.bulatnig.smpp.pdu.tlv.TlvException;
 import org.bulatnig.smpp.util.ByteBuffer;
 
 import java.util.Map;
@@ -37,14 +37,10 @@ public abstract class AbstractPdu implements Pdu {
      * Parse PDU from bytes.
      *
      * @param bb pdu bytes
-     * @throws org.bulatnig.smpp.pdu.PduParsingException
-     *          parsing failed.
+     * @throws PduException parsing failed
      */
-    protected AbstractPdu(ByteBuffer bb) throws PduParsingException {
-        long length = bb.readInt();
-        if (length != bb.length())
-            throw new PduParsingException("PDU length expected " + length + " but has " + bb.length() + ".");
-        bb.removeInt();
+    protected AbstractPdu(ByteBuffer bb) throws PduException {
+        bb.removeInt(); // PDU length value not need
         commandId = bb.removeInt();
         commandStatus = bb.removeInt();
         sequenceNumber = bb.removeInt();
@@ -54,18 +50,18 @@ public abstract class AbstractPdu implements Pdu {
      * Calculate and return PDU body bytes.
      *
      * @return body bytes, can be null
-     * @throws PduParsingException wrong pdu body
+     * @throws PduException wrong pdu body
      */
-    protected abstract ByteBuffer body() throws PduParsingException;
+    protected abstract ByteBuffer body() throws PduException;
 
     /**
      * Calculate and return PDU bytes.
      *
      * @return pdu bytes
-     * @throws PduParsingException pdu contains wrong values
+     * @throws PduException pdu contains wrong values
      */
     @Override
-    public ByteBuffer buffer() throws PduParsingException {
+    public ByteBuffer buffer() throws PduException {
         long length = HEADER_LENGTH;
         ByteBuffer body = body();
         if (body != null)
@@ -85,14 +81,14 @@ public abstract class AbstractPdu implements Pdu {
         return bb;
     }
 
-    private ByteBuffer tlv() throws PduParsingException {
+    private ByteBuffer tlv() throws PduException {
         if (tlvs != null) {
             ByteBuffer result = new ByteBuffer();
             for (Tlv tlv : tlvs.values()) {
                 try {
                     result.appendBytes(tlv.buffer().array());
-                } catch (TlvParsingException e) {
-                    throw new PduParsingException("Tlv to bytes parsing error.", e);
+                } catch (TlvException e) {
+                    throw new PduException("Tlv to bytes parsing error.", e);
                 }
             }
             return result;

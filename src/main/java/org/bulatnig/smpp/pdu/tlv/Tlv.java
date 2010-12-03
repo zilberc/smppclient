@@ -30,14 +30,17 @@ public interface Tlv {
      * Calculate and return TLV bytes.
      *
      * @return  tlv bytes
-     * @throws TlvParsingException TLV contains wrong values
+     * @throws TlvException TLV contains wrong values
      */
-    public ByteBuffer buffer() throws TlvParsingException;
+    public ByteBuffer buffer() throws TlvException;
 
     /**
-     * Return TLV Parameter Tag.
+     * The Tag field is used to uniquely identify the particular optional
+     * parameter in question.<br>
+     * <p/>
+     * The optional parameter Tag field is always 2 octets in length.
      *
-     * @return
+     * @return tag id
      */
     public int getTag();
 
@@ -47,4 +50,18 @@ public interface Tlv {
      * @return  value length
      */
     public int getLength();
+
+    /**
+     * Return TLV value bytes.
+     *
+     * @return  value bytes
+     */
+    public ByteBuffer getValue();
+
+    /**
+     * Set TLV value in bytes.
+     *
+     * @param valueBytes value bytes
+     */
+    public void setValue(ByteBuffer valueBytes);
 }

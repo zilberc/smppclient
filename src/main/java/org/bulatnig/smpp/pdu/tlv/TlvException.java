@@ -3,7 +3,7 @@ package org.bulatnig.smpp.pdu.tlv;
 import org.bulatnig.smpp.SmppException;
 
 /**
- * TODO comment
+ * TLV parsing failed.
  *
  * @author Bulat Nigmatullin
  */

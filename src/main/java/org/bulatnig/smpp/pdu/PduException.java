@@ -3,7 +3,7 @@ package org.bulatnig.smpp.pdu;
 import org.bulatnig.smpp.SmppException;
 
 /**
- * PDU related SMPP exception.
+ * PDU parsing failed.
  *
  * @author Bulat Nigmatullin
  */

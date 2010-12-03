@@ -1,7 +1,7 @@
 package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.CommandId;
-import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.util.ByteBuffer;
 
 /**
@@ -22,12 +22,12 @@ public class GenericNack extends AbstractPdu {
         super(CommandId.GENERIC_NACK);
     }
 
-    public GenericNack(ByteBuffer bb) throws PduParsingException {
+    public GenericNack(ByteBuffer bb) throws PduException {
         super(bb);
     }
 
     @Override
-    protected ByteBuffer body() throws PduParsingException {
+    protected ByteBuffer body() throws PduException {
         return null;
     }
 }

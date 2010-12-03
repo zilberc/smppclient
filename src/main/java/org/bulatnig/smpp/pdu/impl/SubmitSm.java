@@ -1,7 +1,7 @@
 package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.CommandId;
-import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 
@@ -112,26 +112,26 @@ public class SubmitSm extends AbstractPdu {
         super(CommandId.SUBMIT_SM);
     }
 
-    public SubmitSm(ByteBuffer bb) throws PduParsingException {
+    public SubmitSm(ByteBuffer bb) throws PduException {
         super(bb);
         try {
             serviceType = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Service type parsing failed.", e);
+            throw new PduException("Service type parsing failed.", e);
         }
         sourceAddrTon = bb.removeByte();
         sourceAddrNpi = bb.removeByte();
         try {
             sourceAddr = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Service type parsing failed.", e);
+            throw new PduException("Service type parsing failed.", e);
         }
         destAddrTon = bb.removeByte();
         destAddrNpi = bb.removeByte();
         try {
             destinationAddr = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Service type parsing failed.", e);
+            throw new PduException("Service type parsing failed.", e);
         }
         esmClass = bb.removeByte();
         protocolId = bb.removeByte();
@@ -139,12 +139,12 @@ public class SubmitSm extends AbstractPdu {
         try {
             scheduleDeliveryTime = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Service type parsing failed.", e);
+            throw new PduException("Service type parsing failed.", e);
         }
         try {
             validityPeriod = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Service type parsing failed.", e);
+            throw new PduException("Service type parsing failed.", e);
         }
         registeredDelivery = bb.removeByte();
         replaceIfPresentFlag = bb.removeByte();
@@ -155,7 +155,7 @@ public class SubmitSm extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduParsingException {
+    protected ByteBuffer body() throws PduException {
         return null;
     }
 

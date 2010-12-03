@@ -18,9 +18,9 @@ public interface Pdu {
      * Calculate and return PDU bytes.
      *
      * @return  pdu bytes
-     * @throws PduParsingException pdu contains wrong values
+     * @throws PduException pdu contains wrong values
      */
-    public ByteBuffer buffer() throws PduParsingException;
+    public ByteBuffer buffer() throws PduException;
 
     public long getCommandId();
 

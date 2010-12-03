@@ -11,14 +11,14 @@ import org.bulatnig.smpp.util.ByteBuffer;
 public class DefaultPduParser implements PduParser {
 
     @Override
-    public Pdu parse(ByteBuffer bb) throws PduParsingException, PduNotFoundException {
+    public Pdu parse(ByteBuffer bb) throws PduException {
         long commandId = bb.readInt(4);
         if (CommandId.BIND_TRANSCEIVER_RESP == commandId) {
             return new BindTransceiverResp(bb);
         } if (CommandId.GENERIC_NACK == commandId) {
             return new GenericNack(bb);
         } else {
-            throw new PduNotFoundException(commandId, bb);
+            throw new PduException("Corresponding PDU not found: " + commandId + ".");
         }
     }
 }

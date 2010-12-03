@@ -1,8 +1,6 @@
 package org.bulatnig.smpp.session;
 
 import org.bulatnig.smpp.pdu.Pdu;
-import org.bulatnig.smpp.pdu.PduNotFoundException;
-import org.bulatnig.smpp.pdu.PduParsingException;
 
 import java.io.IOException;
 import java.util.concurrent.Future;

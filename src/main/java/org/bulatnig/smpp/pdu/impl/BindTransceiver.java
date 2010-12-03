@@ -1,7 +1,7 @@
 package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.CommandId;
-import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 
@@ -53,22 +53,22 @@ public class BindTransceiver extends AbstractPdu {
         super(CommandId.BIND_TRANSCEIVER);
     }
 
-    public BindTransceiver(ByteBuffer bb) throws PduParsingException {
+    public BindTransceiver(ByteBuffer bb) throws PduException {
         super(bb);
         try {
             systemId = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("System id parsing failed.", e);
+            throw new PduException("System id parsing failed.", e);
         }
         try {
             password = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Password parsing failed.", e);
+            throw new PduException("Password parsing failed.", e);
         }
         try {
             systemType= bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("System type parsing failed.", e);
+            throw new PduException("System type parsing failed.", e);
         }
         interfaceVersion = bb.removeByte();
         addrTon = bb.removeByte();
@@ -76,12 +76,12 @@ public class BindTransceiver extends AbstractPdu {
         try {
             addressRange = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Address range parsing failed.", e);
+            throw new PduException("Address range parsing failed.", e);
         }
     }
 
     @Override
-    protected ByteBuffer body() throws PduParsingException {
+    protected ByteBuffer body() throws PduException {
         ByteBuffer bb = new ByteBuffer();
         bb.appendCString(systemId);
         bb.appendCString(password);

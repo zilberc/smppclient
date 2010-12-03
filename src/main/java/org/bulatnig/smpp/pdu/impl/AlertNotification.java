@@ -1,7 +1,7 @@
 package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.CommandId;
-import org.bulatnig.smpp.pdu.PduParsingException;
+import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 
@@ -48,26 +48,26 @@ public class AlertNotification extends AbstractPdu {
         super(CommandId.ALERT_NOTIFICATION);
     }
 
-    public AlertNotification(ByteBuffer bb) throws PduParsingException {
+    public AlertNotification(ByteBuffer bb) throws PduException {
         super(bb);
         sourceAddrTon = bb.removeByte();
         sourceAddrNpi = bb.removeByte();
         try {
             sourceAddr = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Source address parsing failed", e);
+            throw new PduException("Source address parsing failed", e);
         }
         esmeAddrTon = bb.removeByte();
         esmeAddrNpi = bb.removeByte();
         try {
             esmeAddr = bb.removeCString();
         } catch (TerminatingNullNotFoundException e) {
-            throw new PduParsingException("Esme address parsing failed", e);
+            throw new PduException("Esme address parsing failed", e);
         }
     }
 
     @Override
-    protected ByteBuffer body() throws PduParsingException {
+    protected ByteBuffer body() throws PduException {
         ByteBuffer bb = new ByteBuffer();
         bb.appendByte(sourceAddrTon);
         bb.appendByte(sourceAddrNpi);
