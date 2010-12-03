@@ -385,5 +385,29 @@ public class ByteBufferTest {
         assertEquals("", bb.hexDump());
     }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void readByteFromEmpty() {
+        ByteBuffer bb = new ByteBuffer();
+        bb.readByte();
+    }
+
+    @Test(expected = TerminatingNullNotFoundException.class)
+    public void removeCStringFromEmpty() throws TerminatingNullNotFoundException {
+        ByteBuffer bb = new ByteBuffer();
+        bb.removeCString();
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void removeStringFromEmpty() {
+        ByteBuffer bb = new ByteBuffer();
+        bb.removeString(15);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void removeBytesFromEmpty() {
+        ByteBuffer bb = new ByteBuffer();
+        bb.removeBytes(10);
+    }
+
 }
 

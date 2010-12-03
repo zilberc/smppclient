@@ -11,8 +11,8 @@ import java.io.IOException;
  * Connection with SMPP entity. Converts bytes to PDU and PDU to bytes. The same
  * connection may be reused many times.
  * <p/>
- * Note: If connection receive PDU wich does not fit int buffer, IOException throwed.
- * If such PDU not and error, incoming PDU's buffer size should be increased.
+ * Note: If connection receive PDU wich does not fit in buffer, IOException throwed.
+ * If such PDU not an error, incoming PDU's buffer size should be increased.
  *
  * @author Bulat Nigmatullin
  */

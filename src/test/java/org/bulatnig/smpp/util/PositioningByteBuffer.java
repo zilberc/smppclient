@@ -4,36 +4,54 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Converts java types to byte array according to SMPP protocol.
+ * Implemented, using java.nio.ByteBuffer as template.
  * You should remember, that all SMPP simple numeric types are unsigned,
  * but Java types are always signed.
  * <p/>
  * Not thread safe.
+ * <p/>
+ * Implementation notes: buffer may be read or write types. Append and remove operations should not be mixed
+ * and should be called only on corresponding buffer type.
  *
  * @author Bulat Nigmatullin
  */
-public class ByteBuffer {
+public class PositioningByteBuffer {
 
     /**
-     * Empty byte array.
+     * Default buffer capacity. It should be enough to contain SUBMIT_SM or DELIVER_SM with 140 bytes text.
      */
-    private static final byte[] EMPTY = new byte[0];
-
-    /**
-     * SMPP NULL character to append at the end of C-Octet String.
-     */
-    private static final byte[] ZERO = new byte[]{0};
+    public static final int DEFAULT_CAPACITY = 250;
 
 
     /**
      * Byte buffer.
      */
-    private byte[] buffer;
+    private final byte[] buffer;
+    /**
+     * Buffer type: read or write. Affects array and length operations.
+     */
+    private final boolean read;
 
     /**
-     * Create empty buffer.
+     * Cursor position. Next write or read operation will start from this array element.
      */
-    public ByteBuffer() {
-        buffer = EMPTY;
+    private int position = 0;
+
+    /**
+     * Create buffer with default capacity.
+     */
+    public PositioningByteBuffer() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    /**
+     * Create buffer with given capacity.
+     *
+     * @param capacity buffer capacity
+     */
+    public PositioningByteBuffer(int capacity) {
+        buffer = new byte[capacity];
+        read = false;
     }
 
     /**
@@ -41,8 +59,9 @@ public class ByteBuffer {
      *
      * @param b byte array
      */
-    public ByteBuffer(byte[] b) {
+    public PositioningByteBuffer(byte[] b) {
         buffer = b;
+        read = true;
     }
 
     /**
@@ -51,7 +70,13 @@ public class ByteBuffer {
      * @return массив байтов
      */
     public byte[] array() {
-        return buffer;
+        if (read)
+            return buffer;
+        else {
+            byte[] result = new byte[position];
+            System.arraycopy(buffer, 0, result, 0, position);
+            return result;
+        }
     }
 
     /**
@@ -60,7 +85,10 @@ public class ByteBuffer {
      * @return длина массива
      */
     public int length() {
-        return buffer.length;
+        if (read)
+            return buffer.length;
+        else
+            return position;
     }
 
     /**
@@ -69,7 +97,7 @@ public class ByteBuffer {
      * @param bytes byte array
      * @return this buffer
      */
-    public ByteBuffer appendBytes(byte[] bytes) {
+    public PositioningByteBuffer appendBytes(byte[] bytes) {
         return appendBytes(bytes, bytes.length);
     }
 
@@ -80,11 +108,9 @@ public class ByteBuffer {
      * @param length bytes length to add
      * @return this buffer
      */
-    public ByteBuffer appendBytes(byte[] bytes, int length) {
-        byte[] newBuffer = new byte[buffer.length + length];
-        System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
-        System.arraycopy(bytes, 0, newBuffer, buffer.length, length);
-        buffer = newBuffer;
+    public PositioningByteBuffer appendBytes(byte[] bytes, int length) {
+        System.arraycopy(bytes, 0, buffer, position, length);
+        position += length;
         return this;
     }
 
@@ -96,10 +122,11 @@ public class ByteBuffer {
      * @return this buffer
      * @throws IllegalArgumentException задан неверный параметр
      */
-    public ByteBuffer appendByte(int value) throws IllegalArgumentException {
-        if (value >= 0 && value < 256)
-            appendBytes(new byte[]{(byte) value});
-        else
+    public PositioningByteBuffer appendByte(int value) throws IllegalArgumentException {
+        if (value >= 0 && value < 256) {
+            buffer[position] = (byte) value;
+            position++;
+        } else
             throw new IllegalArgumentException("Byte value should be between 0 and 255.");
         return this;
     }
@@ -112,10 +139,12 @@ public class ByteBuffer {
      * @return this buffer
      * @throws IllegalArgumentException задан неверный параметр
      */
-    public ByteBuffer appendShort(int value) throws IllegalArgumentException {
-        if (value >= 0 && value < 65536)
-            appendBytes(new byte[]{(byte) (value >>> 8), (byte) value});
-        else
+    public PositioningByteBuffer appendShort(int value) throws IllegalArgumentException {
+        if (value >= 0 && value < 65536) {
+            buffer[position] = (byte) (value >>> 8);
+            buffer[position + 1] = (byte) value;
+            position += 2;
+        } else
             throw new IllegalArgumentException("Short value should be between 0 and 65535.");
         return this;
     }
@@ -128,10 +157,14 @@ public class ByteBuffer {
      * @return this buffer
      * @throws IllegalArgumentException задан неверный параметр
      */
-    public ByteBuffer appendInt(long value) throws IllegalArgumentException {
-        if (value >= 0 && value < 4294967296L)
-            appendBytes(new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value});
-        else
+    public PositioningByteBuffer appendInt(long value) throws IllegalArgumentException {
+        if (value >= 0 && value < 4294967296L) {
+            buffer[position] = (byte) (value >>> 24);
+            buffer[position + 1] = (byte) (value >>> 16);
+            buffer[position + 2] = (byte) (value >>> 8);
+            buffer[position + 3] = (byte) value;
+            position += 4;
+        } else
             throw new IllegalArgumentException("Short value should be between 0 and 4294967295.");
         return this;
     }
@@ -142,16 +175,15 @@ public class ByteBuffer {
      * @param cstring строка типа C-Octet (по протоколу SMPP), may be null
      * @return this buffer
      */
-    public ByteBuffer appendCString(String cstring) {
+    public PositioningByteBuffer appendCString(String cstring) {
         if (cstring != null && cstring.length() > 0) {
             try {
-                byte[] stringBuf = cstring.getBytes("ASCII");
-                appendBytes(stringBuf);
+                appendBytes(cstring.getBytes("ASCII"));
             } catch (UnsupportedEncodingException neverHappen) {
                 // omit it
             }
         }
-        appendBytes(ZERO); // always append terminating ZERO
+        position++; // always append terminating ZERO
         return this;
     }
 
@@ -161,7 +193,7 @@ public class ByteBuffer {
      * @param string string value, may be null
      * @return this buffer
      */
-    public ByteBuffer appendString(String string) {
+    public PositioningByteBuffer appendString(String string) {
         return appendString(string, "ASCII");
     }
 
@@ -174,13 +206,11 @@ public class ByteBuffer {
      * @param string      encoded string, null allowed
      * @param charsetName encoding character set name
      * @return this buffer
-     * @throws IllegalArgumentException wrong charset name
      */
-    public ByteBuffer appendString(String string, String charsetName) {
+    public PositioningByteBuffer appendString(String string, String charsetName) {
         if (string != null && string.length() > 0) {
             try {
-                byte[] stringBuf = string.getBytes(charsetName);
-                appendBytes(stringBuf);
+                appendBytes(string.getBytes(charsetName));
             } catch (UnsupportedEncodingException e) {
                 throw new IllegalArgumentException("Wrong charset name provided.", e);
             }
@@ -192,7 +222,6 @@ public class ByteBuffer {
      * Read one byte from byte buffer
      *
      * @return byte was read
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public int readByte() {
         return buffer[0] & 0xFF;
@@ -202,7 +231,6 @@ public class ByteBuffer {
      * Read short value from buffer
      *
      * @return short value
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public int readShort() {
         int result = 0;
@@ -216,7 +244,6 @@ public class ByteBuffer {
      * Read int value from buffer
      *
      * @return int value
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public long readInt() {
         return readInt(0);
@@ -227,7 +254,6 @@ public class ByteBuffer {
      *
      * @param offset start reading from offset byte
      * @return int value
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public long readInt(int offset) {
         long result = 0;
@@ -245,11 +271,10 @@ public class ByteBuffer {
      * Удаляет один byte из массива и возвращает его.
      *
      * @return удаленный byte
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public int removeByte() {
         int result = readByte();
-        removeBytes0(1);
+        position++;
         return result;
     }
 
@@ -257,11 +282,10 @@ public class ByteBuffer {
      * Удаляет один short из массива и возвращает его.
      *
      * @return удаленный short
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public int removeShort() {
         int result = readShort();
-        removeBytes0(2);
+        position += 2;
         return result;
     }
 
@@ -269,11 +293,10 @@ public class ByteBuffer {
      * Удаляет один int из массива и возвращает его.
      *
      * @return удаленные int
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public long removeInt() {
         long result = readInt();
-        removeBytes0(4);
+        position += 4;
         return result;
     }
 
@@ -286,24 +309,26 @@ public class ByteBuffer {
      */
     public String removeCString() throws TerminatingNullNotFoundException {
         int zeroPos = -1;
-        for (int i = 0; i < buffer.length; i++) {
+        for (int i = position; i < buffer.length; i++) {
             if (buffer[i] == 0) {
                 zeroPos = i;
                 break;
             }
         }
-        if (zeroPos == -1)
-            throw new TerminatingNullNotFoundException();
-        String result = null;
-        if (zeroPos > 0) {
-            try {
-                result = new String(buffer, 0, zeroPos, "ASCII");
-            } catch (UnsupportedEncodingException neverHappen) {
-                // omit it
+        if (zeroPos > -1) { // found terminating ZERO
+            String result = null;
+            if (zeroPos > position) {
+                try {
+                    result = new String(buffer, 0, zeroPos, "ASCII");
+                } catch (UnsupportedEncodingException neverHappen) {
+                    // omit it
+                }
             }
+            position = zeroPos + 1;
+            return result;
+        } else {
+            throw new TerminatingNullNotFoundException();
         }
-        removeBytes0(zeroPos + 1);
-        return result;
     }
 
     /**
@@ -311,7 +336,6 @@ public class ByteBuffer {
      *
      * @param length string length
      * @return removed string
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public String removeString(int length) {
         return removeString(length, "ASCII");
@@ -327,16 +351,15 @@ public class ByteBuffer {
      * @param length      string length
      * @param charsetName string charset name
      * @return removed string
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public String removeString(int length, String charsetName) {
         String result;
         try {
-            result = new String(buffer, 0, length, charsetName);
+            result = new String(buffer, position, length, charsetName);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException("Unsupported charset name: " + charsetName, e);
         }
-        removeBytes0(length);
+        position += length;
         return result;
     }
 
@@ -345,11 +368,10 @@ public class ByteBuffer {
      *
      * @param count count of bytes to remove
      * @return removed bytes
-     * @throws IndexOutOfBoundsException out of buffer
      */
     public byte[] removeBytes(int count) {
         byte[] result = readBytes(count);
-        removeBytes0(count);
+        position += count;
         return result;
     }
 
@@ -360,27 +382,11 @@ public class ByteBuffer {
      */
     public String hexDump() {
         StringBuilder builder = new StringBuilder();
-        for (byte b : buffer) {
+        for (byte b : array()) {
             builder.append(Character.forDigit((b >> 4) & 0x0f, 16));
             builder.append(Character.forDigit(b & 0x0f, 16));
         }
         return builder.toString();
-    }
-
-    /**
-     * Just removes bytes from the buffer and doesnt return anything.
-     *
-     * @param count removed bytes
-     */
-    private void removeBytes0(int count) {
-        int lefts = buffer.length - count;
-        if (lefts > 0) {
-            byte[] newBuf = new byte[lefts];
-            System.arraycopy(buffer, count, newBuf, 0, lefts);
-            buffer = newBuf;
-        } else {
-            buffer = EMPTY;
-        }
     }
 
     /**
@@ -391,7 +397,7 @@ public class ByteBuffer {
      */
     private byte[] readBytes(int count) {
         byte[] resBuf = new byte[count];
-        System.arraycopy(buffer, 0, resBuf, 0, count);
+        System.arraycopy(buffer, position, resBuf, 0, count);
         return resBuf;
     }
 }
