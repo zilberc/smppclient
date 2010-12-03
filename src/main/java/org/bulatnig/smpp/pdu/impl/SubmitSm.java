@@ -108,11 +108,11 @@ public class SubmitSm extends AbstractPdu {
      */
     private byte[] shortMessage;
 
-    protected SubmitSm() {
+    public SubmitSm() {
         super(CommandId.SUBMIT_SM);
     }
 
-    protected SubmitSm(ByteBuffer bb) throws PduParsingException {
+    public SubmitSm(ByteBuffer bb) throws PduParsingException {
         super(bb);
         try {
             serviceType = bb.removeCString();

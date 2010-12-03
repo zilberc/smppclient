@@ -17,6 +17,11 @@ import java.util.concurrent.Future;
 public interface Session {
 
     /**
+     * Wait 30 seconds for response by default.
+     */
+    static final int DEFAULT_SMSC_RESPONSE_TIMEOUT = 30000;
+
+    /**
      * Set incoming messages from SMSC listener.
      *
      * @param sessionListener   listener
@@ -24,21 +29,27 @@ public interface Session {
     void setSessionListener(SessionListener sessionListener);
 
     /**
+     * Set time in ms in which SMSC should response.
+     *
+     * @param timeout   time in milliseconds
+     */
+    void setSmscResponseTimeout(int timeout);
+
+    /**
      * Open session. Establish TCP connection and send provided bind PDU.
      *
      * @param pdu   bind request
      * @return  bind response
-     * @throws PduParsingException  wrong PDU
-     * @throws PduNotFoundException PDU not found by id
      * @throws IOException  input-output exception
      */
-    Pdu open(Pdu pdu) throws PduParsingException, PduNotFoundException, IOException;
+    Future<Pdu> open(Pdu pdu) throws IOException;
 
     /**
      * Send PDU to SMSC.
+     * If SMSC response not received in SmscResponseTimeout, null returned.
      *
      * @param pdu   pdu to send
-     * @return  response pdu
+     * @return  response pdu, can be null
      */
     Future<Pdu> send(Pdu pdu);
 

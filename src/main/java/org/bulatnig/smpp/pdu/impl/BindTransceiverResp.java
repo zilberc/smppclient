@@ -21,11 +21,11 @@ public class BindTransceiverResp extends AbstractPdu {
      */
 //    private ScInterfaceVersion scInterfaceVersion;
 
-    protected BindTransceiverResp() {
+    public BindTransceiverResp() {
         super(CommandId.BIND_TRANSCEIVER_RESP);
     }
 
-    protected BindTransceiverResp(ByteBuffer bb) throws PduParsingException {
+    public BindTransceiverResp(ByteBuffer bb) throws PduParsingException {
         super(bb);
         try {
             systemId = bb.removeCString();

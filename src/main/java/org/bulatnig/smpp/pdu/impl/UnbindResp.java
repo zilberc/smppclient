@@ -11,11 +11,11 @@ import org.bulatnig.smpp.util.ByteBuffer;
  */
 public class UnbindResp extends AbstractPdu {
 
-    protected UnbindResp() {
+    public UnbindResp() {
         super(CommandId.UNBIND_RESP);
     }
 
-    protected UnbindResp(ByteBuffer bb) throws PduParsingException {
+    public UnbindResp(ByteBuffer bb) throws PduParsingException {
         super(bb);
     }
 

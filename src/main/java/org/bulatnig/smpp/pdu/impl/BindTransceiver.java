@@ -49,11 +49,11 @@ public class BindTransceiver extends AbstractPdu {
      */
     private String addressRange;
 
-    protected BindTransceiver() {
+    public BindTransceiver() {
         super(CommandId.BIND_TRANSCEIVER);
     }
 
-    protected BindTransceiver(ByteBuffer bb) throws PduParsingException {
+    public BindTransceiver(ByteBuffer bb) throws PduParsingException {
         super(bb);
         try {
             systemId = bb.removeCString();

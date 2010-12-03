@@ -16,11 +16,11 @@ import org.bulatnig.smpp.util.ByteBuffer;
  */
 public class Unbind extends AbstractPdu {
 
-    protected Unbind() {
+    public Unbind() {
         super(CommandId.UNBIND);
     }
 
-    protected Unbind(ByteBuffer bb) throws PduParsingException {
+    public Unbind(ByteBuffer bb) throws PduParsingException {
         super(bb);
     }
 
