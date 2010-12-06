@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Asynchronous session implementation.
@@ -29,7 +30,7 @@ public class SessionImpl implements Session {
 
     private int smscResponseTimeout = DEFAULT_SMSC_RESPONSE_TIMEOUT;
     private int pingTimeout = DEFAULT_PING_TIMEOUT;
-    private SessionListener sessionListener;
+    private SessionListener sessionListener = new DefaultSessionListener();
     private PingThread pingThread;
     private ReadThread readThread;
 
@@ -57,6 +58,7 @@ public class SessionImpl implements Session {
 
     @Override
     public Pdu open(Pdu pdu) throws PduException, IOException {
+        sequenceNumber = 0;
         conn.open();
         send(pdu);
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
@@ -70,7 +72,6 @@ public class SessionImpl implements Session {
         try {
             Pdu bindResp = conn.read();
             if (CommandStatus.ESME_ROK == bindResp.getCommandStatus()) {
-                sequenceNumber = 0;
                 updateLastActivity();
                 pingThread = new PingThread();
                 new Thread(pingThread).start();
@@ -120,11 +121,16 @@ public class SessionImpl implements Session {
         public void run() {
             try {
                 while (run) {
-                    if (isInactive()) {
+                    if (pingTimeout < (System.currentTimeMillis() - lastActivity)) {
+                        long prevLastActivity = lastActivity;
                         send(new EnquireLink());
                         Thread.sleep(smscResponseTimeout);
-                        isInactive();
-                        logger.warn("Enquire link response not received.");
+                        if (lastActivity == prevLastActivity) {
+                            // TODO refactor
+                            logger.warn("Enquire link response not received. Session will be closed.");
+                            close();
+                            break;
+                        }
                     }
                     Thread.sleep(pingTimeout);
                 }
@@ -132,10 +138,6 @@ public class SessionImpl implements Session {
                 if (run)
                     close();
             }
-        }
-
-        private boolean isInactive() {
-            return pingTimeout < (System.currentTimeMillis() - lastActivity);
         }
 
         void stop() {
@@ -178,6 +180,14 @@ public class SessionImpl implements Session {
             run = false;
         }
 
+    }
+
+    private class DefaultSessionListener implements SessionListener {
+        @Override
+        public Pdu received(Pdu pdu) {
+            logger.debug("{} received, but no session listener set.", pdu.getClass().getName());
+            return null;
+        }
     }
 
 }

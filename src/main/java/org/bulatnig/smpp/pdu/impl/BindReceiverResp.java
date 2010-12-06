@@ -6,22 +6,22 @@ import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 
 /**
- * BindTransceiver response PDU.
+ * BindReceiver response PDU.
  *
  * @author Bulat Nigmatullin
  */
-public class BindTransceiverResp extends AbstractPdu {
+public class BindReceiverResp extends AbstractPdu {
 
     /**
      * SMSC identifier. Identifies the SMSC to the ESME.
      */
     private String systemId;
 
-    public BindTransceiverResp() {
-        super(CommandId.BIND_TRANSCEIVER_RESP);
+    public BindReceiverResp() {
+        super(CommandId.BIND_RECEIVER_RESP);
     }
 
-    BindTransceiverResp(ByteBuffer bb) throws PduException {
+    BindReceiverResp(ByteBuffer bb) throws PduException {
         super(bb);
         try {
             systemId = bb.removeCString();

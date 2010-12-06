@@ -1,5 +1,6 @@
 package org.bulatnig.smpp.pdu.impl;
 
+import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.util.ByteBuffer;
 
@@ -10,8 +11,8 @@ import org.bulatnig.smpp.util.ByteBuffer;
  */
 public class EnquireLinkResp extends AbstractPdu {
 
-    public EnquireLinkResp(long commandId) {
-        super(commandId);
+    public EnquireLinkResp() {
+        super(CommandId.ENQUIRE_LINK_RESP);
     }
 
     protected EnquireLinkResp(ByteBuffer bb) throws PduException {

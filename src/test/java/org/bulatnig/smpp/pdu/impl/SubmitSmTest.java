@@ -69,4 +69,10 @@ public class SubmitSmTest {
         assertEquals("000000210000000400000000000000000000000000000000000000000000000000",
                 submit.buffer().hexDump());
     }
+
+    @Test
+    public void parseNull() throws PduException {
+        SubmitSm submit = new SubmitSm();
+        new DefaultPduParser().parse(submit.buffer());
+    }
 }
