@@ -2,38 +2,47 @@ package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.PduException;
+import org.bulatnig.smpp.pdu.PduParser;
+import org.bulatnig.smpp.pdu.tlv.ParameterTag;
+import org.bulatnig.smpp.pdu.tlv.Tlv;
+import org.bulatnig.smpp.pdu.tlv.impl.TlvImpl;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.bulatnig.smpp.util.TerminatingNullNotFoundException;
 import org.junit.Test;
 
+import java.util.HashMap;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * AlertNotification test.
- * TODO fix
  *
  * @author Bulat Nigmatullin
  */
 public class AlertNotificationTest {
 
+    private final PduParser parser = new DefaultPduParser();
+
     @Test
     public void bytesToObject() throws TerminatingNullNotFoundException, PduException {
-        ByteBuffer sbb = new ByteBuffer();
-//        sbb.appendInt(49L);
-        sbb.appendInt(44L);
-        sbb.appendInt(CommandId.ALERT_NOTIFICATION);
-        sbb.appendInt(0);
-        sbb.appendInt(1000123456L);
-        sbb.appendByte((short) 0);
-        sbb.appendByte((short) 0);
-        sbb.appendCString("99501363400");
-        sbb.appendByte((short) 2);
-        sbb.appendByte((short) 1);
-        sbb.appendCString("destination");
-//        sbb.appendShort(0x0422);
-//        sbb.appendShort(1);
-//        sbb.appendByte((short) 2);
-        AlertNotification an = new AlertNotification(sbb);
+        ByteBuffer bb = new ByteBuffer();
+        bb.appendInt(49L);
+        bb.appendInt(CommandId.ALERT_NOTIFICATION);
+        bb.appendInt(0);
+        bb.appendInt(1000123456L);
+        bb.appendByte((short) 0);
+        bb.appendByte((short) 0);
+        bb.appendCString("99501363400");
+        bb.appendByte((short) 2);
+        bb.appendByte((short) 1);
+        bb.appendCString("destination");
+        bb.appendShort(0x0422);
+        bb.appendShort(1);
+        bb.appendByte((short) 2);
+        AlertNotification an = (AlertNotification)parser.parse(bb);
+
         assertEquals(CommandId.ALERT_NOTIFICATION, an.getCommandId());
         assertEquals(0, an.getCommandStatus());
         assertEquals(1000123456L, an.getSequenceNumber());
@@ -43,7 +52,11 @@ public class AlertNotificationTest {
         assertEquals(2, an.getEsmeAddrTon());
         assertEquals(1, an.getEsmeAddrNpi());
         assertEquals("destination", an.getEsmeAddr());
-//        assertEquals(AvailabilityStatus.UNAVAILABLE, an.getMsAvailabilityStatus().getValue());
+
+        assertNotNull(an.tlvs);
+        Tlv tlv = an.tlvs.get(0x0422);
+        assertNotNull(tlv);
+        assertArrayEquals(new byte[] {2}, tlv.getValue());
     }
 
     @Test
@@ -57,8 +70,10 @@ public class AlertNotificationTest {
         an.setEsmeAddrTon(0);
         an.setEsmeAddrNpi(18);
         an.setEsmeAddr("destmy");
-//        an.setMsAvailabilityStatus(new MsAvailabilityStatus(AvailabilityStatus.AVAILABLE));
-//        assertEquals("00000029000001020000000000000073010672656d6172656d61000012646573746d79000422000100", an.buffer().hexDump());
-        assertEquals("00000024000001020000000000000073010672656d6172656d61000012646573746d7900", an.buffer().hexDump());
+        an.tlvs = new HashMap<Integer, Tlv>();
+        Tlv tlv = new TlvImpl(ParameterTag.MS_AVAILABILITY_STATUS);
+        tlv.setValue(new ByteBuffer().appendByte(0).array());
+        an.tlvs.put(tlv.getTag(), tlv);
+        assertEquals("00000029000001020000000000000073010672656d6172656d61000012646573746d79000422000100", an.buffer().hexDump());
     }
 }

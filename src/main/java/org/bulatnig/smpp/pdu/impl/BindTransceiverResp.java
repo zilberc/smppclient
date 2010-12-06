@@ -16,16 +16,12 @@ public class BindTransceiverResp extends AbstractPdu {
      * SMSC identifier. Identifies the SMSC to the ESME.
      */
     private String systemId;
-    /**
-     * SMPP version supported by SMSC.
-     */
-//    private ScInterfaceVersion scInterfaceVersion;
 
     public BindTransceiverResp() {
         super(CommandId.BIND_TRANSCEIVER_RESP);
     }
 
-    public BindTransceiverResp(ByteBuffer bb) throws PduException {
+    BindTransceiverResp(ByteBuffer bb) throws PduException {
         super(bb);
         try {
             systemId = bb.removeCString();

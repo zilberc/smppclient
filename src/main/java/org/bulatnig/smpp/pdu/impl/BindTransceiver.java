@@ -53,7 +53,7 @@ public class BindTransceiver extends AbstractPdu {
         super(CommandId.BIND_TRANSCEIVER);
     }
 
-    public BindTransceiver(ByteBuffer bb) throws PduException {
+    BindTransceiver(ByteBuffer bb) throws PduException {
         super(bb);
         try {
             systemId = bb.removeCString();

@@ -11,31 +11,37 @@ import org.bulatnig.smpp.util.ByteBuffer;
  */
 public class TlvImpl implements Tlv {
 
-    public TlvImpl(int tag) {
+    private final int tag;
 
+    private byte[] value;
+
+    public TlvImpl(int tag) {
+        this.tag = tag;
     }
 
     @Override
     public ByteBuffer buffer() throws TlvException {
-        return null;
+        ByteBuffer bb = new ByteBuffer();
+        bb.appendShort(tag);
+        int length = value != null ? value.length : 0;
+        bb.appendShort(length);
+        if (length > 0)
+            bb.appendBytes(value);
+        return bb;
     }
 
     @Override
     public int getTag() {
-        return 0;
+        return tag;
     }
 
     @Override
-    public int getLength() {
-        return 0;
+    public byte[] getValue() {
+        return value;
     }
 
     @Override
-    public ByteBuffer getValue() {
-        return null;
-    }
-
-    @Override
-    public void setValue(ByteBuffer valueBytes) {
+    public void setValue(byte[] valueBytes) {
+        this.value = valueBytes;
     }
 }

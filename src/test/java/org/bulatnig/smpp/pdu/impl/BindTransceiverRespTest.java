@@ -3,9 +3,12 @@ package org.bulatnig.smpp.pdu.impl;
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.PduException;
+import org.bulatnig.smpp.pdu.PduParser;
+import org.bulatnig.smpp.pdu.tlv.ParameterTag;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.junit.Test;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -15,23 +18,25 @@ import static org.junit.Assert.assertEquals;
  */
 public class BindTransceiverRespTest {
 
+    private final PduParser parser = new DefaultPduParser();
+
     @Test
     public void bytesToObject() throws PduException {
-        ByteBuffer sbb = new ByteBuffer();
-        sbb.appendInt(37L);
-        sbb.appendInt(2147483657L);
-        sbb.appendInt(0);
-        sbb.appendInt(2000123456L);
-        sbb.appendCString("Rome is the cap");
-        sbb.appendShort(0x0210);
-        sbb.appendShort(1);
-        sbb.appendByte((short)0);
-        BindTransceiverResp btr = new BindTransceiverResp(sbb);
+        ByteBuffer bb = new ByteBuffer();
+        bb.appendInt(37L);
+        bb.appendInt(2147483657L);
+        bb.appendInt(0);
+        bb.appendInt(2000123456L);
+        bb.appendCString("Rome is the cap");
+        bb.appendShort(0x0210);
+        bb.appendShort(1);
+        bb.appendByte((short) 0);
+        BindTransceiverResp btr = (BindTransceiverResp)parser.parse(bb);
         assertEquals(CommandId.BIND_TRANSCEIVER_RESP, btr.getCommandId());
         assertEquals(CommandStatus.ESME_ROK, btr.getCommandStatus());
         assertEquals(2000123456L, btr.getSequenceNumber());
         assertEquals("Rome is the cap", btr.getSystemId());
-//        assertEquals((short)0, btr.getScInterfaceVersion().getValue());
+        assertArrayEquals(new byte[]{0}, btr.tlvs.get(ParameterTag.SC_INTERFACE_VERSION).getValue());
     }
 
     @Test

@@ -15,7 +15,7 @@ public class UnbindResp extends AbstractPdu {
         super(CommandId.UNBIND_RESP);
     }
 
-    public UnbindResp(ByteBuffer bb) throws PduException {
+    UnbindResp(ByteBuffer bb) throws PduException {
         super(bb);
     }
 

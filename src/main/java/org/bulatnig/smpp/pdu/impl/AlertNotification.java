@@ -48,7 +48,7 @@ public class AlertNotification extends AbstractPdu {
         super(CommandId.ALERT_NOTIFICATION);
     }
 
-    public AlertNotification(ByteBuffer bb) throws PduException {
+    AlertNotification(ByteBuffer bb) throws PduException {
         super(bb);
         sourceAddrTon = bb.removeByte();
         sourceAddrNpi = bb.removeByte();

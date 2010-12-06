@@ -22,7 +22,7 @@ public class GenericNack extends AbstractPdu {
         super(CommandId.GENERIC_NACK);
     }
 
-    public GenericNack(ByteBuffer bb) throws PduException {
+    GenericNack(ByteBuffer bb) throws PduException {
         super(bb);
     }
 

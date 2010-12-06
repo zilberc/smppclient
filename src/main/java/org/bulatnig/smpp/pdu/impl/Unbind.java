@@ -20,7 +20,7 @@ public class Unbind extends AbstractPdu {
         super(CommandId.UNBIND);
     }
 
-    public Unbind(ByteBuffer bb) throws PduException {
+    Unbind(ByteBuffer bb) throws PduException {
         super(bb);
     }
 

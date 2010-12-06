@@ -45,23 +45,16 @@ public interface Tlv {
     public int getTag();
 
     /**
-     * Return TLV value length.
-     *
-     * @return  value length
-     */
-    public int getLength();
-
-    /**
      * Return TLV value bytes.
      *
      * @return  value bytes
      */
-    public ByteBuffer getValue();
+    public byte[] getValue();
 
     /**
      * Set TLV value in bytes.
      *
      * @param valueBytes value bytes
      */
-    public void setValue(ByteBuffer valueBytes);
+    public void setValue(byte[] valueBytes);
 }
