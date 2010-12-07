@@ -27,7 +27,6 @@ public class SmscStub implements Runnable {
     private volatile OutputStream out;
 
     private volatile boolean run = true;
-    private volatile boolean started = false;
 
     public SmscStub(int port) {
         this.port = port;
@@ -36,15 +35,18 @@ public class SmscStub implements Runnable {
     public void start() throws IOException, InterruptedException {
         Thread listener = new Thread(this);
         listener.start();
-        while (!started)
-            Thread.sleep(10);
+        synchronized (this) {
+            wait();
+        }
     }
 
     @Override
     public void run() {
         try {
             server = new ServerSocket(port);
-            started = true;
+            synchronized (this) {
+                notify();
+            }
             Socket client = server.accept();
             client.setSoTimeout(0);
             InputStream in = client.getInputStream();

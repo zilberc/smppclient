@@ -40,7 +40,7 @@ public abstract class AbstractPdu implements Pdu {
      * @throws PduException parsing failed
      */
     protected AbstractPdu(ByteBuffer bb) throws PduException {
-        bb.removeInt(); // PDU length value not need
+        bb.removeInt(); // PDU length value not stored
         commandId = bb.removeInt();
         commandStatus = bb.removeInt();
         sequenceNumber = bb.removeInt();
@@ -66,9 +66,9 @@ public abstract class AbstractPdu implements Pdu {
         ByteBuffer body = body();
         if (body != null)
             length += body.length();
-        ByteBuffer tlvBb = tlv();
-        if (tlvBb != null)
-            length += tlvBb.length();
+        ByteBuffer tlv = tlv();
+        if (tlv != null)
+            length += tlv.length();
         ByteBuffer bb = new ByteBuffer();
         bb.appendInt(length);
         bb.appendInt(commandId);
@@ -76,8 +76,8 @@ public abstract class AbstractPdu implements Pdu {
         bb.appendInt(sequenceNumber);
         if (body != null)
             bb.appendBytes(body.array());
-        if (tlvBb != null)
-            bb.appendBytes(tlvBb.array());
+        if (tlv != null)
+            bb.appendBytes(tlv.array());
         return bb;
     }
 

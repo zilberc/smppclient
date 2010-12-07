@@ -17,38 +17,43 @@ public class DefaultPduParser implements PduParser {
 
     @Override
     public Pdu parse(ByteBuffer bb) throws PduException {
+        final byte[] original = bb.array();
         long commandId = bb.readInt(4);
         AbstractPdu result;
-        if (CommandId.SUBMIT_SM_RESP == commandId) {
-            result = new SubmitSmResp(bb);
-        } else if (CommandId.DELIVER_SM == commandId) {
-            result = new DeliverSm(bb);
-        } else if (CommandId.GENERIC_NACK == commandId) {
-            result = new GenericNack(bb);
-        } else if (CommandId.BIND_RECEIVER == commandId) {
-            result = new BindReceiver(bb);
-        } else if (CommandId.BIND_RECEIVER_RESP == commandId) {
-            result = new BindReceiverResp(bb);
-        } else if (CommandId.BIND_TRANSMITTER == commandId) {
-            result = new BindTransmitter(bb);
-        } else if (CommandId.BIND_TRANSMITTER_RESP == commandId) {
-            result = new BindTransmitterResp(bb);
-        } else if (CommandId.BIND_TRANSCEIVER == commandId) {
-            result = new BindTransceiver(bb);
-        } else if (CommandId.BIND_TRANSCEIVER_RESP == commandId) {
-            result = new BindTransceiverResp(bb);
-        } else if (CommandId.SUBMIT_SM == commandId) {
-            result = new SubmitSm(bb);
-        } else if (CommandId.DELIVER_SM_RESP == commandId) {
-            result = new DeliverSmResp(bb);
-        } else if (CommandId.ENQUIRE_LINK == commandId) {
-            result = new EnquireLink(bb);
-        } else if (CommandId.ENQUIRE_LINK_RESP == commandId) {
-            result = new EnquireLinkResp(bb);
-        } else if (CommandId.ALERT_NOTIFICATION == commandId) {
-            result = new AlertNotification(bb);
-        } else {
-            throw new PduException("Corresponding PDU not found: " + commandId + ".");
+        try {
+            if (CommandId.SUBMIT_SM_RESP == commandId) {
+                result = new SubmitSmResp(bb);
+            } else if (CommandId.DELIVER_SM == commandId) {
+                result = new DeliverSm(bb);
+            } else if (CommandId.GENERIC_NACK == commandId) {
+                result = new GenericNack(bb);
+            } else if (CommandId.BIND_RECEIVER == commandId) {
+                result = new BindReceiver(bb);
+            } else if (CommandId.BIND_RECEIVER_RESP == commandId) {
+                result = new BindReceiverResp(bb);
+            } else if (CommandId.BIND_TRANSMITTER == commandId) {
+                result = new BindTransmitter(bb);
+            } else if (CommandId.BIND_TRANSMITTER_RESP == commandId) {
+                result = new BindTransmitterResp(bb);
+            } else if (CommandId.BIND_TRANSCEIVER == commandId) {
+                result = new BindTransceiver(bb);
+            } else if (CommandId.BIND_TRANSCEIVER_RESP == commandId) {
+                result = new BindTransceiverResp(bb);
+            } else if (CommandId.SUBMIT_SM == commandId) {
+                result = new SubmitSm(bb);
+            } else if (CommandId.DELIVER_SM_RESP == commandId) {
+                result = new DeliverSmResp(bb);
+            } else if (CommandId.ENQUIRE_LINK == commandId) {
+                result = new EnquireLink(bb);
+            } else if (CommandId.ENQUIRE_LINK_RESP == commandId) {
+                result = new EnquireLinkResp(bb);
+            } else if (CommandId.ALERT_NOTIFICATION == commandId) {
+                result = new AlertNotification(bb);
+            } else {
+                throw new PduException("Corresponding PDU not found: " + bb.hexDump() + ".");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new PduException("Malformed PDU: " + new ByteBuffer(original).hexDump() + ".", e);
         }
         if (bb.length() > 0) {
             try {
