@@ -4,7 +4,7 @@ import org.bulatnig.smpp.net.Connection;
 import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.Pdu;
-import org.bulatnig.smpp.pdu.impl.GenericNack;
+import org.bulatnig.smpp.pdu.impl.*;
 import org.bulatnig.smpp.testutil.SmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.bulatnig.smpp.util.ByteBuffer;
@@ -43,12 +43,14 @@ public class TcpConnectionTest {
     @Test
     public void connect() throws Exception {
         final int port = UniquePortGenerator.generate();
-        SmscStub smsc = new SmscStub(port);
+        final SmscStub smsc = new SmscStub(port);
         smsc.start();
         try {
+
             Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
             conn.open();
             conn.close();
+
         } finally {
             smsc.stop();
         }
@@ -57,15 +59,16 @@ public class TcpConnectionTest {
     @Test
     public void write() throws Exception {
         final int port = UniquePortGenerator.generate();
-        final Pdu pdu = new GenericNack();
-        SmscStub smsc = new SmscStub(port);
+        final Pdu pdu = new SubmitSm();
+        final SmscStub smsc = new SmscStub(port);
         smsc.start();
         try {
+
             Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
             conn.open();
             conn.write(pdu);
-            Thread.sleep(20);
             conn.close();
+
         } finally {
             smsc.stop();
         }
@@ -76,19 +79,23 @@ public class TcpConnectionTest {
     @Test
     public void read() throws Exception {
         final int port = UniquePortGenerator.generate();
-        final Pdu pdu = new GenericNack();
+        final Pdu pdu = new DeliverSm();
         pdu.setCommandStatus(500);
         pdu.setSequenceNumber(1034234);
-        Pdu read;
-        SmscStub smsc = new SmscStub(port);
+        final SmscStub smsc = new SmscStub(port);
         smsc.start();
+        Pdu read;
         try {
+
             Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
             conn.open();
-            conn.write(new GenericNack());
+            conn.write(new SubmitSm());
+
             smsc.write(pdu.buffer().array());
+
             read = conn.read();
             conn.close();
+
         } finally {
             smsc.stop();
         }
@@ -102,17 +109,19 @@ public class TcpConnectionTest {
     @Test
     public void readDelayed() throws Exception {
         final int port = UniquePortGenerator.generate();
-        final Pdu pdu = new GenericNack();
+        final Pdu pdu = new BindTransceiverResp();
         pdu.setCommandStatus(123098);
         pdu.setSequenceNumber(0);
         final SmscStub smsc = new SmscStub(port);
         smsc.start();
         Pdu read;
         try {
+
             Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
             conn.open();
-            conn.write(new GenericNack());
-            Thread sendThread = new Thread(new Runnable() {
+            conn.write(new BindTransceiver());
+
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -122,10 +131,11 @@ public class TcpConnectionTest {
                         e.printStackTrace();
                     }
                 }
-            });
-            sendThread.start();
+            }).start();
+
             read = conn.read();
             conn.close();
+
         } finally {
             smsc.stop();
         }
@@ -153,10 +163,12 @@ public class TcpConnectionTest {
         smsc.start();
         Pdu read;
         try {
+
             Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
             conn.open();
             conn.write(new GenericNack());
-            Thread sendThread = new Thread(new Runnable() {
+
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -167,10 +179,11 @@ public class TcpConnectionTest {
                         e.printStackTrace();
                     }
                 }
-            });
-            sendThread.start();
+            }).start();
+
             read = conn.read();
             conn.close();
+
         } finally {
             smsc.stop();
         }
@@ -184,25 +197,29 @@ public class TcpConnectionTest {
     @Test(timeout = 10000)
     public void readTwoMessages() throws Exception {
         final int port = UniquePortGenerator.generate();
-        final Pdu pdu1 = new GenericNack();
+        final Pdu pdu1 = new DeliverSm();
         pdu1.setCommandStatus(998);
         pdu1.setSequenceNumber(1234567890);
-        final Pdu pdu2 = new GenericNack();
+        final Pdu pdu2 = new DeliverSm();
         pdu2.setCommandStatus(999);
         pdu2.setSequenceNumber(1234567891);
-        Pdu read1;
-        Pdu read2;
         SmscStub smsc = new SmscStub(port);
         smsc.start();
+        Pdu read1;
+        Pdu read2;
         try {
+
             Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
             conn.open();
             conn.write(new GenericNack());
+
             smsc.write(pdu1.buffer().array());
             smsc.write(pdu2.buffer().array());
+
             read1 = conn.read();
             read2 = conn.read();
             conn.close();
+
         } finally {
             smsc.stop();
         }

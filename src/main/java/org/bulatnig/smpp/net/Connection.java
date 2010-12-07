@@ -9,25 +9,10 @@ import java.io.IOException;
 /**
  * Connection with SMPP entity. Converts bytes to PDU and PDU to bytes. The same
  * connection may be reused many times.
- * <p/>
- * Note: If connection receive PDU wich does not fit in buffer, IOException throwed.
- * If such PDU not an error, incoming PDU's buffer size should be increased.
  *
  * @author Bulat Nigmatullin
  */
 public interface Connection {
-
-    /**
-     * Default incoming PDU buffer size.
-     */
-    static final int DEFAULT_BUFFER_SIZE = 1000;
-
-    /**
-     * Set max read PDU length in bytes.
-     *
-     * @param bufferSize max PDU length
-     */
-    void setIncomingBufferSize(int bufferSize);
 
     /**
      * Incoming PDU packets parser.

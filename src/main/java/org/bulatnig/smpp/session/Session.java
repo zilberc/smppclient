@@ -19,6 +19,9 @@ public interface Session {
      */
     static final int DEFAULT_SMSC_RESPONSE_TIMEOUT = 30000;
 
+    /**
+     * Send ENQUIRE_LINK requests every 30 seconds to check SMSC alive..
+     */
     static final int DEFAULT_PING_TIMEOUT = 30000;
 
     /**

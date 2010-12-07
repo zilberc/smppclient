@@ -1,7 +1,9 @@
 package org.bulatnig.smpp.net.impl;
 
 import org.bulatnig.smpp.net.Connection;
-import org.bulatnig.smpp.pdu.*;
+import org.bulatnig.smpp.pdu.Pdu;
+import org.bulatnig.smpp.pdu.PduException;
+import org.bulatnig.smpp.pdu.PduParser;
 import org.bulatnig.smpp.pdu.impl.DefaultPduParser;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.slf4j.Logger;
@@ -14,9 +16,9 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 /**
- * TCP/IP connection.
+ * TCP/IP connection. Additionally logs on debug level all read and sent PDU's.
  *
- * Not thread safe.
+ * Not thread safe. Weak against buffer overflow problem.
  *
  * @author Bulat Nigmatullin
  */
@@ -25,23 +27,17 @@ public class TcpConnection implements Connection {
     private static final Logger logger = LoggerFactory.getLogger(TcpConnection.class);
 
     private final SocketAddress socketAddress;
-    private int bufferSize = DEFAULT_BUFFER_SIZE;
+    private final byte[] bytes = new byte[250];
     private PduParser parser = new DefaultPduParser();
 
     private Socket socket;
     private InputStream in;
     private OutputStream out;
 
-    private byte[] bytes;
     private ByteBuffer bb;
 
     public TcpConnection(SocketAddress socketAddress) {
         this.socketAddress = socketAddress;
-    }
-
-    @Override
-    public void setIncomingBufferSize(int bufferSize) {
-        this.bufferSize = bufferSize;
     }
 
     @Override
@@ -56,13 +52,12 @@ public class TcpConnection implements Connection {
         socket.setSoTimeout(0); // block read forever
         in = socket.getInputStream();
         out = socket.getOutputStream();
-        bytes = new byte[bufferSize];
         bb = new ByteBuffer();
     }
 
     @Override
     public Pdu read() throws PduException, IOException {
-        Pdu pdu = tryToReadBuffer();
+        Pdu pdu = tryToReadBuffer(); // there may be two PDU's read previous time, but only one parsed
         while (pdu == null) {
             int read = in.read(bytes);
             bb.appendBytes(bytes, read);
@@ -83,12 +78,11 @@ public class TcpConnection implements Connection {
         try {
             socket.close();
         } catch (IOException e) {
-            logger.trace("Connection closing error.", e);
+            logger.debug("Connection closing error.", e);
         }
         socket = null;
         in = null;
         out = null;
-        bytes = null;
         bb = null;
     }
 
