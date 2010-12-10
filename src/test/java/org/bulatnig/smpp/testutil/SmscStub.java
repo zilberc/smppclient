@@ -36,7 +36,7 @@ public class SmscStub implements Runnable {
         Thread listener = new Thread(this);
         listener.start();
         synchronized (this) {
-            wait();
+            this.wait();
         }
     }
 
@@ -45,7 +45,7 @@ public class SmscStub implements Runnable {
         try {
             server = new ServerSocket(port);
             synchronized (this) {
-                notify();
+                this.notify();
             }
             Socket client = server.accept();
             client.setSoTimeout(0);

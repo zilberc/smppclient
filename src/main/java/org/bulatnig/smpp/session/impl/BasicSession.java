@@ -6,6 +6,7 @@ import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.pdu.impl.EnquireLink;
+import org.bulatnig.smpp.pdu.impl.Unbind;
 import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.session.SessionListener;
 import org.slf4j.Logger;
@@ -15,16 +16,15 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Asynchronous session implementation.
  *
  * @author Bulat Nigmatullin
  */
-public class SessionImpl implements Session {
+public class BasicSession implements Session {
 
-    private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BasicSession.class);
 
     private final Connection conn;
 
@@ -37,7 +37,11 @@ public class SessionImpl implements Session {
     private volatile long sequenceNumber;
     private volatile long lastActivity;
 
-    public SessionImpl(Connection conn) {
+    private volatile boolean closed;
+    private volatile IOException ioe;
+    private volatile PduException pdue;
+
+    public BasicSession(Connection conn) {
         this.conn = conn;
     }
 
@@ -59,6 +63,9 @@ public class SessionImpl implements Session {
     @Override
     public Pdu open(Pdu pdu) throws PduException, IOException {
         sequenceNumber = 0;
+        closed = false;
+        ioe = null;
+        pdue = null;
         conn.open();
         send(pdu);
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
@@ -74,9 +81,13 @@ public class SessionImpl implements Session {
             if (CommandStatus.ESME_ROK == bindResp.getCommandStatus()) {
                 updateLastActivity();
                 pingThread = new PingThread();
-                new Thread(pingThread).start();
+                Thread t1 = new Thread(pingThread);
+                t1.setName("Ping");
+                t1.start();
                 readThread = new ReadThread();
-                new Thread(readThread).start();
+                Thread t2 = new Thread(readThread);
+                t2.setName("Read");
+                t2.start();
             }
             return bindResp;
         } finally {
@@ -85,20 +96,39 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public long send(Pdu pdu) throws PduException, IOException {
-        // TODO implement send limit
-        pdu.setSequenceNumber(nextSequenceNumber());
+    public synchronized long send(Pdu pdu) throws PduException, IOException {
+        if (closed) {
+            if (ioe != null)
+                throw ioe;
+            if (pdue != null)
+                throw pdue;
+            throw new IOException("Connection already closed.");
+        }
+        if (pdu.getCommandId() < CommandId.GENERIC_NACK)
+            pdu.setSequenceNumber(nextSequenceNumber());
         conn.write(pdu);
         return pdu.getSequenceNumber();
     }
 
     @Override
-    public void close() {
-        pingThread.stop();
-        pingThread = null;
-        readThread.stop();
-        readThread = null;
-        conn.close();
+    public synchronized void close() {
+        if (!closed) {
+            try {
+                send(new Unbind());
+//                Thread.sleep(smscResponseTimeout);
+                synchronized (conn) {
+                    conn.wait(smscResponseTimeout);
+                }
+            } catch (Exception e) {
+                logger.debug("Unbind request send failed.", e);
+            }
+            pingThread.stop();
+            pingThread = null;
+            readThread.stop();
+            readThread = null;
+            conn.close();
+            closed = true;
+        }
     }
 
     private synchronized long nextSequenceNumber() {
@@ -121,22 +151,36 @@ public class SessionImpl implements Session {
         public void run() {
             try {
                 while (run) {
+                    logger.trace("Checking last activity");
                     if (pingTimeout < (System.currentTimeMillis() - lastActivity)) {
                         long prevLastActivity = lastActivity;
                         send(new EnquireLink());
-                        Thread.sleep(smscResponseTimeout);
-                        if (lastActivity == prevLastActivity) {
-                            // TODO refactor
-                            logger.warn("Enquire link response not received. Session will be closed.");
+                        synchronized (conn) {
+                            conn.wait(smscResponseTimeout);
+                        }
+                        if (run && lastActivity == prevLastActivity) {
+                            ioe = new IOException("Enquire link response not received. SMSC no responding to requests.");
                             close();
                             break;
                         }
                     }
+                    logger.trace("Going to sleep {}", pingTimeout);
                     Thread.sleep(pingTimeout);
                 }
-            } catch (Exception e) {
-                if (run)
+            } catch (PduException e) {
+                if (run) {
+                    logger.warn("EnquireLink request failed.", e);
+                    pdue = e;
                     close();
+                }
+            } catch (IOException e) {
+                if (run) {
+                    logger.warn("Ping thread IO failed", e);
+                    ioe = e;
+                    close();
+                }
+            } catch (InterruptedException e) {
+                logger.debug("Ping thread interrupted.");
             }
         }
 
@@ -160,17 +204,29 @@ public class SessionImpl implements Session {
                     if (CommandId.ENQUIRE_LINK == request.getCommandId()) {
                         response = new EnquireLink();
                         response.setSequenceNumber(request.getSequenceNumber());
-                    } else if (CommandId.ENQUIRE_LINK_RESP == request.getCommandId()) {
-                        response = null;
-                    } else {
-                        response = sessionListener.received(request);
-                    }
-                    if (response != null) {
                         send(response);
+                    } else if (CommandId.ENQUIRE_LINK_RESP == request.getCommandId()) {
+                        synchronized (conn) {
+                            conn.notifyAll();
+                        }
+                    } else if (CommandId.UNBIND_RESP == request.getCommandId()) {
+                        synchronized (conn) {
+                            conn.notifyAll();
+                        }
+                    } else {
+                        sessionListener.received(request);
                     }
                 }
-            } catch (Exception e) {
+            } catch (PduException e) {
                 if (run) {
+                    logger.warn("Incoming message parsing failed.", e);
+                    pdue = e;
+                    close();
+                }
+            } catch (IOException e) {
+                if (run) {
+                    logger.warn("Reading IO failure.", e);
+                    ioe = e;
                     close();
                 }
             }
@@ -184,9 +240,8 @@ public class SessionImpl implements Session {
 
     private class DefaultSessionListener implements SessionListener {
         @Override
-        public Pdu received(Pdu pdu) {
+        public void received(Pdu pdu) {
             logger.debug("{} received, but no session listener set.", pdu.getClass().getName());
-            return null;
         }
     }
 

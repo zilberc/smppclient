@@ -49,6 +49,10 @@ public class DefaultPduParser implements PduParser {
                 result = new EnquireLinkResp(bb);
             } else if (CommandId.ALERT_NOTIFICATION == commandId) {
                 result = new AlertNotification(bb);
+            } else if (CommandId.UNBIND == commandId) {
+                result = new Unbind(bb);
+            } else if (CommandId.UNBIND_RESP == commandId) {
+                result = new UnbindResp(bb);
             } else {
                 throw new PduException("Corresponding PDU not found: " + bb.hexDump() + ".");
             }

@@ -58,7 +58,8 @@ public interface Session {
 
     /**
      * Send PDU to SMSC.
-     * If SMSC response not received in SmscResponseTimeout, null returned.
+     * If it's request PDU, then current session unique sequence number assigned to PDU and returned.
+     * It it's response PDU, it's sequence number is not changed and returned.
      *
      * @param pdu pdu to send
      * @return sent PDU sequence number
@@ -68,7 +69,8 @@ public interface Session {
     long send(Pdu pdu) throws PduException, IOException;
 
     /**
-     * Close TCP connection and free all resources. Session may be reopened.
+     * Send Unbind request, wait for UnbindResp, then close TCP connection and free all resources.
+     * Session may be reopened.
      */
     void close();
 

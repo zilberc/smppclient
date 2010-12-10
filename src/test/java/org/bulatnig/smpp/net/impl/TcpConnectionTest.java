@@ -67,6 +67,9 @@ public class TcpConnectionTest {
             Connection conn = new TcpConnection(new InetSocketAddress("localhost", port));
             conn.open();
             conn.write(pdu);
+
+            Thread.sleep(10);
+
             conn.close();
 
         } finally {

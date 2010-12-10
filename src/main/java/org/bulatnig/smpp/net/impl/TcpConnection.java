@@ -68,7 +68,7 @@ public class TcpConnection implements Connection {
     }
 
     @Override
-    public void write(Pdu pdu) throws PduException, IOException {
+    public synchronized void write(Pdu pdu) throws PduException, IOException {
         out.write(pdu.buffer().array());
         logger.debug(">>> {}", pdu.buffer().hexDump());
     }
