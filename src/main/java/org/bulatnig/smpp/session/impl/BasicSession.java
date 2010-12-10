@@ -128,6 +128,7 @@ public class BasicSession implements Session {
             readThread = null;
             conn.close();
             closed = true;
+            logger.debug("Session closed.");
         }
     }
 
@@ -159,7 +160,7 @@ public class BasicSession implements Session {
                             conn.wait(smscResponseTimeout);
                         }
                         if (run && lastActivity == prevLastActivity) {
-                            ioe = new IOException("Enquire link response not received. SMSC no responding to requests.");
+                            ioe = new IOException("Enquire link response not received. Session closed.");
                             close();
                             break;
                         }

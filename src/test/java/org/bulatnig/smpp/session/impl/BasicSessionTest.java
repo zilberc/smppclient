@@ -8,6 +8,7 @@ import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.session.SessionListener;
 import org.bulatnig.smpp.testutil.SmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -192,21 +193,77 @@ public class BasicSessionTest {
     }
 
     @Test
-    public void closeWhilePing() {
-        // TODO implement
+    public void closeWhilePing() throws Exception {
+        final Pdu request = new BindTransceiver();
+        final Pdu response = new BindTransceiverResp();
+        response.setSequenceNumber(1);
+        final int port = UniquePortGenerator.generate();
+        final SmscStub smsc = new SmscStub(port);
+        smsc.start();
+
+        try {
+            Session session = basicSession(smsc, port, null);
+            session.setSmscResponseTimeout(200);
+            session.setPingTimeout(250);
+            session.open(request);
+
+            while (smsc.input.size() == 1)
+                Thread.sleep(10);
+
+            session.close();
+        } finally {
+            smsc.stop();
+        }
     }
 
-    @Test
-    public void closeByPingThread() {
-        // TODO implement
+    @Test(expected = IOException.class)
+    public void closeByPingThread() throws Exception {
+        final Pdu request = new BindTransceiver();
+        final Pdu response = new BindTransceiverResp();
+        response.setSequenceNumber(1);
+        final int port = UniquePortGenerator.generate();
+        final SmscStub smsc = new SmscStub(port);
+        smsc.start();
+
+        try {
+            Session session = basicSession(smsc, port, null);
+            session.setSmscResponseTimeout(200);
+            session.setPingTimeout(250);
+            session.open(request);
+
+            while (smsc.input.size() < 3)
+                Thread.sleep(10);
+
+            session.send(new SubmitSm());
+
+        } finally {
+            smsc.stop();
+        }
     }
 
-    @Test
-    public void readFromClosedConnection() {
-        // TODO implement
+    @Test(expected = IOException.class, timeout = 500)
+    public void closeConnBySmscWhileReading() throws Exception {
+        final Pdu request = new BindTransceiver();
+        final Pdu response = new BindTransceiverResp();
+        response.setSequenceNumber(1);
+        final int port = UniquePortGenerator.generate();
+        final SmscStub smsc = new SmscStub(port);
+        smsc.start();
+
+        Session session = basicSession(smsc, port, null);
+        session.setSmscResponseTimeout(200);
+        session.open(request);
+
+        smsc.stop();
+
+        session.send(new SubmitSm());
+
+        Thread.sleep(50);
+
+        session.send(new SubmitSm());
     }
 
-    private Session basicSession(final SmscStub smsc, int port, SessionListener listener) {
+    protected Session basicSession(final SmscStub smsc, int port, SessionListener listener) {
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.schedule(new Runnable() {
             @Override

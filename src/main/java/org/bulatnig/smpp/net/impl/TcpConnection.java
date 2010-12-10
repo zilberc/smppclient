@@ -60,6 +60,8 @@ public class TcpConnection implements Connection {
         Pdu pdu = tryToReadBuffer(); // there may be two PDU's read previous time, but only one parsed
         while (pdu == null) {
             int read = in.read(bytes);
+            if (read < 0)
+                throw new IOException("Connection closed");
             bb.appendBytes(bytes, read);
             pdu = tryToReadBuffer();
         }
