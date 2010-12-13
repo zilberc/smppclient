@@ -4,7 +4,7 @@
     <groupId>org.bulatnig</groupId>
     <artifactId>smpp</artifactId>
     <packaging>bundle</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <name>SMPP client library</name>
     <inceptionYear>2008</inceptionYear>
     <developers>
