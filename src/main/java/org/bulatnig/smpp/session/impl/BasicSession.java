@@ -6,6 +6,7 @@ import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.pdu.impl.EnquireLink;
+import org.bulatnig.smpp.pdu.impl.EnquireLinkResp;
 import org.bulatnig.smpp.pdu.impl.Unbind;
 import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.session.SessionListener;
@@ -203,7 +204,7 @@ public class BasicSession implements Session {
                     updateLastActivity();
                     Pdu response;
                     if (CommandId.ENQUIRE_LINK == request.getCommandId()) {
-                        response = new EnquireLink();
+                        response = new EnquireLinkResp();
                         response.setSequenceNumber(request.getSequenceNumber());
                         send(response);
                     } else if (CommandId.ENQUIRE_LINK_RESP == request.getCommandId()) {

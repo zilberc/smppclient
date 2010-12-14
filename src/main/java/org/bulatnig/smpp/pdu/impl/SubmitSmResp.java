@@ -32,6 +32,9 @@ public class SubmitSmResp extends AbstractPdu {
             } catch (TerminatingNullNotFoundException e) {
                 throw new PduException("Message id parsing failed.", e);
             }
+        } else if (bb.length() == 1) {
+            // Some SMSC ignore protocol and add null messageId value. This is the workaround for them.
+            bb.removeByte();
         }
     }
 
