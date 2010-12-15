@@ -129,7 +129,7 @@ public class BasicSession implements Session {
             readThread = null;
             conn.close();
             closed = true;
-            logger.debug("Session closed.");
+            logger.trace("Session closed.");
         }
     }
 
