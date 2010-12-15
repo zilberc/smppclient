@@ -46,4 +46,13 @@ public class SubmitSmResp extends AbstractPdu {
         bb.appendCString(messageId);
         return bb;
     }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
 }
