@@ -115,9 +115,8 @@ public class BasicSession implements Session {
     public synchronized void close() {
         if (!closed) {
             try {
-                send(new Unbind());
-//                Thread.sleep(smscResponseTimeout);
                 synchronized (conn) {
+                    send(new Unbind());
                     conn.wait(smscResponseTimeout);
                 }
             } catch (Exception e) {
