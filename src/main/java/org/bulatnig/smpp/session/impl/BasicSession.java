@@ -82,9 +82,8 @@ public class BasicSession implements Session {
             if (CommandStatus.ESME_ROK == bindResp.getCommandStatus()) {
                 updateLastActivity();
                 pingThread = new PingThread();
-                Thread t1 = new Thread(pingThread);
-                t1.setName("Ping");
-                t1.start();
+                pingThread.setName("Ping");
+                pingThread.start();
                 readThread = new ReadThread();
                 Thread t2 = new Thread(readThread);
                 t2.setName("Read");
@@ -114,6 +113,7 @@ public class BasicSession implements Session {
     @Override
     public synchronized void close() {
         if (!closed) {
+            logger.trace("Closing session...");
             try {
                 synchronized (conn) {
                     send(new Unbind());
@@ -122,13 +122,15 @@ public class BasicSession implements Session {
             } catch (Exception e) {
                 logger.debug("Unbind request send failed.", e);
             }
-            pingThread.stop();
+            pingThread.stopAndInterrupt();
             pingThread = null;
             readThread.stop();
             readThread = null;
             conn.close();
             closed = true;
             logger.trace("Session closed.");
+        } else {
+            logger.trace("Session already closed.");
         }
     }
 
@@ -144,7 +146,7 @@ public class BasicSession implements Session {
         lastActivity = System.currentTimeMillis();
     }
 
-    private class PingThread implements Runnable {
+    private class PingThread extends Thread {
 
         private volatile boolean run = true;
 
@@ -185,8 +187,9 @@ public class BasicSession implements Session {
             }
         }
 
-        void stop() {
+        void stopAndInterrupt() {
             run = false;
+            interrupt();
         }
 
     }
@@ -214,6 +217,7 @@ public class BasicSession implements Session {
                         synchronized (conn) {
                             conn.notifyAll();
                         }
+                        stop();
                     } else {
                         sessionListener.received(request);
                     }
