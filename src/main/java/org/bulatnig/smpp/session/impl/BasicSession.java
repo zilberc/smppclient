@@ -135,7 +135,7 @@ public class BasicSession implements Session {
     }
 
     private synchronized long nextSequenceNumber() {
-        if (sequenceNumber == 4294967295L)
+        if (sequenceNumber == 2147483647L)
             sequenceNumber = 1;
         else
             sequenceNumber++;
