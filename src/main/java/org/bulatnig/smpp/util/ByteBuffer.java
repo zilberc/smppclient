@@ -145,10 +145,10 @@ public class ByteBuffer {
     public ByteBuffer appendCString(String cstring) {
         if (cstring != null && cstring.length() > 0) {
             try {
-                byte[] stringBuf = cstring.getBytes("ASCII");
+                byte[] stringBuf = cstring.getBytes("US-ASCII");
                 appendBytes(stringBuf);
-            } catch (UnsupportedEncodingException neverHappen) {
-                // omit it
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("US-ASCII charset is not supported. Consult developer.", e);
             }
         }
         appendBytes(ZERO); // always append terminating ZERO
@@ -162,7 +162,7 @@ public class ByteBuffer {
      * @return this buffer
      */
     public ByteBuffer appendString(String string) {
-        return appendString(string, "ASCII");
+        return appendString(string, "US-ASCII");
     }
 
     /**
@@ -297,9 +297,9 @@ public class ByteBuffer {
         String result = null;
         if (zeroPos > 0) {
             try {
-                result = new String(buffer, 0, zeroPos, "ASCII");
-            } catch (UnsupportedEncodingException neverHappen) {
-                // omit it
+                result = new String(buffer, 0, zeroPos, "US-ASCII");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("US-ASCII charset is not supported. Consult developer.", e);
             }
         }
         removeBytes0(zeroPos + 1);
@@ -314,7 +314,7 @@ public class ByteBuffer {
      * @throws IndexOutOfBoundsException out of buffer
      */
     public String removeString(int length) {
-        return removeString(length, "ASCII");
+        return removeString(length, "US-ASCII");
     }
 
     /**

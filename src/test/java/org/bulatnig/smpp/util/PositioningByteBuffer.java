@@ -178,9 +178,9 @@ public class PositioningByteBuffer {
     public PositioningByteBuffer appendCString(String cstring) {
         if (cstring != null && cstring.length() > 0) {
             try {
-                appendBytes(cstring.getBytes("ASCII"));
-            } catch (UnsupportedEncodingException neverHappen) {
-                // omit it
+                appendBytes(cstring.getBytes("US-ASCII"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("US-ASCII charset is not supported. Consult developer.", e);
             }
         }
         position++; // always append terminating ZERO
@@ -194,7 +194,7 @@ public class PositioningByteBuffer {
      * @return this buffer
      */
     public PositioningByteBuffer appendString(String string) {
-        return appendString(string, "ASCII");
+        return appendString(string, "US-ASCII");
     }
 
     /**
@@ -319,9 +319,9 @@ public class PositioningByteBuffer {
             String result = null;
             if (zeroPos > position) {
                 try {
-                    result = new String(buffer, 0, zeroPos, "ASCII");
-                } catch (UnsupportedEncodingException neverHappen) {
-                    // omit it
+                    result = new String(buffer, 0, zeroPos, "US-ASCII");
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException("US-ASCII charset is not supported. Consult developer.", e);
                 }
             }
             position = zeroPos + 1;
@@ -338,7 +338,7 @@ public class PositioningByteBuffer {
      * @return removed string
      */
     public String removeString(int length) {
-        return removeString(length, "ASCII");
+        return removeString(length, "US-ASCII");
     }
 
     /**

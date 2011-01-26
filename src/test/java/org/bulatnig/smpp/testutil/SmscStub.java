@@ -82,8 +82,8 @@ public class SmscStub implements Runnable {
             if (server != null) {
                 try {
                     server.close();
-                } catch (IOException ignore) {
-                    // omit it
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
