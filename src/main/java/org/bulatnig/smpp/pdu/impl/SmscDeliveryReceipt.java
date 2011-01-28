@@ -12,13 +12,12 @@ import java.io.UnsupportedEncodingException;
  * id:bd778cd76ae9e79da2ddc8188c68f8c1 sub:001 dlvrd:0 submit date:0610191533 done date:0610191539 stat:UNDELIV err:1 text:This is an Acti
  * id:1661543146 sub:001 dlvrd:001 submit date:1101261110 done date:1101261110 stat:DELIVRD err:000 text:Hello, how are you?
  *
- *
  * @author Bulat Nigmatullin
  */
 public class SmscDeliveryReceipt {
 
     private static final String CHARSET = "US-ASCII";
-    private static final String NULL = "";
+    private static final String SPACE = " ";
 
     private String id;
     private String sub;
@@ -32,19 +31,40 @@ public class SmscDeliveryReceipt {
     /**
      * Empty construtor for creating SMSC Delivery Receipt.
      */
-    public SmscDeliveryReceipt() {}
+    public SmscDeliveryReceipt() {
+    }
 
     /**
      * Parse SMSC Delivery Receipt from bytes ( proper esm_class should be set on PDU ).
      *
-     * @param bytes
+     * @param bytes received bytes
      */
     public SmscDeliveryReceipt(byte[] bytes) {
         try {
             String data = new String(bytes, CHARSET);
-            for (int i = 0; i < data.length(); i++) {
-
-            }
+            int index = data.indexOf(SPACE);
+            id = data.substring(3, index);
+            int index2 = data.indexOf(SPACE, index + 1);
+            sub = data.substring(index + 5, index2);
+            index = index2;
+            index2 = data.indexOf(SPACE, index + 1);
+            dlvrd = data.substring(index + 7, index2);
+            index = index2;
+            index2 = data.indexOf(SPACE, index + 1);
+            index2 = data.indexOf(SPACE, index2 + 1);
+            submitDate = data.substring(index + 13, index2);
+            index = index2;
+            index2 = data.indexOf(SPACE, index + 1);
+            index2 = data.indexOf(SPACE, index2 + 1);
+            doneDate = data.substring(index + 11, index2);
+            index = index2;
+            index2 = data.indexOf(SPACE, index + 1);
+            stat = data.substring(index + 6, index2);
+            index = index2;
+            index2 = data.indexOf(SPACE, index + 1);
+            err = data.substring(index + 5, index2);
+            index = index2;
+            text = data.substring(index + 6, data.length());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("US-ASCII charset is not supported. Consult developer.", e);
         }
@@ -53,25 +73,33 @@ public class SmscDeliveryReceipt {
     public byte[] toBytes() {
         StringBuilder builder = new StringBuilder();
         builder.append("id:");
-        builder.append(id != null ? id : NULL);
+        if (id != null)
+            builder.append(id);
         builder.append(" sub:");
-        builder.append(sub != null ? sub : NULL);
+        if (sub != null)
+            builder.append(sub);
         builder.append(" dlvrd:");
-        builder.append(dlvrd != null ? dlvrd : NULL);
+        if (dlvrd != null)
+            builder.append(dlvrd);
         builder.append(" submit date:");
-        builder.append(submitDate != null ? submitDate : NULL);
+        if (submitDate != null)
+            builder.append(submitDate);
         builder.append(" done date:");
-        builder.append(doneDate != null ? doneDate : NULL);
+        if (doneDate != null)
+            builder.append(doneDate);
         builder.append(" stat:");
-        builder.append(stat != null ? stat : NULL);
+        if (stat != null)
+            builder.append(stat);
         builder.append(" err:");
-        builder.append(err != null ? err : NULL);
+        if (err != null)
+            builder.append(err);
         builder.append(" text:");
-        builder.append(text != null ? text : NULL);
+        if (text != null)
+            builder.append(text);
         try {
             return builder.toString().getBytes(CHARSET);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("US-ASCII charset not supported by this JVM implementation. Consult developer.", e);
+            throw new RuntimeException("US-ASCII charset is not supported. Consult developer.", e);
         }
     }
 
