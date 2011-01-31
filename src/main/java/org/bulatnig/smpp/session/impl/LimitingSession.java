@@ -61,9 +61,14 @@ public class LimitingSession implements Session {
     }
 
     @Override
-    public long send(Pdu pdu) throws PduException, IOException {
+    public long nextSequenceNumber() {
+        return session.nextSequenceNumber();
+    }
+
+    @Override
+    public void send(Pdu pdu) throws PduException, IOException {
         if (CommandId.SUBMIT_SM != pdu.getCommandId()) {
-            return session.send(pdu);
+            session.send(pdu);
         } else {
             try {
                 long timeToSleep = sentTimes.poll() + TIMEOUT - System.currentTimeMillis();
@@ -72,7 +77,7 @@ public class LimitingSession implements Session {
                     logger.trace("Going to sleep {}.", timeToSleep);
                     Thread.sleep(timeToSleep);
                 }
-                return session.send(pdu);
+                session.send(pdu);
             } catch (InterruptedException e) {
                 throw new IOException("Send interrupted.");
             } finally {

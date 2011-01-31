@@ -48,6 +48,7 @@ public interface Session {
 
     /**
      * Open session. Establish TCP connection and send provided bind PDU.
+     * Sequence number 1 assigned to PDU automatically.
      *
      * @param pdu bind request
      * @return bind response
@@ -57,16 +58,21 @@ public interface Session {
     Pdu open(Pdu pdu) throws PduException, IOException;
 
     /**
+     * Automatically generated unique PDU sequence number, used to track SMSC response.
+     * Application should first call this method, then set returned value to PDU and send it.
+     *
+     * @return relatively unique PDU sequence number
+     */
+    long nextSequenceNumber();
+
+    /**
      * Send PDU to SMSC.
-     * If it's request PDU, then current session unique sequence number assigned to PDU and returned.
-     * It it's response PDU, it's sequence number is not changed and returned.
      *
      * @param pdu pdu to send
-     * @return sent PDU sequence number
      * @throws PduException PDU parsing failed
      * @throws IOException  input-output exception
      */
-    long send(Pdu pdu) throws PduException, IOException;
+    void send(Pdu pdu) throws PduException, IOException;
 
     /**
      * Send Unbind request, wait for UnbindResp, then close TCP connection and free all resources.

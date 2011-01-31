@@ -8,6 +8,7 @@ import org.bulatnig.smpp.pdu.impl.*;
 import org.bulatnig.smpp.testutil.SmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.bulatnig.smpp.util.ByteBuffer;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -34,6 +35,7 @@ public class TcpConnectionTest {
         conn.open();
     }
 
+    @Ignore // this test executes too long > 3 min
     @Test(expected = IOException.class)
     public void targetIPUnreachableTest() throws IOException {
         Connection conn = new TcpConnection(new InetSocketAddress("1.0.0.0", UniquePortGenerator.generate()));

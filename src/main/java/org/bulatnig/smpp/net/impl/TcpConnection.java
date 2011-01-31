@@ -17,7 +17,7 @@ import java.net.SocketAddress;
 
 /**
  * TCP/IP connection. Additionally logs on debug level all read and sent PDU's.
- *
+ * <p/>
  * Not thread safe. Weak against buffer overflow problem.
  *
  * @author Bulat Nigmatullin
@@ -46,7 +46,7 @@ public class TcpConnection implements Connection {
     }
 
     @Override
-    public void open() throws IOException {
+    public synchronized void open() throws IOException {
         socket = new Socket();
         socket.connect(socketAddress);
         socket.setSoTimeout(0); // block read forever
@@ -57,26 +57,30 @@ public class TcpConnection implements Connection {
 
     @Override
     public Pdu read() throws PduException, IOException {
-        Pdu pdu = tryToReadBuffer(); // there may be two PDU's read previous time, but only one parsed
-        while (pdu == null) {
-            int read = in.read(bytes);
-            if (read < 0)
-                throw new IOException("Connection closed");
-            bb.appendBytes(bytes, read);
-            pdu = tryToReadBuffer();
+        synchronized (in) {
+            Pdu pdu = tryToReadBuffer(); // there may be two PDU's read previous time, but only one parsed
+            while (pdu == null) {
+                int read = in.read(bytes);
+                if (read < 0)
+                    throw new IOException("Connection closed");
+                bb.appendBytes(bytes, read);
+                pdu = tryToReadBuffer();
+            }
+            logger.debug("<<< {}", pdu.buffer().hexDump());
+            return pdu;
         }
-        logger.debug("<<< {}", pdu.buffer().hexDump());
-        return pdu;
     }
 
     @Override
-    public synchronized void write(Pdu pdu) throws PduException, IOException {
-        out.write(pdu.buffer().array());
-        logger.debug(">>> {}", pdu.buffer().hexDump());
+    public void write(Pdu pdu) throws PduException, IOException {
+        synchronized (out) {
+            out.write(pdu.buffer().array());
+            logger.debug(">>> {}", pdu.buffer().hexDump());
+        }
     }
 
     @Override
-    public void close() {
+    public synchronized void close() {
         try {
             socket.close();
         } catch (IOException e) {

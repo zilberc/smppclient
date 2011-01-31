@@ -10,7 +10,7 @@ import org.bulatnig.smpp.pdu.Pdu;
 public interface SessionListener {
 
     /**
-     * Process incoming PDU and return response if required.
+     * Process incoming PDU.
      *
      * @param pdu   incoming PDU from SMSC
      */

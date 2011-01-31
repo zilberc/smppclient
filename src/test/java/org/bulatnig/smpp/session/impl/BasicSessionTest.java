@@ -229,8 +229,10 @@ public class BasicSessionTest {
             session.setPingTimeout(250);
             session.open(request);
 
-            while (smsc.input.size() < 3)
+            while (smsc.input.size() < 2)
                 Thread.sleep(10);
+
+            Thread.sleep(250);
 
             session.send(new SubmitSm());
 

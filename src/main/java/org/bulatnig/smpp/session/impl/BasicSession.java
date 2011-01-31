@@ -68,6 +68,7 @@ public class BasicSession implements Session {
         ioe = null;
         pdue = null;
         conn.open();
+        pdu.setSequenceNumber(nextSequenceNumber());
         send(pdu);
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.schedule(new Runnable() {
@@ -96,7 +97,16 @@ public class BasicSession implements Session {
     }
 
     @Override
-    public synchronized long send(Pdu pdu) throws PduException, IOException {
+    public synchronized long nextSequenceNumber() {
+        if (sequenceNumber == 2147483647L)
+            sequenceNumber = 1;
+        else
+            sequenceNumber++;
+        return sequenceNumber;
+    }
+
+    @Override
+    public synchronized void send(Pdu pdu) throws PduException, IOException {
         if (closed) {
             if (ioe != null)
                 throw ioe;
@@ -104,26 +114,29 @@ public class BasicSession implements Session {
                 throw pdue;
             throw new IOException("Connection already closed.");
         }
-        if (pdu.getCommandId() < CommandId.GENERIC_NACK)
-            pdu.setSequenceNumber(nextSequenceNumber());
         conn.write(pdu);
-        return pdu.getSequenceNumber();
     }
 
     @Override
     public synchronized void close() {
         if (!closed) {
             logger.trace("Closing session...");
-            try {
-                synchronized (conn) {
-                    send(new Unbind());
-                    conn.wait(smscResponseTimeout);
-                }
-            } catch (Exception e) {
-                logger.debug("Unbind request send failed.", e);
-            }
             pingThread.stopAndInterrupt();
             pingThread = null;
+            if (ioe == null) {
+                try {
+                    synchronized (conn) {
+                        Pdu unbind = new Unbind();
+                        unbind.setSequenceNumber(nextSequenceNumber());
+                        send(unbind);
+                        conn.wait(smscResponseTimeout);
+                    }
+                } catch (Exception e) {
+                    logger.debug("Unbind request send failed.", e);
+                }
+            } else {
+                logger.trace("IOException occured, Unbind request will not be sent.");
+            }
             readThread.stop();
             readThread = null;
             conn.close();
@@ -132,14 +145,6 @@ public class BasicSession implements Session {
         } else {
             logger.trace("Session already closed.");
         }
-    }
-
-    private synchronized long nextSequenceNumber() {
-        if (sequenceNumber == 2147483647L)
-            sequenceNumber = 1;
-        else
-            sequenceNumber++;
-        return sequenceNumber;
     }
 
     private void updateLastActivity() {
@@ -157,7 +162,9 @@ public class BasicSession implements Session {
                     logger.trace("Checking last activity");
                     if (pingTimeout < (System.currentTimeMillis() - lastActivity)) {
                         long prevLastActivity = lastActivity;
-                        send(new EnquireLink());
+                        Pdu enquireLink = new EnquireLink();
+                        enquireLink.setSequenceNumber(nextSequenceNumber());
+                        send(enquireLink);
                         synchronized (conn) {
                             conn.wait(smscResponseTimeout);
                         }
@@ -183,7 +190,9 @@ public class BasicSession implements Session {
                     close();
                 }
             } catch (InterruptedException e) {
-                logger.debug("Ping thread interrupted.");
+                logger.trace("Ping thread interrupted.");
+            } finally {
+                logger.trace("Ping thread stopped.");
             }
         }
 
@@ -234,6 +243,8 @@ public class BasicSession implements Session {
                     ioe = e;
                     close();
                 }
+            } finally {
+                logger.trace("Read thread stopped.");
             }
         }
 
