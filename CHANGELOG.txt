@@ -5,6 +5,7 @@ Changelog 0.5
 [new features]
 * library refactored from the ground to be very flexible, a lot of features was removed,
   but library became more simple
+* only asynchronous session implemented
 * all tests designed to run in parallel, so build should not take much time
 
 04.04.2009 0.4beta2
