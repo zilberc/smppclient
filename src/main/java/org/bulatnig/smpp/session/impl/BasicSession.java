@@ -120,31 +120,34 @@ public class BasicSession implements Session {
     @Override
     public synchronized void close() {
         if (!closed) {
-            logger.trace("Closing session...");
-            pingThread.stopAndInterrupt();
-            pingThread = null;
-            if (ioe == null) {
-                try {
-                    synchronized (conn) {
-                        Pdu unbind = new Unbind();
-                        unbind.setSequenceNumber(nextSequenceNumber());
-                        send(unbind);
-                        conn.wait(smscResponseTimeout);
-                    }
-                } catch (Exception e) {
-                    logger.debug("Unbind request send failed.", e);
+        logger.trace("Closing session...");
+        pingThread.stopAndInterrupt();
+        pingThread = null;
+        if (readThread.run) {
+            try {
+                synchronized (conn) {
+                    Pdu unbind = new Unbind();
+                    unbind.setSequenceNumber(nextSequenceNumber());
+                    send(unbind);
+                    conn.wait(smscResponseTimeout);
                 }
-            } else {
-                logger.trace("IOException occured, Unbind request will not be sent.");
+            } catch (Exception e) {
+                logger.debug("Unbind request send failed.", e);
             }
-            readThread.stop();
-            readThread = null;
-            conn.close();
+        }
+        readThread.stop();
+        readThread = null;
+        conn.close();
             closed = true;
             logger.trace("Session closed.");
         } else {
             logger.trace("Session already closed.");
         }
+    }
+
+    private synchronized void close(Exception e) {
+        close();
+        sessionListener.closed(e);
     }
 
     private void updateLastActivity() {
@@ -170,7 +173,7 @@ public class BasicSession implements Session {
                         }
                         if (run && lastActivity == prevLastActivity) {
                             ioe = new IOException("Enquire link response not received. Session closed.");
-                            close();
+                            close(ioe);
                             break;
                         }
                     }
@@ -181,13 +184,15 @@ public class BasicSession implements Session {
                 if (run) {
                     logger.warn("EnquireLink request failed.", e);
                     pdue = e;
-                    close();
+                    run = false;
+                    close(e);
                 }
             } catch (IOException e) {
                 if (run) {
                     logger.warn("Ping thread IO failed", e);
                     ioe = e;
-                    close();
+                    run = false;
+                    close(e);
                 }
             } catch (InterruptedException e) {
                 logger.trace("Ping thread interrupted.");
@@ -235,13 +240,15 @@ public class BasicSession implements Session {
                 if (run) {
                     logger.warn("Incoming message parsing failed.", e);
                     pdue = e;
-                    close();
+                    run = false;
+                    close(e);
                 }
             } catch (IOException e) {
                 if (run) {
                     logger.warn("Reading IO failure.", e);
                     ioe = e;
-                    close();
+                    run = false;
+                    close(e);
                 }
             } finally {
                 logger.trace("Read thread stopped.");
@@ -258,6 +265,11 @@ public class BasicSession implements Session {
         @Override
         public void received(Pdu pdu) {
             logger.debug("{} received, but no session listener set.", pdu.getClass().getName());
+        }
+
+        @Override
+        public void closed(Exception e) {
+            logger.debug("Close exception.", e);
         }
     }
 

@@ -21,6 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * BasicSession test.
@@ -201,7 +202,6 @@ public class BasicSessionTest {
 
         try {
             Session session = basicSession(smsc, port, null);
-            session.setSmscResponseTimeout(200);
             session.setPingTimeout(250);
             session.open(request);
 
@@ -214,17 +214,18 @@ public class BasicSessionTest {
         }
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void closeByPingThread() throws Exception {
         final Pdu request = new BindTransceiver();
         final Pdu response = new BindTransceiverResp();
         response.setSequenceNumber(1);
         final int port = UniquePortGenerator.generate();
         final SmscStub smsc = new SmscStub(port);
+        final SessionListenerImpl listener = new SessionListenerImpl();
         smsc.start();
 
         try {
-            Session session = basicSession(smsc, port, null);
+            Session session = basicSession(smsc, port, listener);
             session.setSmscResponseTimeout(200);
             session.setPingTimeout(250);
             session.open(request);
@@ -234,7 +235,8 @@ public class BasicSessionTest {
 
             Thread.sleep(250);
 
-            session.send(new SubmitSm());
+            assertNotNull(listener.closed);
+            assertEquals(IOException.class, listener.closed.getClass());
 
         } finally {
             smsc.stop();
@@ -251,7 +253,6 @@ public class BasicSessionTest {
         smsc.start();
 
         Session session = basicSession(smsc, port, null);
-        session.setSmscResponseTimeout(200);
         session.open(request);
 
         smsc.stop();
@@ -286,11 +287,18 @@ public class BasicSessionTest {
     private class SessionListenerImpl implements SessionListener {
 
         private final List<Pdu> pdus = new ArrayList<Pdu>();
+        private Exception closed;
 
         @Override
         public void received(Pdu pdu) {
             pdus.add(pdu);
         }
+
+        @Override
+        public void closed(Exception e) {
+            closed = e;
+        }
+
     }
 
 }
