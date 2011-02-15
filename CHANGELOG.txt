@@ -1,6 +1,6 @@
 Changelog 0.5
 
-01.01.2011 0.5
+01.02.2011 0.5
 
 [new features]
 * library refactored from the ground to be very flexible, a lot of features was removed,
