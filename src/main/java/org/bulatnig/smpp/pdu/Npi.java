@@ -7,6 +7,7 @@ package org.bulatnig.smpp.pdu;
  */
 public enum Npi {
     INSTANCE;
+
     /**
      * Unknown.
      */

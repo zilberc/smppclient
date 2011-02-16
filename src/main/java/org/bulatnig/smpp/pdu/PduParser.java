@@ -14,7 +14,7 @@ public interface PduParser {
      *
      * @param bb one pdu bytes
      * @return Pdu
-     * @throws PduException        pdu parsing failed
+     * @throws PduException pdu parsing failed
      */
     Pdu parse(ByteBuffer bb) throws PduException;
 

@@ -6,7 +6,7 @@ import org.bulatnig.smpp.pdu.PduException;
 import java.io.IOException;
 
 /**
- * Session with SMSC.
+ * Asynchronous session with SMSC.
  * Supports connection by sending EnquireLink requests, session reuse (reconnect operations),
  * limiting number of messages per second.
  *

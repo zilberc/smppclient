@@ -46,7 +46,7 @@ public class TcpConnection implements Connection {
     }
 
     @Override
-    public synchronized void open() throws IOException {
+    public void open() throws IOException {
         socket = new Socket();
         socket.connect(socketAddress);
         socket.setSoTimeout(0); // block read forever
@@ -80,7 +80,7 @@ public class TcpConnection implements Connection {
     }
 
     @Override
-    public synchronized void close() {
+    public void close() {
         try {
             socket.close();
         } catch (IOException e) {

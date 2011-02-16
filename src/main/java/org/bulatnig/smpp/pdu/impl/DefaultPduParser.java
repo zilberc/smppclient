@@ -1,7 +1,7 @@
 package org.bulatnig.smpp.pdu.impl;
 
 import org.bulatnig.smpp.pdu.*;
-import org.bulatnig.smpp.pdu.tlv.DefaultTlvParser;
+import org.bulatnig.smpp.pdu.tlv.impl.DefaultTlvParser;
 import org.bulatnig.smpp.pdu.tlv.TlvException;
 import org.bulatnig.smpp.pdu.tlv.TlvParser;
 import org.bulatnig.smpp.util.ByteBuffer;
