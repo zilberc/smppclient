@@ -4,8 +4,8 @@ import org.bulatnig.smpp.net.impl.TcpConnection;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.impl.*;
+import org.bulatnig.smpp.session.MessageListener;
 import org.bulatnig.smpp.session.Session;
-import org.bulatnig.smpp.session.SessionListener;
 import org.bulatnig.smpp.testutil.SmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.junit.Test;
@@ -76,7 +76,7 @@ public class BasicSessionTest {
         final Pdu request = new BindTransceiver();
         final SmscStub smsc = new SmscStub(port);
         smsc.start();
-        final SessionListenerImpl listener = new SessionListenerImpl();
+        final MessageListenerImpl listener = new MessageListenerImpl();
         final byte[] incoming = new DeliverSm().buffer().array();
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.schedule(new Runnable() {
@@ -93,7 +93,7 @@ public class BasicSessionTest {
         try {
 
             Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
-            session.setSessionListener(listener);
+            session.setMessageListener(listener);
             session.setSmscResponseTimeout(500);
             session.setPingTimeout(300);
             session.open(request);
@@ -133,7 +133,7 @@ public class BasicSessionTest {
         final int port = UniquePortGenerator.generate();
         final SmscStub smsc = new SmscStub(port);
         smsc.start();
-        final SessionListenerImpl listener = new SessionListenerImpl();
+        final MessageListenerImpl listener = new MessageListenerImpl();
         final Pdu request = new SubmitSm();
         final byte[] response = new SubmitSmResp().buffer().array();
 
@@ -221,7 +221,7 @@ public class BasicSessionTest {
         response.setSequenceNumber(1);
         final int port = UniquePortGenerator.generate();
         final SmscStub smsc = new SmscStub(port);
-        final SessionListenerImpl listener = new SessionListenerImpl();
+        final MessageListenerImpl listener = new MessageListenerImpl();
         smsc.start();
 
         try {
@@ -264,7 +264,7 @@ public class BasicSessionTest {
         session.send(new SubmitSm());
     }
 
-    protected Session basicSession(final SmscStub smsc, int port, SessionListener listener) {
+    protected Session basicSession(final SmscStub smsc, int port, MessageListener listener) {
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.schedule(new Runnable() {
             @Override
@@ -280,11 +280,11 @@ public class BasicSessionTest {
         Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
         session.setSmscResponseTimeout(500);
         if (listener != null)
-            session.setSessionListener(listener);
+            session.setMessageListener(listener);
         return session;
     }
 
-    private class SessionListenerImpl implements SessionListener {
+    private class MessageListenerImpl implements MessageListener {
 
         private final List<Pdu> pdus = new ArrayList<Pdu>();
         private Exception closed;

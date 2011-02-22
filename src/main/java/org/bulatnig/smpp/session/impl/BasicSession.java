@@ -8,8 +8,8 @@ import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.pdu.impl.EnquireLink;
 import org.bulatnig.smpp.pdu.impl.EnquireLinkResp;
 import org.bulatnig.smpp.pdu.impl.Unbind;
+import org.bulatnig.smpp.session.MessageListener;
 import org.bulatnig.smpp.session.Session;
-import org.bulatnig.smpp.session.SessionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class BasicSession implements Session {
 
     private int smscResponseTimeout = DEFAULT_SMSC_RESPONSE_TIMEOUT;
     private int pingTimeout = DEFAULT_PING_TIMEOUT;
-    private SessionListener sessionListener = new DefaultSessionListener();
+    private MessageListener messageListener = new DefaultMessageListener();
     private PingThread pingThread;
     private ReadThread readThread;
 
@@ -47,8 +47,8 @@ public class BasicSession implements Session {
     }
 
     @Override
-    public void setSessionListener(SessionListener sessionListener) {
-        this.sessionListener = sessionListener;
+    public void setMessageListener(MessageListener messageListener) {
+        this.messageListener = messageListener;
     }
 
     @Override
@@ -147,7 +147,7 @@ public class BasicSession implements Session {
 
     private synchronized void close(Exception e) {
         close();
-        sessionListener.closed(e);
+        messageListener.closed(e);
     }
 
     private void updateLastActivity() {
@@ -233,7 +233,7 @@ public class BasicSession implements Session {
                         }
                         stop();
                     } else {
-                        sessionListener.received(request);
+                        messageListener.received(request);
                     }
                 }
             } catch (PduException e) {
@@ -261,7 +261,7 @@ public class BasicSession implements Session {
 
     }
 
-    private class DefaultSessionListener implements SessionListener {
+    private class DefaultMessageListener implements MessageListener {
         @Override
         public void received(Pdu pdu) {
             logger.debug("{} received, but no session listener set.", pdu.getClass().getName());

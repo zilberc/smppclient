@@ -7,7 +7,7 @@ import org.bulatnig.smpp.pdu.Pdu;
  *
  * @author Bulat Nigmatullin
  */
-public interface SessionListener {
+public interface MessageListener {
 
     /**
      * Process incoming PDU.

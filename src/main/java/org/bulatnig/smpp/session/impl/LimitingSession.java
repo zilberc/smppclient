@@ -4,7 +4,7 @@ import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.session.Session;
-import org.bulatnig.smpp.session.SessionListener;
+import org.bulatnig.smpp.session.MessageListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +41,8 @@ public class LimitingSession implements Session {
     }
 
     @Override
-    public void setSessionListener(SessionListener sessionListener) {
-        session.setSessionListener(sessionListener);
+    public void setMessageListener(MessageListener messageListener) {
+        session.setMessageListener(messageListener);
     }
 
     @Override
