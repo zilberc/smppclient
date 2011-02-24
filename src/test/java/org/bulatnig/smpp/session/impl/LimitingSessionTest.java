@@ -1,8 +1,10 @@
 package org.bulatnig.smpp.session.impl;
 
 import org.bulatnig.smpp.net.impl.TcpConnection;
-import org.bulatnig.smpp.pdu.Pdu;
-import org.bulatnig.smpp.pdu.impl.*;
+import org.bulatnig.smpp.pdu.impl.BindTransceiver;
+import org.bulatnig.smpp.pdu.impl.BindTransceiverResp;
+import org.bulatnig.smpp.pdu.impl.EnquireLink;
+import org.bulatnig.smpp.pdu.impl.SubmitSm;
 import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.testutil.SmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
@@ -12,9 +14,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  * LimitingSession test.

@@ -74,7 +74,18 @@ public class BasicSession implements Session {
         closed = false;
         ioe = null;
         pdue = null;
-        conn.open();
+        try {
+            conn.open();
+        } catch (final IOException e) {
+            ioe = e;
+            new Thread(new Runnable () {
+                @Override
+                public void run() {
+                    stateListener.changed(State.DISCONNECTED, e);
+                }
+            }).start();
+            throw e;
+        }
         pdu.setSequenceNumber(nextSequenceNumber());
         send(pdu);
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
