@@ -10,6 +10,8 @@ import org.bulatnig.smpp.pdu.impl.EnquireLinkResp;
 import org.bulatnig.smpp.pdu.impl.Unbind;
 import org.bulatnig.smpp.session.MessageListener;
 import org.bulatnig.smpp.session.Session;
+import org.bulatnig.smpp.session.State;
+import org.bulatnig.smpp.session.StateListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +34,12 @@ public class BasicSession implements Session {
     private int smscResponseTimeout = DEFAULT_SMSC_RESPONSE_TIMEOUT;
     private int pingTimeout = DEFAULT_PING_TIMEOUT;
     private MessageListener messageListener = new DefaultMessageListener();
+    private StateListener stateListener = new DefaultStateListener();
     private PingThread pingThread;
     private ReadThread readThread;
 
     private volatile long sequenceNumber;
     private volatile long lastActivity;
-
     private volatile boolean closed;
     private volatile IOException ioe;
     private volatile PduException pdue;
@@ -49,6 +51,11 @@ public class BasicSession implements Session {
     @Override
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
+    }
+
+    @Override
+    public void setStateListener(StateListener stateListener) {
+        this.stateListener = stateListener;
     }
 
     @Override
@@ -74,8 +81,8 @@ public class BasicSession implements Session {
         es.schedule(new Runnable() {
             @Override
             public void run() {
-                logger.warn("SMSC bind response not received, terminating connection.");
                 conn.close();
+                stateListener.changed(State.DISCONNECTED, new IOException("SMSC bind response not received, terminating session."));
             }
         }, smscResponseTimeout, TimeUnit.MILLISECONDS);
         try {
@@ -89,6 +96,7 @@ public class BasicSession implements Session {
                 Thread t2 = new Thread(readThread);
                 t2.setName("Read");
                 t2.start();
+                stateListener.changed(State.CONNECTED, null);
             }
             return bindResp;
         } finally {
@@ -112,7 +120,7 @@ public class BasicSession implements Session {
                 throw ioe;
             if (pdue != null)
                 throw pdue;
-            throw new IOException("Connection already closed.");
+            throw new IOException("Session already closed.");
         }
         conn.write(pdu);
     }
@@ -120,24 +128,24 @@ public class BasicSession implements Session {
     @Override
     public synchronized void close() {
         if (!closed) {
-        logger.trace("Closing session...");
-        pingThread.stopAndInterrupt();
-        pingThread = null;
-        if (readThread.run) {
-            try {
-                synchronized (conn) {
-                    Pdu unbind = new Unbind();
-                    unbind.setSequenceNumber(nextSequenceNumber());
-                    send(unbind);
-                    conn.wait(smscResponseTimeout);
+            logger.trace("Closing session...");
+            pingThread.stopAndInterrupt();
+            pingThread = null;
+            if (readThread.run) {
+                try {
+                    synchronized (conn) {
+                        Pdu unbind = new Unbind();
+                        unbind.setSequenceNumber(nextSequenceNumber());
+                        send(unbind);
+                        conn.wait(smscResponseTimeout);
+                    }
+                } catch (Exception e) {
+                    logger.debug("Unbind request send failed.", e);
                 }
-            } catch (Exception e) {
-                logger.debug("Unbind request send failed.", e);
             }
-        }
-        readThread.stop();
-        readThread = null;
-        conn.close();
+            readThread.stop();
+            readThread = null;
+            conn.close();
             closed = true;
             logger.trace("Session closed.");
         } else {
@@ -147,7 +155,7 @@ public class BasicSession implements Session {
 
     private synchronized void close(Exception e) {
         close();
-        messageListener.closed(e);
+        stateListener.changed(State.DISCONNECTED, e);
     }
 
     private void updateLastActivity() {
@@ -259,18 +267,6 @@ public class BasicSession implements Session {
             run = false;
         }
 
-    }
-
-    private class DefaultMessageListener implements MessageListener {
-        @Override
-        public void received(Pdu pdu) {
-            logger.debug("{} received, but no session listener set.", pdu.getClass().getName());
-        }
-
-        @Override
-        public void closed(Exception e) {
-            logger.debug("Close exception.", e);
-        }
     }
 
 }

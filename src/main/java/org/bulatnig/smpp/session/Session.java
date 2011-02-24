@@ -27,9 +27,16 @@ public interface Session {
     /**
      * Set incoming messages from SMSC listener.
      *
-     * @param messageListener listener
+     * @param messageListener incoming message listener
      */
     void setMessageListener(MessageListener messageListener);
+
+    /**
+     * Set session state listener
+     *
+     * @param stateListener state listener
+     */
+    void setStateListener(StateListener stateListener);
 
     /**
      * Set time in ms in which SMSC should response.

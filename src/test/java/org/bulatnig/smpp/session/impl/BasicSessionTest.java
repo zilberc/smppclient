@@ -6,6 +6,8 @@ import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.impl.*;
 import org.bulatnig.smpp.session.MessageListener;
 import org.bulatnig.smpp.session.Session;
+import org.bulatnig.smpp.session.State;
+import org.bulatnig.smpp.session.StateListener;
 import org.bulatnig.smpp.testutil.SmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.junit.Test;
@@ -21,7 +23,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * BasicSession test.
@@ -221,11 +222,12 @@ public class BasicSessionTest {
         response.setSequenceNumber(1);
         final int port = UniquePortGenerator.generate();
         final SmscStub smsc = new SmscStub(port);
-        final MessageListenerImpl listener = new MessageListenerImpl();
+        final StateListenerImpl listener = new StateListenerImpl();
         smsc.start();
 
         try {
-            Session session = basicSession(smsc, port, listener);
+            Session session = basicSession(smsc, port, null);
+            session.setStateListener(listener);
             session.setSmscResponseTimeout(200);
             session.setPingTimeout(250);
             session.open(request);
@@ -287,18 +289,21 @@ public class BasicSessionTest {
     private class MessageListenerImpl implements MessageListener {
 
         private final List<Pdu> pdus = new ArrayList<Pdu>();
-        private Exception closed;
 
         @Override
         public void received(Pdu pdu) {
             pdus.add(pdu);
         }
+    }
+
+    private class StateListenerImpl implements StateListener {
+
+        private Exception closed;
 
         @Override
-        public void closed(Exception e) {
+        public void changed(State state, Exception e) {
             closed = e;
         }
-
     }
 
 }

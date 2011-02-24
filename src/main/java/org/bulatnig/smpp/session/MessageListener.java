@@ -16,11 +16,4 @@ public interface MessageListener {
      */
     void received(Pdu pdu);
 
-    /**
-     * Session closed cause exception.
-     *
-     * @param e asynchronous  exception
-     */
-    void closed(Exception e);
-
 }
