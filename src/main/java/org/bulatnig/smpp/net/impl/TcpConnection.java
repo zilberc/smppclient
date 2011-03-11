@@ -75,6 +75,7 @@ public class TcpConnection implements Connection {
     public void write(Pdu pdu) throws PduException, IOException {
         synchronized (out) {
             out.write(pdu.buffer().array());
+            out.flush();
             logger.debug(">>> {}", pdu.buffer().hexDump());
         }
     }

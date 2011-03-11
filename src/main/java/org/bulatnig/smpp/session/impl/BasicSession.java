@@ -38,7 +38,7 @@ public class BasicSession implements Session {
     private PingThread pingThread;
     private ReadThread readThread;
 
-    private volatile long sequenceNumber;
+    private volatile long sequenceNumber = 0;
     private volatile long lastActivity;
     private volatile boolean closed;
     private volatile IOException ioe;
@@ -70,7 +70,6 @@ public class BasicSession implements Session {
 
     @Override
     public Pdu open(Pdu pdu) throws PduException, IOException {
-        sequenceNumber = 0;
         closed = false;
         ioe = null;
         pdue = null;

@@ -84,7 +84,11 @@ public class ReconnectingSession implements Session {
             if (State.DISCONNECTED == state) {
                 stateListener.changed(state, e);
                 try {
-                    Thread.sleep(reconnectPeriod);
+                    try {
+                        Thread.sleep(reconnectPeriod);
+                    } catch (InterruptedException e1) {
+                        logger.debug("Reconnection sleep interrupted.", e1);
+                    }
                     if (!closed) {
                         stateListener.changed(State.RECONNECTING, null);
                         Pdu bindResponse = session.open(bindPdu);
