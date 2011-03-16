@@ -39,65 +39,50 @@ public class BasicSession implements Session {
     private PingThread pingThread;
     private ReadThread readThread;
 
+    private Pdu bindPdu;
     private volatile long sequenceNumber = 0;
     private volatile long lastActivity;
-    private volatile boolean closed;
+    private volatile State state = State.DISCONNECTED;
 
     public BasicSession(Connection conn) {
         this.conn = conn;
     }
 
-    @Override
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
     }
 
-    @Override
     public void setStateListener(StateListener stateListener) {
         this.stateListener = stateListener;
     }
 
-    @Override
     public void setSmscResponseTimeout(int timeout) {
         this.smscResponseTimeout = timeout;
     }
 
-    @Override
     public void setEnquireLinkTimeout(int timeout) {
         this.pingTimeout = timeout;
     }
 
-    @Override
     public void setReconnectTimeout(int timeout) {
         this.reconnectTimeout = timeout;
     }
 
-    @Override
-    public Pdu open(Pdu pdu) throws PduException, IOException {
-        closed = false;
-        try {
-            conn.open();
-        } catch (final IOException e) {
-            new Thread(new Runnable () {
-                @Override
-                public void run() {
-                    stateListener.changed(State.DISCONNECTED, e);
-                }
-            }).start();
-            throw e;
-        }
+    public synchronized Pdu open(Pdu pdu) throws PduException, IOException {
+        conn.open();
         pdu.setSequenceNumber(nextSequenceNumber());
-        send(pdu);
+        conn.write(pdu);
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.schedule(new Runnable() {
             @Override
             public void run() {
+                logger.warn("Bind response timed out.");
                 conn.close();
-                stateListener.changed(State.DISCONNECTED, new IOException("SMSC bind response not received, terminating session."));
             }
         }, smscResponseTimeout, TimeUnit.MILLISECONDS);
         try {
             Pdu bindResp = conn.read();
+            es.shutdownNow();
             if (CommandStatus.ESME_ROK == bindResp.getCommandStatus()) {
                 updateLastActivity();
                 pingThread = new PingThread();
@@ -107,11 +92,14 @@ public class BasicSession implements Session {
                 Thread t2 = new Thread(readThread);
                 t2.setName("Read");
                 t2.start();
-                stateListener.changed(State.CONNECTED, null);
+                if (bindPdu == null)
+                    bindPdu = pdu;
+                updateState(State.CONNECTED);
             }
             return bindResp;
         } finally {
-            es.shutdownNow();
+            if (!es.isShutdown())
+                es.shutdownNow();
         }
     }
 
@@ -126,19 +114,18 @@ public class BasicSession implements Session {
 
     @Override
     public synchronized boolean send(Pdu pdu) throws PduException {
-        if (closed)
+        if (State.CONNECTED != state)
             return false;
         try {
             conn.write(pdu);
         } catch (IOException e) {
-            // TODO initiate reconnect
+            reconnect(e);
         }
         return true;
     }
 
-    @Override
     public synchronized void close() {
-        if (!closed) {
+        if (State.DISCONNECTED != state) {
             logger.trace("Closing session...");
             pingThread.stopAndInterrupt();
             pingThread = null;
@@ -157,20 +144,61 @@ public class BasicSession implements Session {
             readThread.stop();
             readThread = null;
             conn.close();
-            closed = true;
+            state = State.DISCONNECTED;
             logger.trace("Session closed.");
         } else {
             logger.trace("Session already closed.");
         }
     }
 
-    private synchronized void close(Exception e) {
-        close();
-        stateListener.changed(State.DISCONNECTED, e);
+    private void reconnect(Exception reason) {
+        // only one thread should do reconnect
+        boolean doReconnect = false;
+        synchronized (state) {
+            if (State.RECONNECTING != state) {
+                doReconnect = true;
+                state = State.RECONNECTING;
+            }
+        }
+        if (doReconnect) {
+            close();
+            updateState(State.RECONNECTING, reason);
+            boolean reconnectSuccessful = false;
+            try {
+                while (!reconnectSuccessful && state == State.RECONNECTING) {
+                    try {
+                        Pdu bindResponse = open(bindPdu);
+                        if (CommandStatus.ESME_ROK == bindResponse.getCommandStatus()) {
+                            reconnectSuccessful = true;
+                        } else {
+                            logger.warn("Reconnect failed. Bind response error code: {}.",
+                                    bindResponse.getCommandStatus());
+                        }
+                    } catch (Exception e) {
+                        logger.warn("Reconnect failed.", e);
+                        Thread.sleep(reconnectTimeout);
+                    }
+                }
+            } catch (InterruptedException e) {
+                logger.warn("Reconnect interrupted.");
+            }
+            if (reconnectSuccessful)
+                state = State.CONNECTED;
+        }
     }
+
 
     private void updateLastActivity() {
         lastActivity = System.currentTimeMillis();
+    }
+
+    private void updateState(State newState) {
+        updateState(newState, null);
+    }
+
+    private void updateState(State newState, Exception e) {
+        this.state = newState;
+        stateListener.changed(newState, e);
     }
 
     private class PingThread extends Thread {
@@ -181,7 +209,7 @@ public class BasicSession implements Session {
         public void run() {
             try {
                 while (run) {
-                    logger.trace("Checking last activity");
+                    logger.trace("Checking last activity.");
                     if (pingTimeout < (System.currentTimeMillis() - lastActivity)) {
                         long prevLastActivity = lastActivity;
                         Pdu enquireLink = new EnquireLink();
@@ -191,7 +219,7 @@ public class BasicSession implements Session {
                             conn.wait(smscResponseTimeout);
                         }
                         if (run && lastActivity == prevLastActivity) {
-                            close(new IOException("Enquire link response not received. Session closed."));
+                            reconnect(new IOException("Enquire link response not received. Session closed."));
                             break;
                         }
                     }
@@ -202,7 +230,7 @@ public class BasicSession implements Session {
                 if (run) {
                     logger.warn("EnquireLink request failed.", e);
                     run = false;
-                    close(e);
+                    reconnect(e);
                 }
             } catch (InterruptedException e) {
                 logger.trace("Ping thread interrupted.");
@@ -250,13 +278,13 @@ public class BasicSession implements Session {
                 if (run) {
                     logger.warn("Incoming message parsing failed.", e);
                     run = false;
-                    close(e);
+                    reconnect(e);
                 }
             } catch (IOException e) {
                 if (run) {
                     logger.warn("Reading IO failure.", e);
                     run = false;
-                    close(e);
+                    reconnect(e);
                 }
             } finally {
                 logger.trace("Read thread stopped.");

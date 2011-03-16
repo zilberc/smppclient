@@ -62,7 +62,7 @@ public class TcpConnection implements Connection {
             while (pdu == null) {
                 int read = in.read(bytes);
                 if (read < 0)
-                    throw new IOException("Connection closed");
+                    throw new IOException("Connection closed by SMSC");
                 bb.appendBytes(bytes, read);
                 pdu = tryToReadBuffer();
             }

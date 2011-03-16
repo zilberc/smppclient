@@ -44,15 +44,17 @@ public class LimitingSessionTest {
 
         long started = System.currentTimeMillis();
         try {
-            Session session = new LimitingSession(new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port))), limit);
-            session.setSmscResponseTimeout(200);
-            session.open(new BindTransceiver());
+            BasicSession basicSession = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+            basicSession.setSmscResponseTimeout(200);
+            basicSession.open(new BindTransceiver());
+
+            LimitingSession session = new LimitingSession(basicSession, limit);
 
             for (int i = 0; i < count; i++) {
                 session.send(new SubmitSm());
             }
 
-            session.close();
+            basicSession.close();
         } finally {
             es.shutdownNow();
             smsc.stop();
@@ -85,15 +87,17 @@ public class LimitingSessionTest {
 
         long started = System.currentTimeMillis();
         try {
-            Session session = new LimitingSession(new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port))), limit);
-            session.setSmscResponseTimeout(200);
-            session.open(new BindTransceiver());
+            BasicSession basicSession = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+            basicSession.setSmscResponseTimeout(200);
+            basicSession.open(new BindTransceiver());
+
+            LimitingSession session = new LimitingSession(basicSession, limit);
 
             for (int i = 0; i < count; i++) {
                 session.send(new EnquireLink());
             }
 
-            session.close();
+            basicSession.close();
         } finally {
             es.shutdownNow();
             smsc.stop();
