@@ -16,9 +16,9 @@ import java.util.List;
  *
  * @author Bulat Nigmatullin
  */
-public class SmscStub implements Runnable {
+public class SimpleSmscStub implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(SmscStub.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleSmscStub.class);
 
     public List<byte[]> input = new ArrayList<byte[]>();
 
@@ -28,7 +28,7 @@ public class SmscStub implements Runnable {
 
     private volatile boolean run = true;
 
-    public SmscStub(int port) {
+    public SimpleSmscStub(int port) {
         this.port = port;
     }
 

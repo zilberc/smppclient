@@ -5,8 +5,7 @@ import org.bulatnig.smpp.pdu.impl.BindTransceiver;
 import org.bulatnig.smpp.pdu.impl.BindTransceiverResp;
 import org.bulatnig.smpp.pdu.impl.EnquireLink;
 import org.bulatnig.smpp.pdu.impl.SubmitSm;
-import org.bulatnig.smpp.session.Session;
-import org.bulatnig.smpp.testutil.SmscStub;
+import org.bulatnig.smpp.testutil.ComplexSmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.junit.Test;
 
@@ -27,7 +26,7 @@ public class LimitingSessionTest {
         final int port = UniquePortGenerator.generate();
         final int limit = 10;
         final int count = 20;
-        final SmscStub smsc = new SmscStub(port);
+        final ComplexSmscStub smsc = new ComplexSmscStub(port);
         smsc.start();
 
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
@@ -70,7 +69,7 @@ public class LimitingSessionTest {
         final int port = UniquePortGenerator.generate();
         final int limit = 1;
         final int count = 20;
-        final SmscStub smsc = new SmscStub(port);
+        final ComplexSmscStub smsc = new ComplexSmscStub(port);
         smsc.start();
 
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();

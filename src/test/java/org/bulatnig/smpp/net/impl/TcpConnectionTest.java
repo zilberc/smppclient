@@ -5,7 +5,7 @@ import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.impl.*;
-import org.bulatnig.smpp.testutil.SmscStub;
+import org.bulatnig.smpp.testutil.SimpleSmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.bulatnig.smpp.util.ByteBuffer;
 import org.junit.Ignore;
@@ -45,7 +45,7 @@ public class TcpConnectionTest {
     @Test
     public void connect() throws Exception {
         final int port = UniquePortGenerator.generate();
-        final SmscStub smsc = new SmscStub(port);
+        final SimpleSmscStub smsc = new SimpleSmscStub(port);
         smsc.start();
         try {
 
@@ -62,7 +62,7 @@ public class TcpConnectionTest {
     public void write() throws Exception {
         final int port = UniquePortGenerator.generate();
         final Pdu pdu = new SubmitSm();
-        final SmscStub smsc = new SmscStub(port);
+        final SimpleSmscStub smsc = new SimpleSmscStub(port);
         smsc.start();
         try {
 
@@ -87,7 +87,7 @@ public class TcpConnectionTest {
         final Pdu pdu = new DeliverSm();
         pdu.setCommandStatus(500);
         pdu.setSequenceNumber(1034234);
-        final SmscStub smsc = new SmscStub(port);
+        final SimpleSmscStub smsc = new SimpleSmscStub(port);
         smsc.start();
         Pdu read;
         try {
@@ -117,7 +117,7 @@ public class TcpConnectionTest {
         final Pdu pdu = new BindTransceiverResp();
         pdu.setCommandStatus(123098);
         pdu.setSequenceNumber(0);
-        final SmscStub smsc = new SmscStub(port);
+        final SimpleSmscStub smsc = new SimpleSmscStub(port);
         smsc.start();
         Pdu read;
         try {
@@ -164,7 +164,7 @@ public class TcpConnectionTest {
         pdu.setCommandStatus(commandStatus);
         pdu.setSequenceNumber(sequenceNumber);
 
-        final SmscStub smsc = new SmscStub(port);
+        final SimpleSmscStub smsc = new SimpleSmscStub(port);
         smsc.start();
         Pdu read;
         try {
@@ -208,7 +208,7 @@ public class TcpConnectionTest {
         final Pdu pdu2 = new DeliverSm();
         pdu2.setCommandStatus(999);
         pdu2.setSequenceNumber(1234567891);
-        SmscStub smsc = new SmscStub(port);
+        SimpleSmscStub smsc = new SimpleSmscStub(port);
         smsc.start();
         Pdu read1;
         Pdu read2;

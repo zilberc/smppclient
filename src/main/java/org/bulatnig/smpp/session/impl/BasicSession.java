@@ -69,38 +69,8 @@ public class BasicSession implements Session {
     }
 
     public synchronized Pdu open(Pdu pdu) throws PduException, IOException {
-        conn.open();
-        pdu.setSequenceNumber(nextSequenceNumber());
-        conn.write(pdu);
-        ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
-        es.schedule(new Runnable() {
-            @Override
-            public void run() {
-                logger.warn("Bind response timed out.");
-                conn.close();
-            }
-        }, smscResponseTimeout, TimeUnit.MILLISECONDS);
-        try {
-            Pdu bindResp = conn.read();
-            es.shutdownNow();
-            if (CommandStatus.ESME_ROK == bindResp.getCommandStatus()) {
-                updateLastActivity();
-                pingThread = new PingThread();
-                pingThread.setName("Ping");
-                pingThread.start();
-                readThread = new ReadThread();
-                Thread t2 = new Thread(readThread);
-                t2.setName("Read");
-                t2.start();
-                if (bindPdu == null)
-                    bindPdu = pdu;
-                updateState(State.CONNECTED);
-            }
-            return bindResp;
-        } finally {
-            if (!es.isShutdown())
-                es.shutdownNow();
-        }
+        bindPdu = pdu;
+        return open();
     }
 
     @Override
@@ -124,7 +94,45 @@ public class BasicSession implements Session {
         return true;
     }
 
-    public synchronized void close() {
+    public void close() {
+        closeInternal();
+        updateState(State.DISCONNECTED);
+    }
+
+    private synchronized Pdu open() throws PduException, IOException {
+        conn.open();
+        bindPdu.setSequenceNumber(nextSequenceNumber());
+        conn.write(bindPdu);
+        ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
+        es.schedule(new Runnable() {
+            @Override
+            public void run() {
+                logger.warn("Bind response timed out.");
+                conn.close();
+            }
+        }, smscResponseTimeout, TimeUnit.MILLISECONDS);
+        try {
+            Pdu bindResp = conn.read();
+            es.shutdownNow();
+            if (CommandStatus.ESME_ROK == bindResp.getCommandStatus()) {
+                updateLastActivity();
+                pingThread = new PingThread();
+                pingThread.setName("Ping");
+                pingThread.start();
+                readThread = new ReadThread();
+                Thread t2 = new Thread(readThread);
+                t2.setName("Read");
+                t2.start();
+                updateState(State.CONNECTED);
+            }
+            return bindResp;
+        } finally {
+            if (!es.isShutdown())
+                es.shutdownNow();
+        }
+    }
+
+    private synchronized void closeInternal() {
         if (State.DISCONNECTED != state) {
             logger.trace("Closing session...");
             pingThread.stopAndInterrupt();
@@ -144,7 +152,6 @@ public class BasicSession implements Session {
             readThread.stop();
             readThread = null;
             conn.close();
-            state = State.DISCONNECTED;
             logger.trace("Session closed.");
         } else {
             logger.trace("Session already closed.");
@@ -167,7 +174,7 @@ public class BasicSession implements Session {
             try {
                 while (!reconnectSuccessful && state == State.RECONNECTING) {
                     try {
-                        Pdu bindResponse = open(bindPdu);
+                        Pdu bindResponse = open();
                         if (CommandStatus.ESME_ROK == bindResponse.getCommandStatus()) {
                             reconnectSuccessful = true;
                         } else {
