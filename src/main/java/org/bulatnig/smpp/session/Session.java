@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Asynchronous session with SMSC.
  * Supports connection by sending EnquireLink requests, session reuse (reconnect operations),
- * limiting number of messages per second.
+ * automatically reconnects on IO failure after successful connect.
  *
  * @author Bulat Nigmatullin
  */
@@ -20,9 +20,14 @@ public interface Session {
     static final int DEFAULT_SMSC_RESPONSE_TIMEOUT = 30000;
 
     /**
-     * Send ENQUIRE_LINK requests every 30 seconds to check SMSC alive..
+     * Send ENQUIRE_LINK requests every 30 seconds to check SMSC alive.
      */
-    static final int DEFAULT_PING_TIMEOUT = 30000;
+    static final int DEFAULT_ENQUIRE_LINK_TIMEOUT = 30000;
+
+    /**
+     * Try to reconnect every N ms.
+     */
+    static final int DEFAULT_RECONNECT_TIMEOUT = 1000;
 
     /**
      * Set incoming messages from SMSC listener.
@@ -51,11 +56,18 @@ public interface Session {
      *
      * @param timeout time in milliseconds
      */
-    void setPingTimeout(int timeout);
+    void setEnquireLinkTimeout(int timeout);
+
+    /**
+     * On IO failure try to reconnect to SMSC every timeout milliseconds.
+     *
+     * @param timeout   time in milliseconds
+     */
+    void setReconnectTimeout(int timeout);
 
     /**
      * Open session. Establish TCP connection and send provided bind PDU.
-     * Sequence number 1 assigned to PDU automatically.
+     * Sequence number assigned automatically.
      *
      * @param pdu bind request
      * @return bind response
@@ -65,8 +77,9 @@ public interface Session {
     Pdu open(Pdu pdu) throws PduException, IOException;
 
     /**
-     * Automatically generated unique PDU sequence number, used to track SMSC response.
-     * Application should first call this method, then set returned value to PDU and send it.
+     * Unique PDU sequence number, used to track SMSC response.
+     * Application should first call this method, then set returned sequence number to PDU and
+     * send it.
      *
      * @return relatively unique PDU sequence number
      */
@@ -76,10 +89,10 @@ public interface Session {
      * Send PDU to SMSC.
      *
      * @param pdu pdu to send
+     * @return send successful
      * @throws PduException PDU parsing failed
-     * @throws IOException  input-output exception
      */
-    void send(Pdu pdu) throws PduException, IOException;
+    boolean send(Pdu pdu) throws PduException;
 
     /**
      * Send Unbind request, wait for UnbindResp, then close TCP connection and free all resources.

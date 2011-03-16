@@ -8,5 +8,5 @@ package org.bulatnig.smpp.session;
 public enum State {
     CONNECTED,
     DISCONNECTED,
-    RECONNECTING;
+    RECONNECTING
 }

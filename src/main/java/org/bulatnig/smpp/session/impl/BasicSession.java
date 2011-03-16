@@ -32,7 +32,8 @@ public class BasicSession implements Session {
     private final Connection conn;
 
     private int smscResponseTimeout = DEFAULT_SMSC_RESPONSE_TIMEOUT;
-    private int pingTimeout = DEFAULT_PING_TIMEOUT;
+    private int pingTimeout = DEFAULT_ENQUIRE_LINK_TIMEOUT;
+    private int reconnectTimeout = DEFAULT_RECONNECT_TIMEOUT;
     private MessageListener messageListener = new DefaultMessageListener();
     private StateListener stateListener = new DefaultStateListener();
     private PingThread pingThread;
@@ -41,8 +42,6 @@ public class BasicSession implements Session {
     private volatile long sequenceNumber = 0;
     private volatile long lastActivity;
     private volatile boolean closed;
-    private volatile IOException ioe;
-    private volatile PduException pdue;
 
     public BasicSession(Connection conn) {
         this.conn = conn;
@@ -64,19 +63,21 @@ public class BasicSession implements Session {
     }
 
     @Override
-    public void setPingTimeout(int timeout) {
-        pingTimeout = timeout;
+    public void setEnquireLinkTimeout(int timeout) {
+        this.pingTimeout = timeout;
+    }
+
+    @Override
+    public void setReconnectTimeout(int timeout) {
+        this.reconnectTimeout = timeout;
     }
 
     @Override
     public Pdu open(Pdu pdu) throws PduException, IOException {
         closed = false;
-        ioe = null;
-        pdue = null;
         try {
             conn.open();
         } catch (final IOException e) {
-            ioe = e;
             new Thread(new Runnable () {
                 @Override
                 public void run() {
@@ -124,15 +125,15 @@ public class BasicSession implements Session {
     }
 
     @Override
-    public synchronized void send(Pdu pdu) throws PduException, IOException {
-        if (closed) {
-            if (ioe != null)
-                throw ioe;
-            if (pdue != null)
-                throw pdue;
-            throw new IOException("Session already closed.");
+    public synchronized boolean send(Pdu pdu) throws PduException {
+        if (closed)
+            return false;
+        try {
+            conn.write(pdu);
+        } catch (IOException e) {
+            // TODO initiate reconnect
         }
-        conn.write(pdu);
+        return true;
     }
 
     @Override
@@ -190,8 +191,7 @@ public class BasicSession implements Session {
                             conn.wait(smscResponseTimeout);
                         }
                         if (run && lastActivity == prevLastActivity) {
-                            ioe = new IOException("Enquire link response not received. Session closed.");
-                            close(ioe);
+                            close(new IOException("Enquire link response not received. Session closed."));
                             break;
                         }
                     }
@@ -201,14 +201,6 @@ public class BasicSession implements Session {
             } catch (PduException e) {
                 if (run) {
                     logger.warn("EnquireLink request failed.", e);
-                    pdue = e;
-                    run = false;
-                    close(e);
-                }
-            } catch (IOException e) {
-                if (run) {
-                    logger.warn("Ping thread IO failed", e);
-                    ioe = e;
                     run = false;
                     close(e);
                 }
@@ -257,14 +249,12 @@ public class BasicSession implements Session {
             } catch (PduException e) {
                 if (run) {
                     logger.warn("Incoming message parsing failed.", e);
-                    pdue = e;
                     run = false;
                     close(e);
                 }
             } catch (IOException e) {
                 if (run) {
                     logger.warn("Reading IO failure.", e);
-                    ioe = e;
                     run = false;
                     close(e);
                 }

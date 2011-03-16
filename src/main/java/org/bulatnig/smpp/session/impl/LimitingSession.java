@@ -23,9 +23,9 @@ public class LimitingSession implements Session {
     private static final Logger logger = LoggerFactory.getLogger(LimitingSession.class);
 
     /**
-     * Limit message count per second.
+     * Limit message count per this amount of time.
      */
-    private static final int TIMEOUT = 1000;
+    private static final int TIMEOUT = 1010;
 
     private final Session session;
 
@@ -57,8 +57,13 @@ public class LimitingSession implements Session {
     }
 
     @Override
-    public void setPingTimeout(int timeout) {
-        session.setPingTimeout(timeout);
+    public void setEnquireLinkTimeout(int timeout) {
+        session.setEnquireLinkTimeout(timeout);
+    }
+
+    @Override
+    public void setReconnectTimeout(int timeout) {
+        session.setReconnectTimeout(timeout);
     }
 
     @Override
@@ -72,20 +77,21 @@ public class LimitingSession implements Session {
     }
 
     @Override
-    public void send(Pdu pdu) throws PduException, IOException {
+    public boolean send(Pdu pdu) throws PduException {
         if (CommandId.SUBMIT_SM != pdu.getCommandId()) {
-            session.send(pdu);
+            return session.send(pdu);
         } else {
             try {
                 long timeToSleep = sentTimes.poll() + TIMEOUT - System.currentTimeMillis();
                 logger.trace("Time spent from N message back to this: {}.", timeToSleep);
                 if (timeToSleep > 0) {
-                    logger.trace("Going to sleep {}.", timeToSleep);
+                    logger.trace("Going to sleep {} ms.", timeToSleep);
                     Thread.sleep(timeToSleep);
                 }
-                session.send(pdu);
+                return session.send(pdu);
             } catch (InterruptedException e) {
-                throw new IOException("Send interrupted.");
+                logger.warn("Send interrupted.", e);
+                return false;
             } finally {
                 sentTimes.add(System.currentTimeMillis());
             }

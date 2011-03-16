@@ -96,7 +96,7 @@ public class BasicSessionTest {
             Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
             session.setMessageListener(listener);
             session.setSmscResponseTimeout(500);
-            session.setPingTimeout(300);
+            session.setEnquireLinkTimeout(300);
             session.open(request);
 
             while (smsc.input.size() == 1)
@@ -203,7 +203,7 @@ public class BasicSessionTest {
 
         try {
             Session session = basicSession(smsc, port, null);
-            session.setPingTimeout(250);
+            session.setEnquireLinkTimeout(250);
             session.open(request);
 
             while (smsc.input.size() == 1)
@@ -229,7 +229,7 @@ public class BasicSessionTest {
             Session session = basicSession(smsc, port, null);
             session.setStateListener(listener);
             session.setSmscResponseTimeout(200);
-            session.setPingTimeout(250);
+            session.setEnquireLinkTimeout(250);
             session.open(request);
 
             while (smsc.input.size() < 2)
@@ -264,6 +264,41 @@ public class BasicSessionTest {
         Thread.sleep(50);
 
         session.send(new SubmitSm());
+    }
+
+    @Test
+    public void reconnect() throws Exception {
+        final int port = UniquePortGenerator.generate();
+        SmscStub smsc = new SmscStub(port);
+        smsc.start();
+
+        ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
+        es.schedule(new BindResponder(smsc), 100, TimeUnit.MILLISECONDS);
+
+        try {
+            Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+            session.setSmscResponseTimeout(200);
+            session.setEnquireLinkTimeout(200);
+            session.open(new BindTransceiver());
+
+            smsc.stop();
+
+            Thread.sleep(1000);
+            logger.info("Sleep done.");
+
+            smsc = new SmscStub(port);
+            smsc.start();
+            es.schedule(new BindResponder(smsc), 100, TimeUnit.MILLISECONDS);
+            logger.info("SMSC started.");
+
+            Thread.sleep(300);
+            logger.info("Closing session.");
+
+            session.close();
+        } finally {
+            es.shutdownNow();
+            smsc.stop();
+        }
     }
 
     protected Session basicSession(final SmscStub smsc, int port, MessageListener listener) {
@@ -303,6 +338,24 @@ public class BasicSessionTest {
         @Override
         public void changed(State state, Exception e) {
             closed = e;
+        }
+    }
+
+    private class BindResponder implements Runnable {
+
+        private final SmscStub smsc;
+
+        private BindResponder(SmscStub smsc) {
+            this.smsc = smsc;
+        }
+
+        @Override
+        public void run() {
+            try {
+                smsc.write(new BindTransceiverResp().buffer().array());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
