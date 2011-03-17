@@ -88,15 +88,16 @@ public class BasicSession implements Session {
             return false;
         try {
             conn.write(pdu);
+            return true;
         } catch (IOException e) {
             reconnect(e);
+            return false;
         }
-        return true;
     }
 
-    public void close() {
-        closeInternal();
-        updateState(State.DISCONNECTED);
+    public synchronized void close() {
+        if (closeInternal())
+            updateState(State.DISCONNECTED);
     }
 
     private synchronized Pdu open() throws PduException, IOException {
@@ -132,7 +133,12 @@ public class BasicSession implements Session {
         }
     }
 
-    private synchronized void closeInternal() {
+    /**
+     * Actually close session.
+     *
+     * @return session closed
+     */
+    private synchronized boolean closeInternal() {
         if (State.DISCONNECTED != state) {
             logger.trace("Closing session...");
             pingThread.stopAndInterrupt();
@@ -153,8 +159,10 @@ public class BasicSession implements Session {
             readThread = null;
             conn.close();
             logger.trace("Session closed.");
+            return true;
         } else {
             logger.trace("Session already closed.");
+            return false;
         }
     }
 

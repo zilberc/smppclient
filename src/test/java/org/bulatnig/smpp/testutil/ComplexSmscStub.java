@@ -32,6 +32,8 @@ public class ComplexSmscStub implements Runnable {
     private volatile ServerSocket server;
     private volatile OutputStream out;
 
+    private Thread listener;
+    private Socket client;
     private volatile boolean run = true;
 
     public ComplexSmscStub(int port) {
@@ -39,7 +41,7 @@ public class ComplexSmscStub implements Runnable {
     }
 
     public void start() throws IOException, InterruptedException {
-        Thread listener = new Thread(this);
+        listener = new Thread(this);
         listener.start();
         synchronized (this) {
             wait();
@@ -53,7 +55,7 @@ public class ComplexSmscStub implements Runnable {
             synchronized (this) {
                 notify();
             }
-            Socket client = server.accept();
+            client = server.accept();
             client.setSoTimeout(0);
             InputStream in = client.getInputStream();
             out = client.getOutputStream();
@@ -117,6 +119,14 @@ public class ComplexSmscStub implements Runnable {
                     e.printStackTrace();
                 }
             }
+            if (client != null) {
+                try {
+                    client.close();
+                } catch (IOException ignore) {
+                    // omit it
+                }
+            }
+            listener.interrupt();
         }
     }
 
