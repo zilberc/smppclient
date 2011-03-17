@@ -96,7 +96,7 @@ public class BasicSession implements Session {
     }
 
     public synchronized void close() {
-        if (State.RECONNECTING == state || closeInternal())
+        if (State.RECONNECTING == state || closeInternal(null))
             updateState(State.DISCONNECTED);
     }
 
@@ -138,12 +138,12 @@ public class BasicSession implements Session {
      *
      * @return session closed
      */
-    private synchronized boolean closeInternal() {
+    private synchronized boolean closeInternal(Exception reason) {
         if (State.DISCONNECTED != state) {
             logger.trace("Closing session...");
             pingThread.stopAndInterrupt();
             pingThread = null;
-            if (readThread.run) {
+            if (!(reason instanceof IOException) && readThread.run) {
                 try {
                     synchronized (conn) {
                         Pdu unbind = new Unbind();
@@ -176,26 +176,26 @@ public class BasicSession implements Session {
             }
         }
         if (doReconnect) {
-            closeInternal();
+            closeInternal(reason);
             updateState(State.RECONNECTING, reason);
             boolean reconnectSuccessful = false;
-            try {
-                while (!reconnectSuccessful && state == State.RECONNECTING) {
+            while (!reconnectSuccessful && state == State.RECONNECTING) {
+                try {
+                    Pdu bindResponse = open();
+                    if (CommandStatus.ESME_ROK == bindResponse.getCommandStatus()) {
+                        reconnectSuccessful = true;
+                    } else {
+                        logger.warn("Reconnect failed. Bind response error code: {}.",
+                                bindResponse.getCommandStatus());
+                    }
+                } catch (Exception e) {
+                    logger.warn("Reconnect failed.", e);
                     try {
-                        Pdu bindResponse = open();
-                        if (CommandStatus.ESME_ROK == bindResponse.getCommandStatus()) {
-                            reconnectSuccessful = true;
-                        } else {
-                            logger.warn("Reconnect failed. Bind response error code: {}.",
-                                    bindResponse.getCommandStatus());
-                        }
-                    } catch (Exception e) {
-                        logger.warn("Reconnect failed.", e);
                         Thread.sleep(reconnectTimeout);
+                    } catch (InterruptedException e1) {
+                        logger.trace("Reconnect sleep interrupted.", e1);
                     }
                 }
-            } catch (InterruptedException e) {
-                logger.warn("Reconnect interrupted.");
             }
             if (reconnectSuccessful)
                 state = State.CONNECTED;
@@ -267,6 +267,7 @@ public class BasicSession implements Session {
 
         @Override
         public void run() {
+            logger.trace("Read thread started.");
             try {
                 while (run) {
                     Pdu request = conn.read();

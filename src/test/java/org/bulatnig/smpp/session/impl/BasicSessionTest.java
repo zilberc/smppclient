@@ -5,12 +5,9 @@ import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.impl.*;
 import org.bulatnig.smpp.session.MessageListener;
-import org.bulatnig.smpp.session.State;
-import org.bulatnig.smpp.session.StateListener;
 import org.bulatnig.smpp.testutil.ComplexSmscStub;
 import org.bulatnig.smpp.testutil.SimpleSmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +21,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * BasicSession test.
@@ -392,9 +387,7 @@ public class BasicSessionTest {
 
         smsc.stop();
 
-        logger.info("Sleep started");
         Thread.sleep(50);
-        logger.info("Sleep done");
 
         session.close();
         smsc = new ComplexSmscStub(port);
@@ -402,7 +395,73 @@ public class BasicSessionTest {
 
         Thread.sleep(1100);
 
+        smsc.stop();
+
         assertTrue(smsc.input.isEmpty());
+    }
+
+    @Test
+    public void reconnectWhilePing() throws Exception {
+        final Pdu request = new BindTransceiver();
+        final Pdu bindResp = new BindTransceiverResp();
+        bindResp.setSequenceNumber(1);
+        final Pdu unbindResp = new UnbindResp();
+        unbindResp.setSequenceNumber(3);
+        final int port = UniquePortGenerator.generate();
+        final SimpleSmscStub smsc = new SimpleSmscStub(port);
+        final SimpleSmscStub smsc2 = new SimpleSmscStub(port);
+        smsc.start();
+
+        ScheduledExecutorService es = Executors.newScheduledThreadPool(2);
+        es.schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    smsc.write(bindResp.buffer().array());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 50, TimeUnit.MILLISECONDS);
+        try {
+            BasicSession session = basicSession(port, null);
+            session.setSmscResponseTimeout(200);
+            session.setEnquireLinkTimeout(100);
+            session.open(request);
+
+            while (smsc.input.size() < 2)
+                Thread.sleep(10);
+
+            smsc.stop();
+
+            Thread.sleep(250);
+
+            smsc2.start();
+
+            while (smsc2.input.size() < 1)
+                Thread.sleep(10);
+
+            smsc2.write(bindResp.buffer().array());
+
+            es.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (smsc2.input.size() < 2)
+                            Thread.sleep(10);
+                        smsc2.write(unbindResp.buffer().array());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 0, TimeUnit.MILLISECONDS);
+
+            session.close();
+        } finally {
+            smsc.stop();
+            smsc2.stop();
+            es.shutdownNow();
+        }
     }
 
     protected BasicSession basicSession(int port, MessageListener listener) {
@@ -420,16 +479,6 @@ public class BasicSessionTest {
         @Override
         public void received(Pdu pdu) {
             pdus.add(pdu);
-        }
-    }
-
-    private class StateListenerImpl implements StateListener {
-
-        private Exception closed;
-
-        @Override
-        public void changed(State state, Exception e) {
-            closed = e;
         }
     }
 
