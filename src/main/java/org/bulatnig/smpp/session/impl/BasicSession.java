@@ -96,7 +96,7 @@ public class BasicSession implements Session {
     }
 
     public synchronized void close() {
-        if (closeInternal())
+        if (State.RECONNECTING == state || closeInternal())
             updateState(State.DISCONNECTED);
     }
 
@@ -176,7 +176,7 @@ public class BasicSession implements Session {
             }
         }
         if (doReconnect) {
-            close();
+            closeInternal();
             updateState(State.RECONNECTING, reason);
             boolean reconnectSuccessful = false;
             try {

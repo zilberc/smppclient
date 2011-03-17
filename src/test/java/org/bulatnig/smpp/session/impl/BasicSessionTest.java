@@ -126,7 +126,7 @@ public class BasicSessionTest {
     }
 
     @Test
-    public void write() throws Exception {
+    public void send() throws Exception {
         final int port = UniquePortGenerator.generate();
         final ComplexSmscStub smsc = new ComplexSmscStub(port);
         smsc.start();
@@ -379,7 +379,6 @@ public class BasicSessionTest {
         assertFalse(sendResult);
     }
 
-    @Ignore
     @Test
     public void closeWhileReconnect() throws Exception {
         final int port = UniquePortGenerator.generate();
@@ -392,17 +391,16 @@ public class BasicSessionTest {
         session.open(new BindTransceiver());
 
         smsc.stop();
-        Thread.sleep(10);
 
         logger.info("Sleep started");
-        Thread.sleep(500);
+        Thread.sleep(50);
         logger.info("Sleep done");
 
         session.close();
         smsc = new ComplexSmscStub(port);
         smsc.start();
 
-        Thread.sleep(2000);
+        Thread.sleep(1100);
 
         assertTrue(smsc.input.isEmpty());
     }
