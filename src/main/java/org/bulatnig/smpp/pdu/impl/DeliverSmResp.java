@@ -26,7 +26,7 @@ public class DeliverSmResp extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         return new ByteBuffer().appendByte(0);
     }
 }

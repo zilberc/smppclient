@@ -151,7 +151,7 @@ public class SubmitSm extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         ByteBuffer bb = new ByteBuffer();
         bb.appendCString(serviceType);
         bb.appendByte(sourceAddrTon);

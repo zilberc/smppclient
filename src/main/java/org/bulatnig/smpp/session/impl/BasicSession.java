@@ -101,7 +101,9 @@ public class BasicSession implements Session {
     }
 
     private synchronized Pdu open() throws PduException, IOException {
+        logger.trace("Opening session.");
         conn.open();
+        logger.trace("TCP connection established. Sending bind request.");
         bindPdu.setSequenceNumber(nextSequenceNumber());
         conn.write(bindPdu);
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
@@ -112,9 +114,11 @@ public class BasicSession implements Session {
                 conn.close();
             }
         }, smscResponseTimeout, TimeUnit.MILLISECONDS);
+        logger.trace("Bind request sent. Waiting for bind response.");
         try {
             Pdu bindResp = conn.read();
             es.shutdownNow();
+            logger.trace("Bind response command status: {}.", bindResp.getCommandStatus());
             if (CommandStatus.ESME_ROK == bindResp.getCommandStatus()) {
                 updateLastActivity();
                 pingThread = new PingThread();
@@ -125,6 +129,7 @@ public class BasicSession implements Session {
                 t2.setName("Read");
                 t2.start();
                 updateState(State.CONNECTED);
+                logger.trace("Session successfully opened.");
             }
             return bindResp;
         } finally {
@@ -136,6 +141,7 @@ public class BasicSession implements Session {
     /**
      * Actually close session.
      *
+     * @param reason exception, caused session close, or null
      * @return session closed
      */
     private synchronized boolean closeInternal(Exception reason) {

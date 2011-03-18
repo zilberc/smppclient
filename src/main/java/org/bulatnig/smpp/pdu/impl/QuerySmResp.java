@@ -53,7 +53,7 @@ public class QuerySmResp extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         ByteBuffer bb = new ByteBuffer();
         bb.appendCString(messageId);
         bb.appendCString(finalDate);

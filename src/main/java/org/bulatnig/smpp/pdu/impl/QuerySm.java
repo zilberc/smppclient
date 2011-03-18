@@ -65,7 +65,7 @@ public class QuerySm extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         ByteBuffer bb = new ByteBuffer();
         bb.appendCString(messageId);
         bb.appendByte(sourceAddrTon);

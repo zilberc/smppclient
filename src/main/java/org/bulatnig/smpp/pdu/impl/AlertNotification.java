@@ -67,7 +67,7 @@ public class AlertNotification extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         ByteBuffer bb = new ByteBuffer();
         bb.appendByte(sourceAddrTon);
         bb.appendByte(sourceAddrNpi);

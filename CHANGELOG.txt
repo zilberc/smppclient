@@ -3,7 +3,8 @@ Changelog 0.6
 00.00.2011 0.6
 
 [new features]
-* ReconnectingSession, session package interfaces refactored
+* session automatic reconnection
+* session state listener
 
 01.02.2011 0.5
 

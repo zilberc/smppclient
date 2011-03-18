@@ -81,7 +81,7 @@ public class BindReceiver extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         ByteBuffer bb = new ByteBuffer();
         bb.appendCString(systemId);
         bb.appendCString(password);

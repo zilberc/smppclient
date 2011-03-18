@@ -25,7 +25,7 @@ public class Unbind extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         return null;
     }
 }

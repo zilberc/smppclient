@@ -18,7 +18,7 @@ public abstract class AbstractPdu implements Pdu {
     // lazy init tlv map
     public Map<Integer, Tlv> tlvs;
 
-    private long commandId;
+    private final long commandId;
     private long commandStatus;
     private long sequenceNumber;
 
@@ -37,9 +37,8 @@ public abstract class AbstractPdu implements Pdu {
      * Parse PDU from bytes.
      *
      * @param bb pdu bytes
-     * @throws PduException parsing failed
      */
-    protected AbstractPdu(ByteBuffer bb) throws PduException {
+    protected AbstractPdu(ByteBuffer bb) {
         bb.removeInt(); // PDU length value not stored
         commandId = bb.removeInt();
         commandStatus = bb.removeInt();
@@ -50,9 +49,8 @@ public abstract class AbstractPdu implements Pdu {
      * Calculate and return PDU body bytes.
      *
      * @return body bytes, can be null
-     * @throws PduException wrong pdu body
      */
-    protected abstract ByteBuffer body() throws PduException;
+    protected abstract ByteBuffer body();
 
     /**
      * Calculate and return PDU bytes.

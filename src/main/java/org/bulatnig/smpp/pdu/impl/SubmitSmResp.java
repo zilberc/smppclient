@@ -39,7 +39,7 @@ public class SubmitSmResp extends AbstractPdu {
     }
 
     @Override
-    protected ByteBuffer body() throws PduException {
+    protected ByteBuffer body() {
         if (CommandStatus.ESME_ROK != getCommandStatus())
             return null;
         ByteBuffer bb = new ByteBuffer();
