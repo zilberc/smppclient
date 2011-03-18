@@ -228,6 +228,7 @@ public class BasicSession implements Session {
 
         @Override
         public void run() {
+            logger.trace("Ping thread started.");
             try {
                 while (run) {
                     logger.trace("Checking last activity.");
