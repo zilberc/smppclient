@@ -48,26 +48,32 @@ public class BasicSession implements Session {
         this.conn = conn;
     }
 
+    @Override
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
     }
 
+    @Override
     public void setStateListener(StateListener stateListener) {
         this.stateListener = stateListener;
     }
 
+    @Override
     public void setSmscResponseTimeout(int timeout) {
         this.smscResponseTimeout = timeout;
     }
 
+    @Override
     public void setEnquireLinkTimeout(int timeout) {
         this.pingTimeout = timeout;
     }
 
+    @Override
     public void setReconnectTimeout(int timeout) {
         this.reconnectTimeout = timeout;
     }
 
+    @Override
     public synchronized Pdu open(Pdu pdu) throws PduException, IOException {
         bindPdu = pdu;
         return open();
@@ -95,6 +101,7 @@ public class BasicSession implements Session {
         }
     }
 
+    @Override
     public synchronized void close() {
         if (State.RECONNECTING == state || closeInternal(null))
             updateState(State.DISCONNECTED);

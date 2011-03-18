@@ -4,9 +4,12 @@ import org.bulatnig.smpp.pdu.CommandId;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.PduException;
 import org.bulatnig.smpp.session.Session;
+import org.bulatnig.smpp.session.MessageListener;
+import org.bulatnig.smpp.session.StateListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -39,6 +42,36 @@ public class LimitingSession implements Session {
     }
 
     @Override
+    public void setMessageListener(MessageListener messageListener) {
+        session.setMessageListener(messageListener);
+    }
+
+    @Override
+    public void setStateListener(StateListener stateListener) {
+        session.setStateListener(stateListener);
+    }
+
+    @Override
+    public void setSmscResponseTimeout(int timeout) {
+        session.setSmscResponseTimeout(timeout);
+    }
+
+    @Override
+    public void setEnquireLinkTimeout(int timeout) {
+        session.setEnquireLinkTimeout(timeout);
+    }
+
+    @Override
+    public void setReconnectTimeout(int timeout) {
+        session.setReconnectTimeout(timeout);
+    }
+
+    @Override
+    public Pdu open(Pdu pdu) throws PduException, IOException {
+        return session.open(pdu);
+    }
+
+    @Override
     public long nextSequenceNumber() {
         return session.nextSequenceNumber();
     }
@@ -63,5 +96,10 @@ public class LimitingSession implements Session {
                 sentTimes.add(System.currentTimeMillis());
             }
         }
+    }
+
+    @Override
+    public void close() {
+        session.close();
     }
 }

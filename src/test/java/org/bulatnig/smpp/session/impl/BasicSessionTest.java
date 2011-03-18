@@ -5,6 +5,7 @@ import org.bulatnig.smpp.pdu.CommandStatus;
 import org.bulatnig.smpp.pdu.Pdu;
 import org.bulatnig.smpp.pdu.impl.*;
 import org.bulatnig.smpp.session.MessageListener;
+import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.testutil.ComplexSmscStub;
 import org.bulatnig.smpp.testutil.SimpleSmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
@@ -40,7 +41,7 @@ public class BasicSessionTest {
         Pdu bindResp = null;
         try {
 
-            BasicSession session = basicSession(port, null);
+            Session session = session(port, null);
             bindResp = session.open(request);
             session.close();
 
@@ -57,7 +58,7 @@ public class BasicSessionTest {
         final int port = UniquePortGenerator.generate();
         final Pdu request = new BindTransceiver();
 
-        BasicSession session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+        Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
         session.setSmscResponseTimeout(100);
         session.open(request);
     }
@@ -70,7 +71,7 @@ public class BasicSessionTest {
         smsc.start();
         try {
 
-            BasicSession session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+            Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
             session.setSmscResponseTimeout(50);
             session.open(request);
 
@@ -89,7 +90,7 @@ public class BasicSessionTest {
         final byte[] incoming = new DeliverSm().buffer().array();
         try {
 
-            BasicSession session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+            Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
             session.setMessageListener(listener);
             session.setSmscResponseTimeout(500);
             session.setEnquireLinkTimeout(300);
@@ -130,7 +131,7 @@ public class BasicSessionTest {
         boolean sendResult = false;
 
         try {
-            BasicSession session = basicSession(port, listener);
+            Session session = session(port, listener);
             session.open(new BindTransceiver());
             sendResult = session.send(request);
 
@@ -170,7 +171,7 @@ public class BasicSessionTest {
         }, 100, TimeUnit.MILLISECONDS);
 
         try {
-            BasicSession session = basicSession(port, null);
+            Session session = session(port, null);
             session.open(new BindTransceiver());
 
             session.close();
@@ -191,7 +192,7 @@ public class BasicSessionTest {
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
 
         try {
-            final BasicSession session = basicSession(port, null);
+            final Session session = session(port, null);
             session.setSmscResponseTimeout(50);
 
             es.schedule(new Runnable() {
@@ -245,7 +246,7 @@ public class BasicSessionTest {
         }, 200, TimeUnit.MILLISECONDS);
 
         try {
-            final BasicSession session = basicSession(port, null);
+            final Session session = session(port, null);
             session.open(bind);
 
             es.schedule(new Runnable() {
@@ -292,7 +293,7 @@ public class BasicSessionTest {
             }
         }, 50, TimeUnit.MILLISECONDS);
         try {
-            BasicSession session = basicSession(port, null);
+            Session session = session(port, null);
             session.setEnquireLinkTimeout(100);
             session.open(request);
 
@@ -323,7 +324,7 @@ public class BasicSessionTest {
         smsc.start();
 
         try {
-            BasicSession session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+            Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
             session.setSmscResponseTimeout(100);
             session.setEnquireLinkTimeout(100);
             session.open(new BindTransceiver());
@@ -351,7 +352,7 @@ public class BasicSessionTest {
         boolean sendResult = true;
 
         try {
-            BasicSession session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+            Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
             session.setSmscResponseTimeout(100);
             session.setEnquireLinkTimeout(100);
             session.open(new BindTransceiver());
@@ -380,7 +381,7 @@ public class BasicSessionTest {
         ComplexSmscStub smsc = new ComplexSmscStub(port);
         smsc.start();
 
-        BasicSession session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+        Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
         session.setSmscResponseTimeout(1000);
         session.setEnquireLinkTimeout(100);
         session.open(new BindTransceiver());
@@ -424,7 +425,7 @@ public class BasicSessionTest {
             }
         }, 50, TimeUnit.MILLISECONDS);
         try {
-            BasicSession session = basicSession(port, null);
+            Session session = session(port, null);
             session.setSmscResponseTimeout(200);
             session.setEnquireLinkTimeout(100);
             session.open(request);
@@ -464,8 +465,8 @@ public class BasicSessionTest {
         }
     }
 
-    protected BasicSession basicSession(int port, MessageListener listener) {
-        BasicSession session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
+    protected Session session(int port, MessageListener listener) {
+        Session session = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
         session.setSmscResponseTimeout(500);
         if (listener != null)
             session.setMessageListener(listener);

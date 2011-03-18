@@ -5,6 +5,7 @@ import org.bulatnig.smpp.pdu.impl.BindTransceiver;
 import org.bulatnig.smpp.pdu.impl.BindTransceiverResp;
 import org.bulatnig.smpp.pdu.impl.EnquireLink;
 import org.bulatnig.smpp.pdu.impl.SubmitSm;
+import org.bulatnig.smpp.session.Session;
 import org.bulatnig.smpp.testutil.ComplexSmscStub;
 import org.bulatnig.smpp.testutil.UniquePortGenerator;
 import org.junit.Test;
@@ -43,17 +44,17 @@ public class LimitingSessionTest {
 
         long started = System.currentTimeMillis();
         try {
-            BasicSession basicSession = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
-            basicSession.setSmscResponseTimeout(200);
-            basicSession.open(new BindTransceiver());
-
-            LimitingSession session = new LimitingSession(basicSession, limit);
+            Session session = new LimitingSession(
+                    new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port))),
+                            limit);
+            session.setSmscResponseTimeout(200);
+            session.open(new BindTransceiver());
 
             for (int i = 0; i < count; i++) {
                 session.send(new SubmitSm());
             }
 
-            basicSession.close();
+            session.close();
         } finally {
             es.shutdownNow();
             smsc.stop();
@@ -86,17 +87,17 @@ public class LimitingSessionTest {
 
         long started = System.currentTimeMillis();
         try {
-            BasicSession basicSession = new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port)));
-            basicSession.setSmscResponseTimeout(200);
-            basicSession.open(new BindTransceiver());
-
-            LimitingSession session = new LimitingSession(basicSession, limit);
+            Session session = new LimitingSession(
+                    new BasicSession(new TcpConnection(new InetSocketAddress("localhost", port))),
+                            limit);
+            session.setSmscResponseTimeout(200);
+            session.open(new BindTransceiver());
 
             for (int i = 0; i < count; i++) {
                 session.send(new EnquireLink());
             }
 
-            basicSession.close();
+            session.close();
         } finally {
             es.shutdownNow();
             smsc.stop();
