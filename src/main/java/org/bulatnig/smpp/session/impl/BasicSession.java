@@ -96,6 +96,7 @@ public class BasicSession implements Session {
             conn.write(pdu);
             return true;
         } catch (IOException e) {
+            logger.debug("Send failed. Reconnecting", e);
             reconnect(e);
             return false;
         }
