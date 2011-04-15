@@ -96,7 +96,7 @@ public class BasicSession implements Session {
             conn.write(pdu);
             return true;
         } catch (IOException e) {
-            logger.debug("Send failed. Reconnecting", e);
+            logger.debug("Send failed.", e);
             reconnect(e);
             return false;
         }
@@ -190,10 +190,12 @@ public class BasicSession implements Session {
             }
         }
         if (doReconnect) {
+            logger.debug("Reconnect started.");
             closeInternal(reason);
             updateState(State.RECONNECTING, reason);
             boolean reconnectSuccessful = false;
             while (!reconnectSuccessful && state == State.RECONNECTING) {
+                logger.debug("Reconnecting...");
                 try {
                     Pdu bindResponse = open();
                     if (CommandStatus.ESME_ROK == bindResponse.getCommandStatus()) {
@@ -213,6 +215,7 @@ public class BasicSession implements Session {
             }
             if (reconnectSuccessful)
                 state = State.CONNECTED;
+            logger.debug("Reconnect done.");
         }
     }
 
@@ -253,7 +256,6 @@ public class BasicSession implements Session {
                             break;
                         }
                     }
-                    logger.trace("Going to sleep {}", pingTimeout);
                     Thread.sleep(pingTimeout);
                 }
             } catch (PduException e) {

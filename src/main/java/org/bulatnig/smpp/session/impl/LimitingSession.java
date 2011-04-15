@@ -83,7 +83,7 @@ public class LimitingSession implements Session {
         } else {
             try {
                 long timeToSleep = sentTimes.poll() + TIMEOUT - System.currentTimeMillis();
-                logger.trace("Time spent from N message back to this: {}.", timeToSleep);
+                logger.trace("Wait before send: {} ms.", timeToSleep);
                 if (timeToSleep > 0) {
                     logger.trace("Going to sleep {} ms.", timeToSleep);
                     Thread.sleep(timeToSleep);
