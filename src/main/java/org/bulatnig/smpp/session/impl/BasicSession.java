@@ -109,19 +109,19 @@ public class BasicSession implements Session {
     }
 
     private synchronized Pdu open() throws PduException, IOException {
-        logger.trace("Opening session.");
+        logger.trace("Opening new session...");
         conn.open();
         logger.trace("TCP connection established. Sending bind request.");
         bindPdu.setSequenceNumber(nextSequenceNumber());
         conn.write(bindPdu);
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.schedule(new Runnable() {
-            @Override
-            public void run() {
-                logger.warn("Bind response timed out.");
-                conn.close();
-            }
-        }, smscResponseTimeout, TimeUnit.MILLISECONDS);
+                    @Override
+                    public void run() {
+                        logger.warn("Bind response timed out.");
+                        conn.close();
+                    }
+                }, smscResponseTimeout, TimeUnit.MILLISECONDS);
         logger.trace("Bind request sent. Waiting for bind response.");
         try {
             Pdu bindResp = conn.read();
@@ -190,32 +190,8 @@ public class BasicSession implements Session {
             }
         }
         if (doReconnect) {
-            logger.debug("Reconnect started.");
             closeInternal(reason);
-            updateState(State.RECONNECTING, reason);
-            boolean reconnectSuccessful = false;
-            while (!reconnectSuccessful && state == State.RECONNECTING) {
-                logger.debug("Reconnecting...");
-                try {
-                    Pdu bindResponse = open();
-                    if (CommandStatus.ESME_ROK == bindResponse.getCommandStatus()) {
-                        reconnectSuccessful = true;
-                    } else {
-                        logger.warn("Reconnect failed. Bind response error code: {}.",
-                                bindResponse.getCommandStatus());
-                    }
-                } catch (Exception e) {
-                    logger.warn("Reconnect failed.", e);
-                    try {
-                        Thread.sleep(reconnectTimeout);
-                    } catch (InterruptedException e1) {
-                        logger.trace("Reconnect sleep interrupted.", e1);
-                    }
-                }
-            }
-            if (reconnectSuccessful)
-                state = State.CONNECTED;
-            logger.debug("Reconnect done.");
+            new Thread(new ReconnectThread(reason)).start();
         }
     }
 
@@ -243,20 +219,23 @@ public class BasicSession implements Session {
             try {
                 while (run) {
                     logger.trace("Checking last activity.");
-                    if (pingTimeout < (System.currentTimeMillis() - lastActivity)) {
-                        long prevLastActivity = lastActivity;
-                        Pdu enquireLink = new EnquireLink();
-                        enquireLink.setSequenceNumber(nextSequenceNumber());
-                        send(enquireLink);
-                        synchronized (conn) {
-                            conn.wait(smscResponseTimeout);
+                    try {
+                        Thread.sleep(pingTimeout);
+                        if (pingTimeout < (System.currentTimeMillis() - lastActivity)) {
+                            long prevLastActivity = lastActivity;
+                            Pdu enquireLink = new EnquireLink();
+                            enquireLink.setSequenceNumber(nextSequenceNumber());
+                            send(enquireLink);
+                            synchronized (conn) {
+                                conn.wait(smscResponseTimeout);
+                            }
+                            if (run && lastActivity == prevLastActivity) {
+                                reconnect(new IOException("Enquire link response not received. Session closed."));
+                            }
                         }
-                        if (run && lastActivity == prevLastActivity) {
-                            reconnect(new IOException("Enquire link response not received. Session closed."));
-                            break;
-                        }
+                    } catch (InterruptedException e) {
+                        logger.trace("Ping thread interrupted.");
                     }
-                    Thread.sleep(pingTimeout);
                 }
             } catch (PduException e) {
                 if (run) {
@@ -264,8 +243,6 @@ public class BasicSession implements Session {
                     run = false;
                     reconnect(e);
                 }
-            } catch (InterruptedException e) {
-                logger.trace("Ping thread interrupted.");
             } finally {
                 logger.trace("Ping thread stopped.");
             }
@@ -328,6 +305,44 @@ public class BasicSession implements Session {
             run = false;
         }
 
+    }
+
+    private class ReconnectThread implements Runnable {
+
+        private final Exception reason;
+
+        private ReconnectThread(Exception reason) {
+            this.reason = reason;
+        }
+
+        @Override
+        public void run() {
+            logger.debug("Reconnect started.");
+            stateListener.changed(state, reason);
+            boolean reconnectSuccessful = false;
+            while (!reconnectSuccessful && state == State.RECONNECTING) {
+                logger.debug("Reconnecting...");
+                try {
+                    Pdu bindResponse = open();
+                    if (CommandStatus.ESME_ROK == bindResponse.getCommandStatus()) {
+                        reconnectSuccessful = true;
+                    } else {
+                        logger.warn("Reconnect failed. Bind response error code: {}.",
+                                bindResponse.getCommandStatus());
+                    }
+                } catch (Exception e) {
+                    logger.warn("Reconnect failed.", e);
+                    try {
+                        Thread.sleep(reconnectTimeout);
+                    } catch (InterruptedException e1) {
+                        logger.trace("Reconnect sleep interrupted.", e1);
+                    }
+                }
+            }
+            if (reconnectSuccessful)
+                state = State.CONNECTED;
+            logger.debug("Reconnect done.");
+        }
     }
 
 }
