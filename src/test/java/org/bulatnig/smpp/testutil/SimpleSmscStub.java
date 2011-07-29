@@ -20,7 +20,7 @@ public class SimpleSmscStub implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleSmscStub.class);
 
-    public List<byte[]> input = new ArrayList<byte[]>();
+    public List<byte[]> input = new ArrayList<>();
 
     private final int port;
     private volatile ServerSocket server;

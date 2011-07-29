@@ -36,7 +36,7 @@ public class LimitingSession implements Session {
 
     public LimitingSession(Session session, int maxMessagesPerSecond) {
         this.session = session;
-        sentTimes = new LinkedBlockingQueue<Long>(maxMessagesPerSecond);
+        sentTimes = new LinkedBlockingQueue<>(maxMessagesPerSecond);
         for (int i = 0; i < maxMessagesPerSecond; i++)
             sentTimes.add(0L);
     }
