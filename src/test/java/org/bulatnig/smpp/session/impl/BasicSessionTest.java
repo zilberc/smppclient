@@ -475,7 +475,7 @@ public class BasicSessionTest {
 
     private class MessageListenerImpl implements MessageListener {
 
-        private final List<Pdu> pdus = new ArrayList<>();
+        private final List<Pdu> pdus = new ArrayList<Pdu>();
 
         @Override
         public void received(Pdu pdu) {

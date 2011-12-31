@@ -26,7 +26,7 @@ public class ComplexSmscStub implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ComplexSmscStub.class);
 
-    public List<byte[]> input = new ArrayList<>();
+    public List<byte[]> input = new ArrayList<byte[]>();
 
     private final int port;
     private volatile ServerSocket server;

@@ -70,7 +70,7 @@ public class AlertNotificationTest {
         an.setEsmeAddrTon(0);
         an.setEsmeAddrNpi(18);
         an.setEsmeAddr("destmy");
-        an.tlvs = new HashMap<>();
+        an.tlvs = new HashMap<Integer, Tlv>();
         Tlv tlv = new TlvImpl(ParameterTag.MS_AVAILABILITY_STATUS);
         tlv.setValue(new ByteBuffer().appendByte(0).array());
         an.tlvs.put(tlv.getTag(), tlv);
